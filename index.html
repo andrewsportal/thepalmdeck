@@ -27,11 +27,9 @@
     :root {
       color-scheme: dark;
     }
-
     * {
       box-sizing: border-box;
     }
-
     html,
     body {
       margin: 0;
@@ -45,7 +43,6 @@
       overflow: hidden;
       overscroll-behavior: none;
     }
-
     .scene-video {
       position: fixed;
       inset: 0;
@@ -55,11 +52,9 @@
       z-index: -3;
       transition: opacity 420ms ease;
     }
-
     .scene-video.dim {
       opacity: 0.35;
     }
-
     .scene-mask {
       position: fixed;
       inset: 0;
@@ -68,21 +63,17 @@
         radial-gradient(circle at 16% 14%, rgba(255, 183, 3, 0.16), transparent 42%),
         linear-gradient(to bottom, rgba(17, 17, 17, 0.23), rgba(17, 17, 17, 0.84));
     }
-
     .controls {
       opacity: 1;
       transition: opacity 320ms ease;
       pointer-events: none;
     }
-
     .controls.hidden {
       opacity: 0;
     }
-
     .controls .ui {
       pointer-events: auto;
     }
-
     .glass {
       backdrop-filter: blur(24px) saturate(160%);
       -webkit-backdrop-filter: blur(24px) saturate(160%);
@@ -90,7 +81,6 @@
       border: 1px solid rgba(255, 248, 240, 0.12);
       box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
     }
-
     .gloss {
       border: 1px solid rgba(255, 248, 240, 0.25);
       background: linear-gradient(to bottom, rgba(255, 248, 240, 0.15), rgba(255, 248, 240, 0.06));
@@ -100,16 +90,13 @@
         transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
         border-color 200ms ease;
     }
-
     .gloss:hover {
       transform: scale(1.06);
       border-color: rgba(255, 248, 240, 0.4);
     }
-
     .gloss:active {
       transform: scale(0.94);
     }
-
     .edge-arrow {
       position: absolute;
       top: 50%;
@@ -129,20 +116,16 @@
       cursor: pointer;
       transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
     }
-
     .edge-arrow:hover {
       transform: translateY(-50%) scale(1.06);
       background: rgba(17, 17, 17, 0.45);
     }
-
     .edge-arrow.left {
       left: 10px;
     }
-
     .edge-arrow.right {
       right: 10px;
     }
-
     .progress {
       height: 4px;
       border-radius: 999px;
@@ -151,19 +134,16 @@
       cursor: pointer;
       transition: height 180ms ease;
     }
-
     .progress:hover,
     .progress:focus-visible {
       height: 6px;
     }
-
     .progress-fill {
       width: 0%;
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #e85d04, #ffb703);
     }
-
     .progress-thumb {
       width: 12px;
       height: 12px;
@@ -176,60 +156,48 @@
       pointer-events: none;
       transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     .progress:hover .progress-thumb,
     .progress:focus-visible .progress-thumb {
       transform: translate(-50%, -50%) scale(1);
     }
-
     .track-panel {
       max-height: 0;
       overflow: hidden;
       transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     .track-panel.open {
       max-height: min(34svh, 310px);
     }
-
     .track-scroll {
       max-height: min(27svh, 250px);
       overflow: auto;
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 248, 240, 0.18) transparent;
     }
-
     .track-scroll::-webkit-scrollbar {
       width: 8px;
     }
-
     .track-scroll::-webkit-scrollbar-thumb {
       background: rgba(255, 248, 240, 0.18);
       border-radius: 999px;
     }
-
     .mix-title-anim-next {
       animation: mixInNext 350ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     .mix-title-anim-prev {
       animation: mixInPrev 350ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-
     @keyframes mixInNext {
       from { opacity: 0; transform: translateX(14px); }
       to { opacity: 1; transform: translateX(0); }
     }
-
     @keyframes mixInPrev {
       from { opacity: 0; transform: translateX(-14px); }
       to { opacity: 1; transform: translateX(0); }
     }
-
     .tnum {
       font-variant-numeric: tabular-nums;
     }
-
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation: none !important;
@@ -253,10 +221,8 @@
     <source id="sceneVideoSource" src="scene-1.mp4" type="video/mp4" />
   </video>
   <div class="scene-mask" aria-hidden="true"></div>
-
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
-
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
       <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape scene">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
@@ -268,7 +234,6 @@
           <path d="M9 6l6 6-6 6"></path>
         </svg>
       </button>
-
       <header id="mixHeader" class="ui pt-3 text-center mix-title-anim-next">
         <h1 id="mixHeroTitle" class="text-[clamp(2.2rem,8.4vw,4.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-cream">
           Vagabond
@@ -277,7 +242,6 @@
           The first glow over the palm deck as the horizon opens.
         </p>
       </header>
-
       <section class="ui glass mx-0 rounded-3xl p-3 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
         <div class="flex flex-wrap items-center justify-center gap-2">
           <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
@@ -287,7 +251,6 @@
               <path d="M8 8l5 5"></path>
             </svg>
           </button>
-
           <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full border-gold/45 bg-gradient-to-b from-gold/35 to-coral/24" aria-label="Play">
             <svg id="iconPlay" viewBox="0 0 24 24" class="h-[18px] w-[18px] translate-x-[1px]" fill="#fff8f0" aria-hidden="true">
               <path d="M8 5v14l11-7z"></path>
@@ -296,7 +259,6 @@
               <path d="M7 5h4v14H7zm6 0h4v14h-4z"></path>
             </svg>
           </button>
-
           <button id="forwardBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
             <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M13 19a7 7 0 1 0-5.57-11.24"></path>
@@ -304,11 +266,9 @@
               <path d="M16 8l-5 5"></path>
             </svg>
           </button>
-
           <button id="tracklistBtn" type="button" class="gloss inline-flex h-10 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
             Tracklist
           </button>
-
           <button id="muteBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Mute">
             <svg id="iconVol" viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M5 9v6h4l5 4V5L9 9z"></path>
@@ -321,12 +281,10 @@
               <path d="M15 9l4 6"></path>
             </svg>
           </button>
-
           <a id="downloadBtn" href="#" download class="gloss inline-flex h-10 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-cream no-underline" aria-label="Download current mixtape">
             Download
           </a>
         </div>
-
         <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
           <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
           <div id="progressTrack" class="progress" role="slider" tabindex="0" aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -335,14 +293,12 @@
           </div>
           <span id="durationEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
         </div>
-
         <div id="trackPanel" class="track-panel mt-3 rounded-2xl border border-cream/12 bg-black/24 p-3">
           <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed text-cream/78"></ol>
         </div>
       </section>
     </div>
   </main>
-
   <script>
     // -------------------------------------------------------------
     // PORTAL DATA (single source of truth)
@@ -396,10 +352,8 @@
         },
       ],
     };
-
     const audio = new Audio();
     audio.preload = "metadata";
-
     let activeMix = 0;
     let isPlaying = false;
     let isScrubbing = false;
@@ -407,7 +361,6 @@
     let tracklistOpen = false;
     let hideTimer = null;
     let lastDirection = "next";
-
     const sceneVideo = document.getElementById("sceneVideo");
     const sceneVideoSource = document.getElementById("sceneVideoSource");
     const stage = document.getElementById("stage");
@@ -435,31 +388,26 @@
     const durationEl = document.getElementById("durationEl");
     const trackPanel = document.getElementById("trackPanel");
     const trackList = document.getElementById("trackList");
-
     function formatTime(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
       const m = Math.floor(seconds / 60);
       const s = Math.floor(seconds % 60);
       return `${m}:${String(s).padStart(2, "0")}`;
     }
-
     function normalizeMixIndex(index) {
       const len = PORTAL.mixtapes.length;
       if (!len) return 0;
       return ((index % len) + len) % len;
     }
-
     function clearHideTimer() {
       if (!hideTimer) return;
       window.clearTimeout(hideTimer);
       hideTimer = null;
     }
-
     function setControlsVisible(visible) {
       controlsAreVisible = visible;
       controls.classList.toggle("hidden", !visible);
     }
-
     function scheduleAutoHide() {
       clearHideTimer();
       if (!isPlaying || tracklistOpen) return;
@@ -467,12 +415,10 @@
         setControlsVisible(false);
       }, 1800);
     }
-
     function revealControls() {
       setControlsVisible(true);
       scheduleAutoHide();
     }
-
     function setTracklistOpen(open) {
       tracklistOpen = open;
       trackPanel.classList.toggle("open", open);
@@ -484,7 +430,6 @@
         scheduleAutoHide();
       }
     }
-
     function updatePlayState(playing) {
       isPlaying = playing;
       iconPlay.classList.toggle("hidden", playing);
@@ -498,14 +443,12 @@
       }
       updateMediaSession(PORTAL.mixtapes[activeMix]);
     }
-
     function updateMuteUI() {
       const muted = audio.muted;
       iconVol.classList.toggle("hidden", muted);
       iconMuted.classList.toggle("hidden", !muted);
       muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     }
-
     function updateProgressUI() {
       const duration = audio.duration;
       const now = audio.currentTime;
@@ -526,7 +469,6 @@
       timeEl.textContent = formatTime(now);
       durationEl.textContent = formatTime(duration);
     }
-
     function seekByClientX(clientX) {
       if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
       const rect = progressTrack.getBoundingClientRect();
@@ -534,7 +476,6 @@
       audio.currentTime = (x / rect.width) * audio.duration;
       updateProgressUI();
     }
-
     function renderTracklist(items) {
       trackList.innerHTML = "";
       items.forEach((track) => {
@@ -544,13 +485,11 @@
         trackList.appendChild(li);
       });
     }
-
     function animateHeader(direction) {
       mixHeader.classList.remove("mix-title-anim-next", "mix-title-anim-prev");
       void mixHeader.offsetWidth;
       mixHeader.classList.add(direction === "prev" ? "mix-title-anim-prev" : "mix-title-anim-next");
     }
-
     function switchSceneVideo(videoPath) {
       const target = videoPath || PORTAL.fallbackVideo;
       if (sceneVideoSource.getAttribute("src") === target) return;
@@ -564,7 +503,6 @@
         sceneVideo.classList.remove("dim");
       }, 140);
     }
-
     function updateMediaSession(mixtape) {
       if (!("mediaSession" in navigator) || !mixtape) return;
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -574,7 +512,6 @@
       });
       navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
     }
-
     async function playAudio() {
       try {
         await audio.play();
@@ -583,7 +520,6 @@
         updatePlayState(false);
       }
     }
-
     function togglePlayPause() {
       if (audio.paused) {
         playAudio();
@@ -591,7 +527,6 @@
         audio.pause();
       }
     }
-
     function selectMixtape(index, options = {}) {
       const {
         autoplay = true,
@@ -600,10 +535,8 @@
       const nextIndex = normalizeMixIndex(index);
       const mix = PORTAL.mixtapes[nextIndex];
       if (!mix) return;
-
       activeMix = nextIndex;
       lastDirection = direction;
-
       mixHeroTitle.textContent = mix.title;
       mixHeroDescription.textContent = mix.description;
       document.title = mix.title;
@@ -611,24 +544,19 @@
       downloadBtn.download = (mix.download || mix.audio).split("/").pop();
       renderTracklist(mix.tracklist);
       animateHeader(direction);
-
       switchSceneVideo(mix.video);
-
       audio.src = mix.audio;
       audio.currentTime = 0;
       audio.load();
       updateProgressUI();
       updateMediaSession(mix);
-
       if (autoplay) {
         playAudio();
       } else {
         updatePlayState(false);
       }
-
       revealControls();
     }
-
     function bindEvents() {
       gestureArea.addEventListener("pointerdown", () => {
         if (!controlsAreVisible) {
@@ -640,67 +568,54 @@
           revealControls();
         }
       });
-
       stage.addEventListener("pointermove", () => {
         if (!controlsAreVisible && isPlaying) return;
         if (isPlaying) scheduleAutoHide();
       });
-
       prevSceneBtn.addEventListener("click", () => {
         selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
       });
-
       nextSceneBtn.addEventListener("click", () => {
         selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
       });
-
       playPauseBtn.addEventListener("click", () => {
         togglePlayPause();
         revealControls();
       });
-
       rewindBtn.addEventListener("click", () => {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
         updateProgressUI();
         revealControls();
       });
-
       forwardBtn.addEventListener("click", () => {
         if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
         updateProgressUI();
         revealControls();
       });
-
       tracklistBtn.addEventListener("click", () => {
         setTracklistOpen(!tracklistOpen);
       });
-
       muteBtn.addEventListener("click", () => {
         audio.muted = !audio.muted;
         updateMuteUI();
         revealControls();
       });
-
       downloadBtn.addEventListener("click", () => {
         revealControls();
       });
-
       progressTrack.addEventListener("pointerdown", (event) => {
         isScrubbing = true;
         seekByClientX(event.clientX);
         progressTrack.setPointerCapture(event.pointerId);
       });
-
       progressTrack.addEventListener("pointermove", (event) => {
         if (!isScrubbing) return;
         seekByClientX(event.clientX);
       });
-
       progressTrack.addEventListener("pointerup", () => {
         isScrubbing = false;
       });
-
       progressTrack.addEventListener("keydown", (event) => {
         if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
         const step = Math.max(1, audio.duration * 0.02);
@@ -719,19 +634,16 @@
         }
         updateProgressUI();
       });
-
       audio.addEventListener("loadedmetadata", updateProgressUI);
       audio.addEventListener("timeupdate", updateProgressUI);
       audio.addEventListener("play", () => updatePlayState(true));
       audio.addEventListener("pause", () => updatePlayState(false));
       audio.addEventListener("ended", () => updatePlayState(false));
-
       sceneVideo.addEventListener("error", () => {
         if (sceneVideoSource.getAttribute("src") === PORTAL.fallbackVideo) return;
         sceneVideoSource.setAttribute("src", PORTAL.fallbackVideo);
         sceneVideo.load();
       });
-
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           // Keep audio running, pause visual decode for lower memory.
@@ -740,7 +652,6 @@
           sceneVideo.play().catch(() => {});
         }
       });
-
       document.addEventListener("keydown", (event) => {
         const inInput = event.target.closest("input, textarea, select, [contenteditable], button, a");
         if (inInput) return;
@@ -764,7 +675,6 @@
         revealControls();
       });
     }
-
     function initMediaSessionActions() {
       if (!("mediaSession" in navigator)) return;
       navigator.mediaSession.setActionHandler("play", playAudio);
@@ -785,7 +695,6 @@
         selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
       });
     }
-
     function init() {
       sceneVideo.poster = PORTAL.fallbackPoster;
       sceneVideoSource.setAttribute("src", PORTAL.mixtapes[0].video || PORTAL.fallbackVideo);
@@ -800,7 +709,6 @@
       setTracklistOpen(false);
       setControlsVisible(true);
     }
-
     init();
   </script>
 </body>
