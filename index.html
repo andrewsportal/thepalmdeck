@@ -89,7 +89,6 @@
       z-index: 10;
     }
 
-    /* "Mixed by Andrew Rios" — top of the glass card, barely-teal, no glow */
     .mixer-credit {
       text-align: center;
       font-size: 0.68rem;
@@ -145,13 +144,11 @@
         inset 0 1px 0 rgba(255, 248, 240, 0.2);
     }
 
-    /* Shuffle — glows teal when on */
     .shuffle-on {
       color: #34ccc4;
       border-color: rgba(52, 204, 196, 0.5) !important;
     }
 
-    /* Main Spotify button — subtle green tint */
     .spotify-btn {
       border-color: rgba(30, 215, 96, 0.42);
       background: linear-gradient(to bottom, rgba(30, 215, 96, 0.16), rgba(30, 215, 96, 0.06));
@@ -214,7 +211,6 @@
     .track-scroll::-webkit-scrollbar       { width: 8px; }
     .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
 
-    /* Tracklist rows */
     .track-item {
       display: flex;
       align-items: center;
@@ -232,14 +228,12 @@
       color: rgba(255, 248, 240, 0.9);
     }
 
-    /* Selected row — teal highlight */
     .track-active {
       background: rgba(52, 204, 196, 0.12);
       color: rgba(255, 248, 240, 0.97);
       box-shadow: inset 0 0 0 1px rgba(52, 204, 196, 0.26);
     }
 
-    /* Per-row Spotify icon */
     .track-spotify-link {
       flex-shrink: 0;
       display: inline-flex;
@@ -255,15 +249,13 @@
       transform: scale(1.2);
     }
 
-    /* On the selected row the icon is already slightly green */
     .track-active .track-spotify-link {
       color: rgba(30, 215, 96, 0.48);
     }
 
     .tnum { font-variant-numeric: tabular-nums; }
 
-    /* Now-playing marquee */
-    .marquee-wrap  { overflow: hidden; }
+    .marquee-wrap { overflow: hidden; }
 
     .marquee-track {
       display: inline-flex;
@@ -308,15 +300,12 @@
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
 
-    <!-- Controls pinned to the bottom; background art fills the screen above -->
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
 
       <section class="ui glass mx-0 rounded-3xl p-3 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
 
-        <!-- Curator credit — quiet header at the top of the glass card -->
         <p class="mixer-credit">Mixed by Andrew Rios</p>
 
-        <!-- Playback buttons: Rewind · Play · Forward · Shuffle · Tracklist · Mute -->
         <div class="flex flex-wrap items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
@@ -373,7 +362,6 @@
 
         </div>
 
-        <!-- Now-playing marquee + main Spotify button -->
         <div class="mt-3 flex items-center gap-2">
           <div id="marqueeWrap" class="marquee-wrap min-w-0 flex-1">
             <div id="marqueeTrack" class="marquee-track">
@@ -390,7 +378,6 @@
           </a>
         </div>
 
-        <!-- Progress bar -->
         <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
           <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
           <div id="progressTrack" class="progress" role="slider" tabindex="0"
@@ -401,7 +388,6 @@
           <span id="durationEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
         </div>
 
-        <!-- Tracklist panel — tap a track title to select it; tap its Spotify icon to open directly -->
         <div id="trackPanel" class="track-panel mt-3">
           <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed"></ol>
         </div>
@@ -412,40 +398,44 @@
 
   <script>
     // ================================================================
-    //  PORTAL DATA  —  this is the only section you need to edit
+    //  PORTAL DATA  —  only edit this section
     // ================================================================
     const PORTAL = {
       fallbackVideo:  "",
       fallbackPoster: "hero-poster.JPG",
       mix: {
         title: "Vagabond",
-        audio: "vagabond-mixtape.mp3",
 
         // ── TRACKLIST ──────────────────────────────────────────────
         //
-        //  For each track fill in:
-        //    title   → the name you want displayed in the list
-        //    spotify → open Spotify, right-click a song,
-        //              Share → "Copy link to song", paste it here
+        //  audio   → filename in your repo. Name your files song1, song2, song3…
+        //            and include the extension: song1.mp3 / song1.flac / song1.aac
+        //            Any format the browser supports works (mp3, aac, flac, m4a, wav).
+        //  title   → text shown in the tracklist and the now-playing marquee
+        //  spotify → in Spotify: right-click a song → Share → Copy link to song
         //
-        //  • Order here = order shown in the tracklist.
-        //  • Tap a track title → selects it (marquee + Spotify button update).
-        //  • Tap the small Spotify icon on the row → opens that song directly.
-        //  • Shuffle reorders the display; the selected track stays highlighted.
-        //  • To add a track: copy any block below and paste it after.
-        //  • To remove a track: delete its { } block and the comma before it.
+        //  • Songs play one after another automatically.
+        //  • Tap a row while playing  → switches to that song immediately.
+        //  • Tap a row while paused   → selects it; press play to start.
+        //  • When shuffled, auto-advance follows the shuffled queue order.
+        //  • Lock-screen previous/next controls skip between tracks.
+        //  • To add a track  → copy any block below and paste it after.
+        //  • To remove a track → delete its { } block and the comma before it.
         //
         // ──────────────────────────────────────────────────────────
         tracklist: [
           {
+            audio:   "song1.mp3",
             title:   "01. John Summit, Sub Focus, Julia Church – Go Back (feat. Julia Church)",
             spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
           },
           {
+            audio:   "song2.mp3",
             title:   "02. John Summit, Guz, Stevie Appleton – What A Life",
             spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
           },
           {
+            audio:   "song3.mp3",
             title:   "03. deadmau5, Kaskade, John Summit – Remember (John Summit Remix)",
             spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
           },
@@ -466,6 +456,7 @@
     let isShuffling        = false;
     let hideTimer          = null;
     let activeTrack        = null;
+    let displayList        = [];   // ordered or shuffled queue used for playback + display
     let progressRafPending = false;
 
     let activeSceneVideoPath       = "";
@@ -559,6 +550,7 @@
       muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     }
 
+    // rAF-throttled: caps DOM writes to one per paint frame
     function _doUpdateProgressUI() {
       progressRafPending = false;
       const duration = audio.duration;
@@ -604,20 +596,22 @@
       return copy;
     }
 
+    // Rebuild the playback queue (called once on init and each time shuffle toggles)
+    function buildDisplayList() {
+      displayList = isShuffling
+        ? shuffleArray(PORTAL.mix.tracklist)
+        : [...PORTAL.mix.tracklist];
+    }
+
     function spotifyHref(track) {
       return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
         ? track.spotify
         : "#";
     }
 
-    // Render tracklist. Each row: [title — selects track] [Spotify icon — opens directly]
     function renderTracklist() {
-      const source = isShuffling
-        ? shuffleArray(PORTAL.mix.tracklist)
-        : PORTAL.mix.tracklist;
-
       trackList.innerHTML = "";
-      source.forEach((track) => {
+      displayList.forEach((track) => {
         const li = document.createElement("li");
         li.className = "track-item" + (track === activeTrack ? " track-active" : "");
         li.addEventListener("click", () => selectTrack(track));
@@ -632,9 +626,8 @@
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.className = "track-spotify-link";
-        link.setAttribute("aria-label", `Open in Spotify`);
+        link.setAttribute("aria-label", "Open in Spotify");
         link.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/></svg>`;
-        // Don't let icon click bubble up to the row's selectTrack listener
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
 
@@ -642,19 +635,41 @@
       });
     }
 
-    // Select a track: update the marquee, main Spotify button, and row highlight
-    function selectTrack(track) {
+    // Select a track. Switches audio source immediately.
+    // If music was already playing it keeps playing (new song).
+    // forcePlay = true is used by auto-advance so the next song starts automatically.
+    function selectTrack(track, forcePlay = false) {
+      const wasPlaying = !audio.paused;
       activeTrack = track;
+
+      audio.src = track.audio;
+      audio.load();
+
       nowPlayingText.textContent = track.title;
       spotifyBtn.href = spotifyHref(track);
       refreshMarquee();
       renderTracklist();
+      updateMediaSession();
+
+      if (wasPlaying || forcePlay) playAudio();
+    }
+
+    // Called when a song finishes — moves to the next track in the queue
+    function advanceToNext() {
+      const idx = displayList.indexOf(activeTrack);
+      if (idx >= 0 && idx < displayList.length - 1) {
+        selectTrack(displayList[idx + 1], true);
+      } else {
+        // end of playlist — stay on last track, show paused
+        updatePlayState(false);
+      }
     }
 
     function setShuffling(active) {
       isShuffling = active;
       shuffleBtn.setAttribute("aria-pressed", String(active));
       shuffleBtn.classList.toggle("shuffle-on", active);
+      buildDisplayList();
       renderTracklist();
       revealControls();
     }
@@ -728,9 +743,9 @@
     function updateMediaSession() {
       if (!("mediaSession" in navigator)) return;
       navigator.mediaSession.metadata = new MediaMetadata({
-        title:  PORTAL.mix.title,
-        artist: "Andrew Rios",
-        album:  "Palm Deck House",
+        title:  activeTrack ? activeTrack.title : PORTAL.mix.title,
+        artist: "Mixed by Andrew Rios",
+        album:  PORTAL.mix.title,
       });
       navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
     }
@@ -746,13 +761,9 @@
 
     function initMix(autoplay = false) {
       document.title = PORTAL.mix.title;
-      if (PORTAL.mix.tracklist.length > 0) selectTrack(PORTAL.mix.tracklist[0]);
-
-      audio.src = PORTAL.mix.audio;
-      audio.load();
+      buildDisplayList();
+      if (displayList.length > 0) selectTrack(displayList[0]);
       updateProgressUI();
-      updateMediaSession();
-
       if (autoplay) playAudio(); else updatePlayState(false);
       revealControls();
     }
@@ -823,9 +834,9 @@
 
       audio.addEventListener("loadedmetadata", updateProgressUI);
       audio.addEventListener("timeupdate",     updateProgressUI);
-      audio.addEventListener("play",   () => updatePlayState(true));
-      audio.addEventListener("pause",  () => updatePlayState(false));
-      audio.addEventListener("ended",  () => updatePlayState(false));
+      audio.addEventListener("play",           () => updatePlayState(true));
+      audio.addEventListener("pause",          () => updatePlayState(false));
+      audio.addEventListener("ended",          () => advanceToNext());
 
       sceneVideo.addEventListener("error", () => {
         if (PORTAL.fallbackVideo && !activeSceneVideoIsFallback) {
@@ -860,6 +871,14 @@
       if (!("mediaSession" in navigator)) return;
       navigator.mediaSession.setActionHandler("play",  playAudio);
       navigator.mediaSession.setActionHandler("pause", () => audio.pause());
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx > 0) selectTrack(displayList[idx - 1]);
+      });
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx < displayList.length - 1) selectTrack(displayList[idx + 1]);
+      });
       navigator.mediaSession.setActionHandler("seekbackward", () => {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
         updateProgressUI();
