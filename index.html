@@ -52,6 +52,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      pointer-events: none;
     }
 
     .scene-poster {
@@ -59,12 +60,12 @@
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-      z-index: -4;
+      z-index: 0;
     }
 
     .scene-video {
       object-fit: cover;
-      z-index: -3;
+      z-index: 1;
       transition: opacity 420ms ease;
     }
 
@@ -79,10 +80,15 @@
     .scene-mask {
       position: fixed;
       inset: 0;
-      z-index: -2;
+      z-index: 2;
       background:
         radial-gradient(circle at 16% 14%, rgba(255, 183, 3, 0.16), transparent 42%),
         linear-gradient(to bottom, rgba(17, 17, 17, 0.23), rgba(17, 17, 17, 0.84));
+    }
+
+    #stage {
+      position: relative;
+      z-index: 10;
     }
 
     .controls {
@@ -257,12 +263,12 @@
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
 
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
-      <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape scene">
+      <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
-      <button id="nextSceneBtn" type="button" class="edge-arrow right ui" aria-label="Next mixtape scene">
+      <button id="nextSceneBtn" type="button" class="edge-arrow right ui" aria-label="Next mixtape">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
           <path d="M9 6l6 6-6 6"></path>
         </svg>
@@ -346,7 +352,7 @@
     // -------------------------------------------------------------
     // PORTAL DATA (single source of truth)
     // -------------------------------------------------------------
-    // Update title/description/audio/video/download/tracklist here.
+    // Update title/description/audio/download/tracklist here.
     const PORTAL = {
       fallbackVideo: "",
       fallbackPoster: "hero-poster.JPG",
@@ -357,7 +363,6 @@
           description: "The first glow over the palm deck as the horizon opens.",
           audio: "mixtape1.mp3",
           download: "mixtape1.mp3",
-          video: "scene-1.mp4",
           tracklist: [
             "01. Artist - Opening Horizon",
             "02. Artist - Palm Rhythm",
@@ -371,7 +376,6 @@
           description: "Dusk settles in while the dancefloor drifts into deeper rhythm.",
           audio: "mixtape2.mp3",
           download: "mixtape2.mp3",
-          video: "scene-2.mp4",
           tracklist: [
             "01. Artist - Blue Lanterns",
             "02. Artist - Deck Conversations",
@@ -385,7 +389,6 @@
           description: "Night wraps the shoreline and the final movement lands softly.",
           audio: "mixtape3.mp3",
           download: "mixtape3.mp3",
-          video: "scene-3.mp4",
           tracklist: [
             "01. Artist - Midnight Palms",
             "02. Artist - Quiet Movement",
@@ -638,8 +641,6 @@
       downloadBtn.download = (mix.download || mix.audio).split("/").pop();
       renderTracklist(mix.tracklist);
 
-      switchSceneVideo(mix.video);
-
       audio.src = mix.audio;
       audio.currentTime = 0;
       audio.load();
@@ -673,11 +674,11 @@
       });
 
       prevSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
       });
 
       nextSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
       });
 
       playPauseBtn.addEventListener("click", () => {
@@ -781,10 +782,10 @@
           updateMuteUI();
         } else if (event.key === "ArrowLeft") {
           event.preventDefault();
-          selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+          selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
         } else if (event.key === "ArrowRight") {
           event.preventDefault();
-          selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+          selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
         } else if (event.key.toLowerCase() === "t") {
           event.preventDefault();
           setTracklistOpen(!tracklistOpen);
@@ -807,15 +808,16 @@
         updateProgressUI();
       });
       navigator.mediaSession.setActionHandler("previoustrack", () => {
-        selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
       });
       navigator.mediaSession.setActionHandler("nexttrack", () => {
-        selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
       });
     }
 
     function init() {
       setScenePoster();
+      switchSceneVideo(PORTAL.fallbackVideo);
       bindEvents();
       initMediaSessionActions();
       updateMuteUI();
