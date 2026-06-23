@@ -109,11 +109,12 @@
     .controls .ui    { pointer-events: auto; }
 
     .glass {
-      backdrop-filter: blur(24px) saturate(160%);
-      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
       background: rgba(23, 23, 25, 0.56);
       border: 1px solid rgba(255, 248, 240, 0.12);
       box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
+      transform: translateZ(0);
     }
 
     .gloss {
@@ -198,6 +199,7 @@
       max-height: 0;
       overflow: hidden;
       transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      contain: paint;
     }
 
     .track-panel.open { max-height: min(34svh, 310px); }
@@ -269,6 +271,8 @@
       font-size: 0.72rem;
       color: rgba(255, 248, 240, 0.58);
       letter-spacing: 0.01em;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
     .marquee-track.scrolling {
@@ -434,20 +438,16 @@
         // ──────────────────────────────────────────────────────────
         tracklist: [
           {
-            title:   "01. Artist Name – Song Title",
-            spotify: "PASTE_SPOTIFY_LINK_HERE",
+            title:   "01. John Summit, Sub Focus, Julia Church – Go Back (feat. Julia Church)",
+            spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
           },
           {
-            title:   "02. Artist Name – Song Title",
-            spotify: "PASTE_SPOTIFY_LINK_HERE",
+            title:   "02. John Summit, Guz, Stevie Appleton – What A Life",
+            spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
           },
           {
-            title:   "03. Artist Name – Song Title",
-            spotify: "PASTE_SPOTIFY_LINK_HERE",
-          },
-          {
-            title:   "04. Artist Name – Song Title",
-            spotify: "PASTE_SPOTIFY_LINK_HERE",
+            title:   "03. deadmau5, Kaskade, John Summit – Remember (John Summit Remix)",
+            spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
           },
         ],
       },
@@ -466,6 +466,7 @@
     let isShuffling        = false;
     let hideTimer          = null;
     let activeTrack        = null;
+    let progressRafPending = false;
 
     let activeSceneVideoPath       = "";
     let activeSceneVideoIsFallback = false;
@@ -558,7 +559,8 @@
       muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     }
 
-    function updateProgressUI() {
+    function _doUpdateProgressUI() {
+      progressRafPending = false;
       const duration = audio.duration;
       const now = audio.currentTime;
       if (!Number.isFinite(duration) || duration <= 0) {
@@ -577,6 +579,12 @@
       progressTrack.setAttribute("aria-valuetext", `${formatTime(now)} of ${formatTime(duration)}`);
       timeEl.textContent = formatTime(now);
       durationEl.textContent = formatTime(duration);
+    }
+
+    function updateProgressUI() {
+      if (progressRafPending) return;
+      progressRafPending = true;
+      requestAnimationFrame(_doUpdateProgressUI);
     }
 
     function seekByClientX(clientX) {
@@ -653,6 +661,7 @@
 
     function refreshMarquee() {
       marqueeTrack.classList.remove("scrolling");
+      marqueeTrack.style.willChange = "";
       nowPlayingClone.classList.add("hidden");
       nowPlayingText.style.paddingRight = "";
       nowPlayingClone.style.paddingRight = "";
@@ -672,6 +681,7 @@
           const spanW = nowPlayingText.offsetWidth;
           const dur   = Math.max(6, spanW / 50);
           marqueeTrack.style.setProperty("--marquee-dur", `${dur}s`);
+          marqueeTrack.style.willChange = "transform";
           marqueeTrack.classList.add("scrolling");
         });
       });
