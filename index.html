@@ -6,7 +6,7 @@
   <title>Vagabond</title>
   <meta
     name="description"
-    content="A minimal Apple-inspired House mixtape portal with cinematic looping scene videos and lightweight persistent audio playback."
+    content="A curated selection of the best tracks for dancing and relaxing on the palm deck."
   />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -69,13 +69,8 @@
       transition: opacity 420ms ease;
     }
 
-    .scene-video.dim {
-      opacity: 0.35;
-    }
-
-    .scene-video.unavailable {
-      opacity: 0;
-    }
+    .scene-video.dim         { opacity: 0.35; }
+    .scene-video.unavailable { opacity: 0; }
 
     .scene-mask {
       position: fixed;
@@ -83,9 +78,9 @@
       z-index: 2;
       background: linear-gradient(
         to bottom,
-        rgba(17, 17, 17, 0.16) 0%,
-        rgba(17, 17, 17, 0.36) 48%,
-        rgba(17, 17, 17, 0.66) 100%
+        rgba(17, 17, 17, 0.08) 0%,
+        rgba(17, 17, 17, 0.28) 52%,
+        rgba(17, 17, 17, 0.62) 100%
       );
     }
 
@@ -94,22 +89,13 @@
       z-index: 10;
     }
 
-    .curator-credit {
-      margin-top: 0.6rem;
-      color: #34ccc4;
-      font-size: clamp(0.72rem, 2.2vw, 0.82rem);
+    .mixer-credit {
+      text-align: center;
+      font-size: 0.68rem;
       font-weight: 500;
-      letter-spacing: 0.01em;
-      line-height: 1.4;
-      text-shadow: 0 0 6px rgba(52, 204, 196, 0.24);
-      opacity: 0.78;
-    }
-
-    @media (min-width: 768px) {
-      .curator-credit {
-        font-size: 0.86rem;
-        opacity: 0.84;
-      }
+      letter-spacing: 0.08em;
+      color: rgba(52, 204, 196, 0.46);
+      margin-bottom: 0.65rem;
     }
 
     .controls {
@@ -118,20 +104,16 @@
       pointer-events: none;
     }
 
-    .controls.hidden {
-      opacity: 0;
-    }
-
-    .controls .ui {
-      pointer-events: auto;
-    }
+    .controls.hidden { opacity: 0; }
+    .controls .ui    { pointer-events: auto; }
 
     .glass {
-      backdrop-filter: blur(24px) saturate(160%);
-      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
       background: rgba(23, 23, 25, 0.56);
       border: 1px solid rgba(255, 248, 240, 0.12);
       box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
+      transform: translateZ(0);
     }
 
     .gloss {
@@ -144,14 +126,8 @@
         border-color 200ms ease;
     }
 
-    .gloss:hover {
-      transform: scale(1.06);
-      border-color: rgba(255, 248, 240, 0.4);
-    }
-
-    .gloss:active {
-      transform: scale(0.94);
-    }
+    .gloss:hover  { transform: scale(1.06); border-color: rgba(255, 248, 240, 0.4); }
+    .gloss:active { transform: scale(0.94); }
 
     .primary-play {
       border-color: rgba(52, 204, 196, 0.58);
@@ -168,38 +144,16 @@
         inset 0 1px 0 rgba(255, 248, 240, 0.2);
     }
 
-    .edge-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 30;
-      width: 44px;
-      height: 56px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid rgba(255, 248, 240, 0.2);
-      background: rgba(17, 17, 17, 0.3);
-      backdrop-filter: blur(14px) saturate(150%);
-      -webkit-backdrop-filter: blur(14px) saturate(150%);
-      color: rgba(255, 248, 240, 0.9);
-      cursor: pointer;
-      transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
+    .shuffle-on {
+      color: #34ccc4;
+      border-color: rgba(52, 204, 196, 0.5) !important;
     }
 
-    .edge-arrow:hover {
-      transform: translateY(-50%) scale(1.06);
-      background: rgba(17, 17, 17, 0.45);
+    .spotify-btn {
+      border-color: rgba(30, 215, 96, 0.42);
+      background: linear-gradient(to bottom, rgba(30, 215, 96, 0.16), rgba(30, 215, 96, 0.06));
     }
-
-    .edge-arrow.left {
-      left: 10px;
-    }
-
-    .edge-arrow.right {
-      right: 10px;
-    }
+    .spotify-btn:hover { border-color: rgba(30, 215, 96, 0.65) !important; }
 
     .progress {
       height: 4px;
@@ -211,9 +165,7 @@
     }
 
     .progress:hover,
-    .progress:focus-visible {
-      height: 6px;
-    }
+    .progress:focus-visible { height: 6px; }
 
     .progress-fill {
       width: 0%;
@@ -244,11 +196,10 @@
       max-height: 0;
       overflow: hidden;
       transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      contain: paint;
     }
 
-    .track-panel.open {
-      max-height: min(34svh, 310px);
-    }
+    .track-panel.open { max-height: min(34svh, 310px); }
 
     .track-scroll {
       max-height: min(27svh, 250px);
@@ -257,24 +208,78 @@
       scrollbar-color: rgba(255, 248, 240, 0.18) transparent;
     }
 
-    .track-scroll::-webkit-scrollbar {
-      width: 8px;
+    .track-scroll::-webkit-scrollbar       { width: 8px; }
+    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
+
+    .track-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 0.5rem;
+      padding: 0.375rem 0.5rem;
+      cursor: pointer;
+      color: rgba(255, 248, 240, 0.7);
+      transition: background 150ms ease, color 150ms ease;
+      user-select: none;
     }
 
-    .track-scroll::-webkit-scrollbar-thumb {
-      background: rgba(255, 248, 240, 0.18);
-      border-radius: 999px;
+    .track-item:hover {
+      background: rgba(255, 248, 240, 0.07);
+      color: rgba(255, 248, 240, 0.9);
     }
 
-    .tnum {
-      font-variant-numeric: tabular-nums;
+    .track-active {
+      background: rgba(52, 204, 196, 0.12);
+      color: rgba(255, 248, 240, 0.97);
+      box-shadow: inset 0 0 0 1px rgba(52, 204, 196, 0.26);
+    }
+
+    .track-spotify-link {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      color: rgba(255, 248, 240, 0.26);
+      text-decoration: none;
+      transition: color 150ms ease, transform 150ms ease;
+    }
+
+    .track-spotify-link:hover {
+      color: rgba(30, 215, 96, 0.85);
+      transform: scale(1.2);
+    }
+
+    .track-active .track-spotify-link {
+      color: rgba(30, 215, 96, 0.48);
+    }
+
+    .tnum { font-variant-numeric: tabular-nums; }
+
+    .marquee-wrap { overflow: hidden; }
+
+    .marquee-track {
+      display: inline-flex;
+      white-space: nowrap;
+      font-size: 0.72rem;
+      color: rgba(255, 248, 240, 0.58);
+      letter-spacing: 0.01em;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .marquee-track.scrolling {
+      animation: marquee-scroll var(--marquee-dur, 14s) linear infinite;
+    }
+
+    .marquee-track.scrolling:hover { animation-play-state: paused; }
+
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -283,10 +288,7 @@
   <video
     id="sceneVideo"
     class="scene-video"
-    autoplay
-    muted
-    loop
-    playsinline
+    autoplay muted loop playsinline
     preload="metadata"
     poster="hero-poster.JPG"
     aria-hidden="true"
@@ -298,32 +300,14 @@
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
 
-    <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
-      <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
-          <path d="M15 6l-6 6 6 6"></path>
-        </svg>
-      </button>
-      <button id="nextSceneBtn" type="button" class="edge-arrow right ui" aria-label="Next mixtape">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
-          <path d="M9 6l6 6-6 6"></path>
-        </svg>
-      </button>
-
-      <header id="mixHeader" class="ui pt-3 text-center">
-        <h1 id="mixHeroTitle" class="text-[clamp(2.2rem,8.4vw,4.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-cream">
-          Vagabond
-        </h1>
-        <p id="mixHeroDescription" class="mx-auto mt-2 max-w-[35ch] text-[0.93rem] leading-relaxed text-cream/72 md:text-[1rem]">
-          The first glow over the palm deck as the horizon opens.
-        </p>
-        <p class="curator-credit">
-          Mixed by Andrew Rios
-        </p>
-      </header>
+    <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
 
       <section class="ui glass mx-0 rounded-3xl p-3 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
+
+        <p class="mixer-credit">Mixed by Andrew Rios</p>
+
         <div class="flex flex-wrap items-center justify-center gap-2">
+
           <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M11 19a7 7 0 1 1 5.57-11.24"></path>
@@ -349,6 +333,16 @@
             </svg>
           </button>
 
+          <button id="shuffleBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M16 3h5v5"></path>
+              <path d="M4 20 21 3"></path>
+              <path d="M21 16v5h-5"></path>
+              <path d="M15 15l5.1 5.1"></path>
+              <path d="M4 4l5 5"></path>
+            </svg>
+          </button>
+
           <button id="tracklistBtn" type="button" class="gloss inline-flex h-10 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
             Tracklist
           </button>
@@ -366,14 +360,28 @@
             </svg>
           </button>
 
-          <a id="downloadBtn" href="#" download class="gloss inline-flex h-10 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em] text-cream no-underline" aria-label="Download current mixtape">
-            Download
+        </div>
+
+        <div class="mt-3 flex items-center gap-2">
+          <div id="marqueeWrap" class="marquee-wrap min-w-0 flex-1">
+            <div id="marqueeTrack" class="marquee-track">
+              <span id="nowPlayingText"></span>
+              <span id="nowPlayingClone" class="hidden" aria-hidden="true"></span>
+            </div>
+          </div>
+          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
+             class="gloss spotify-btn inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+             aria-label="Open in Spotify">
+            <svg viewBox="0 0 24 24" class="h-[15px] w-[15px]" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/>
+            </svg>
           </a>
         </div>
 
         <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
           <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
-          <div id="progressTrack" class="progress" role="slider" tabindex="0" aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progressTrack" class="progress" role="slider" tabindex="0"
+               aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div id="progressFill" class="progress-fill"></div>
             <div id="progressThumb" class="progress-thumb"></div>
           </div>
@@ -381,118 +389,114 @@
         </div>
 
         <div id="trackPanel" class="track-panel mt-3">
-          <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed text-cream/78"></ol>
+          <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed"></ol>
         </div>
+
       </section>
     </div>
   </main>
 
   <script>
-    // -------------------------------------------------------------
-    // PORTAL DATA (single source of truth)
-    // -------------------------------------------------------------
-    // Update title/description/audio/download/tracklist here.
+    // ================================================================
+    //  PORTAL DATA  —  only edit this section
+    // ================================================================
     const PORTAL = {
-      fallbackVideo: "",
+      fallbackVideo:  "",
       fallbackPoster: "hero-poster.JPG",
-      mixtapes: [
-        {
-          id: "mixtape1",
-          title: "Vagabond",
-          description: "The first glow over the palm deck as the horizon opens.",
-          audio: "vagabond-mixtape.mp3",
-          download: "vagabond-mixtape.mp3",
-          tracklist: [
-            "01. Artist - Opening Horizon",
-            "02. Artist - Palm Rhythm",
-            "03. Artist - Warm Current",
-            "04. Artist - Coastal Groove",
-          ],
-        },
-        {
-          id: "mixtape2",
-          title: "Our House",
-          description: "Dusk settles in while the dancefloor drifts into deeper rhythm.",
-          audio: "ourhouse-mixtape.mp3",
-          download: "ourhouse-mixtape.mp3",
-          tracklist: [
-            "01. Artist - Blue Lanterns",
-            "02. Artist - Deck Conversations",
-            "03. Artist - Salt Air",
-            "04. Artist - Night Bloom",
-          ],
-        },
-        {
-          id: "mixtape3",
-          title: "Midnight Reviere",
-          description: "Night wraps the shoreline and the final movement lands softly.",
-          audio: "midnightreviere-mixtape.mp3",
-          download: "midnightreviere-mixtape.mp3",
-          tracklist: [
-            "01. Artist - Midnight Palms",
-            "02. Artist - Quiet Movement",
-            "03. Artist - Sea of Lights",
-            "04. Artist - Closing Embrace",
-          ],
-        },
-      ],
+      mix: {
+        title: "Vagabond",
+
+        // ── TRACKLIST ──────────────────────────────────────────────
+        //
+        //  audio   → filename in your repo. Name your files song1, song2, song3…
+        //            and include the extension: song1.mp3 / song1.flac / song1.aac
+        //            Any format the browser supports works (mp3, aac, flac, m4a, wav).
+        //  title   → text shown in the tracklist and the now-playing marquee
+        //  spotify → in Spotify: right-click a song → Share → Copy link to song
+        //
+        //  • Songs play one after another automatically.
+        //  • Tap a row while playing  → switches to that song immediately.
+        //  • Tap a row while paused   → selects it; press play to start.
+        //  • When shuffled, auto-advance follows the shuffled queue order.
+        //  • Lock-screen previous/next controls skip between tracks.
+        //  • To add a track  → copy any block below and paste it after.
+        //  • To remove a track → delete its { } block and the comma before it.
+        //
+        // ──────────────────────────────────────────────────────────
+        tracklist: [
+          {
+            audio:   "song1.mp3",
+            title:   "01. John Summit, Sub Focus, Julia Church – Go Back (feat. Julia Church)",
+            spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
+          },
+          {
+            audio:   "song2.mp3",
+            title:   "02. John Summit, Guz, Stevie Appleton – What A Life",
+            spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
+          },
+          {
+            audio:   "song3.mp3",
+            title:   "03. deadmau5, Kaskade, John Summit – Remember (John Summit Remix)",
+            spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
+          },
+        ],
+      },
     };
+    // ================================================================
+    //  END OF EDITABLE DATA  —  no need to change anything below
+    // ================================================================
 
     const audio = new Audio();
     audio.preload = "metadata";
 
-    let activeMix = 0;
-    let isPlaying = false;
-    let isScrubbing = false;
+    let isPlaying          = false;
+    let isScrubbing        = false;
     let controlsAreVisible = true;
-    let tracklistOpen = false;
-    let hideTimer = null;
-    let lastDirection = "next";
-    let activeSceneVideoPath = "";
-    let activeSceneVideoIsFallback = false;
-    let isShowingPosterFallback = false;
-    const mixPlaybackPositions = {};
+    let tracklistOpen      = false;
+    let isShuffling        = false;
+    let hideTimer          = null;
+    let activeTrack        = null;
+    let displayList        = [];
+    let progressRafPending = false;
 
-    const scenePoster = document.getElementById("scenePoster");
-    const sceneVideo = document.getElementById("sceneVideo");
-    const sceneVideoSource = document.getElementById("sceneVideoSource");
-    const stage = document.getElementById("stage");
-    const gestureArea = document.getElementById("gestureArea");
-    const controls = document.getElementById("controls");
-    const prevSceneBtn = document.getElementById("prevSceneBtn");
-    const nextSceneBtn = document.getElementById("nextSceneBtn");
-    const mixHeader = document.getElementById("mixHeader");
-    const mixHeroTitle = document.getElementById("mixHeroTitle");
-    const mixHeroDescription = document.getElementById("mixHeroDescription");
-    const rewindBtn = document.getElementById("rewindBtn");
-    const playPauseBtn = document.getElementById("playPauseBtn");
-    const iconPlay = document.getElementById("iconPlay");
-    const iconPause = document.getElementById("iconPause");
-    const forwardBtn = document.getElementById("forwardBtn");
-    const tracklistBtn = document.getElementById("tracklistBtn");
-    const muteBtn = document.getElementById("muteBtn");
-    const iconVol = document.getElementById("iconVol");
-    const iconMuted = document.getElementById("iconMuted");
-    const downloadBtn = document.getElementById("downloadBtn");
-    const progressTrack = document.getElementById("progressTrack");
-    const progressFill = document.getElementById("progressFill");
-    const progressThumb = document.getElementById("progressThumb");
-    const timeEl = document.getElementById("timeEl");
-    const durationEl = document.getElementById("durationEl");
-    const trackPanel = document.getElementById("trackPanel");
-    const trackList = document.getElementById("trackList");
+    let activeSceneVideoPath       = "";
+    let activeSceneVideoIsFallback = false;
+    let isShowingPosterFallback    = false;
+
+    const scenePoster        = document.getElementById("scenePoster");
+    const sceneVideo         = document.getElementById("sceneVideo");
+    const sceneVideoSource   = document.getElementById("sceneVideoSource");
+    const stage              = document.getElementById("stage");
+    const gestureArea        = document.getElementById("gestureArea");
+    const controls           = document.getElementById("controls");
+    const rewindBtn          = document.getElementById("rewindBtn");
+    const playPauseBtn       = document.getElementById("playPauseBtn");
+    const iconPlay           = document.getElementById("iconPlay");
+    const iconPause          = document.getElementById("iconPause");
+    const forwardBtn         = document.getElementById("forwardBtn");
+    const shuffleBtn         = document.getElementById("shuffleBtn");
+    const tracklistBtn       = document.getElementById("tracklistBtn");
+    const muteBtn            = document.getElementById("muteBtn");
+    const iconVol            = document.getElementById("iconVol");
+    const iconMuted          = document.getElementById("iconMuted");
+    const spotifyBtn         = document.getElementById("spotifyBtn");
+    const marqueeWrap        = document.getElementById("marqueeWrap");
+    const marqueeTrack       = document.getElementById("marqueeTrack");
+    const nowPlayingText     = document.getElementById("nowPlayingText");
+    const nowPlayingClone    = document.getElementById("nowPlayingClone");
+    const progressTrack      = document.getElementById("progressTrack");
+    const progressFill       = document.getElementById("progressFill");
+    const progressThumb      = document.getElementById("progressThumb");
+    const timeEl             = document.getElementById("timeEl");
+    const durationEl         = document.getElementById("durationEl");
+    const trackPanel         = document.getElementById("trackPanel");
+    const trackList          = document.getElementById("trackList");
 
     function formatTime(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
       const m = Math.floor(seconds / 60);
       const s = Math.floor(seconds % 60);
       return `${m}:${String(s).padStart(2, "0")}`;
-    }
-
-    function normalizeMixIndex(index) {
-      const len = PORTAL.mixtapes.length;
-      if (!len) return 0;
-      return ((index % len) + len) % len;
     }
 
     function clearHideTimer() {
@@ -509,9 +513,7 @@
     function scheduleAutoHide() {
       clearHideTimer();
       if (!isPlaying || tracklistOpen) return;
-      hideTimer = window.setTimeout(() => {
-        setControlsVisible(false);
-      }, 1800);
+      hideTimer = window.setTimeout(() => setControlsVisible(false), 1800);
     }
 
     function revealControls() {
@@ -524,11 +526,7 @@
       trackPanel.classList.toggle("open", open);
       tracklistBtn.setAttribute("aria-expanded", String(open));
       tracklistBtn.textContent = open ? "Hide List" : "Tracklist";
-      if (open) {
-        revealControls();
-      } else {
-        scheduleAutoHide();
-      }
+      if (open) revealControls(); else scheduleAutoHide();
     }
 
     function updatePlayState(playing) {
@@ -542,7 +540,7 @@
         clearHideTimer();
         setControlsVisible(true);
       }
-      updateMediaSession(PORTAL.mixtapes[activeMix]);
+      updateMediaSession();
     }
 
     function updateMuteUI() {
@@ -552,7 +550,8 @@
       muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     }
 
-    function updateProgressUI() {
+    function _doUpdateProgressUI() {
+      progressRafPending = false;
       const duration = audio.duration;
       const now = audio.currentTime;
       if (!Number.isFinite(duration) || duration <= 0) {
@@ -573,6 +572,12 @@
       durationEl.textContent = formatTime(duration);
     }
 
+    function updateProgressUI() {
+      if (progressRafPending) return;
+      progressRafPending = true;
+      requestAnimationFrame(_doUpdateProgressUI);
+    }
+
     function seekByClientX(clientX) {
       if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
       const rect = progressTrack.getBoundingClientRect();
@@ -581,46 +586,113 @@
       updateProgressUI();
     }
 
-    function renderTracklist(items) {
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function buildDisplayList() {
+      displayList = isShuffling
+        ? shuffleArray(PORTAL.mix.tracklist)
+        : [...PORTAL.mix.tracklist];
+    }
+
+    function spotifyHref(track) {
+      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
+        ? track.spotify
+        : "#";
+    }
+
+    function renderTracklist() {
       trackList.innerHTML = "";
-      items.forEach((track) => {
+      displayList.forEach((track) => {
         const li = document.createElement("li");
-        li.className = "rounded-lg bg-cream/[0.04] px-2 py-1.5";
-        li.textContent = track;
+        li.className = "track-item" + (track === activeTrack ? " track-active" : "");
+        li.addEventListener("click", () => selectTrack(track));
+
+        const titleSpan = document.createElement("span");
+        titleSpan.className = "flex-1 min-w-0 truncate";
+        titleSpan.textContent = track.title;
+        li.appendChild(titleSpan);
+
+        const link = document.createElement("a");
+        link.href = spotifyHref(track);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.className = "track-spotify-link";
+        link.setAttribute("aria-label", "Open in Spotify");
+        link.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/></svg>`;
+        link.addEventListener("click", (e) => e.stopPropagation());
+        li.appendChild(link);
+
         trackList.appendChild(li);
       });
     }
 
-    function rememberActiveMixPosition() {
-      const mix = PORTAL.mixtapes[activeMix];
-      if (!mix || !Number.isFinite(audio.currentTime)) return;
+    function selectTrack(track, forcePlay = false) {
+      const wasPlaying = !audio.paused;
+      activeTrack = track;
 
-      const duration = audio.duration;
-      mixPlaybackPositions[mix.id] = Number.isFinite(duration) && duration > 0 && audio.currentTime >= duration - 0.5
-        ? 0
-        : audio.currentTime;
+      audio.src = track.audio;
+      audio.load();
+
+      nowPlayingText.textContent = track.title;
+      spotifyBtn.href = spotifyHref(track);
+      refreshMarquee();
+      renderTracklist();
+      updateMediaSession();
+
+      if (wasPlaying || forcePlay) playAudio();
     }
 
-    function restoreMixPosition(mix) {
-      const savedTime = mixPlaybackPositions[mix.id] || 0;
-      if (!savedTime) {
-        updateProgressUI();
-        return;
-      }
-
-      const applySavedTime = () => {
-        const duration = audio.duration;
-        audio.currentTime = Number.isFinite(duration) && duration > 0
-          ? Math.min(savedTime, Math.max(0, duration - 0.25))
-          : savedTime;
-        updateProgressUI();
-      };
-
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        applySavedTime();
+    function advanceToNext() {
+      const idx = displayList.indexOf(activeTrack);
+      if (idx >= 0 && idx < displayList.length - 1) {
+        selectTrack(displayList[idx + 1], true);
       } else {
-        audio.addEventListener("loadedmetadata", applySavedTime, { once: true });
+        updatePlayState(false);
       }
+    }
+
+    function setShuffling(active) {
+      isShuffling = active;
+      shuffleBtn.setAttribute("aria-pressed", String(active));
+      shuffleBtn.classList.toggle("shuffle-on", active);
+      buildDisplayList();
+      renderTracklist();
+      revealControls();
+    }
+
+    function refreshMarquee() {
+      marqueeTrack.classList.remove("scrolling");
+      marqueeTrack.style.willChange = "";
+      nowPlayingClone.classList.add("hidden");
+      nowPlayingText.style.paddingRight = "";
+      nowPlayingClone.style.paddingRight = "";
+
+      requestAnimationFrame(() => {
+        const wrapW = marqueeWrap.offsetWidth;
+        const rawW  = nowPlayingText.offsetWidth;
+        if (rawW <= wrapW) return;
+
+        const GAP = 56;
+        nowPlayingText.style.paddingRight = `${GAP}px`;
+        nowPlayingClone.textContent = nowPlayingText.textContent;
+        nowPlayingClone.style.paddingRight = `${GAP}px`;
+        nowPlayingClone.classList.remove("hidden");
+
+        requestAnimationFrame(() => {
+          const spanW = nowPlayingText.offsetWidth;
+          const dur   = Math.max(6, spanW / 50);
+          marqueeTrack.style.setProperty("--marquee-dur", `${dur}s`);
+          marqueeTrack.style.willChange = "transform";
+          marqueeTrack.classList.add("scrolling");
+        });
+      });
     }
 
     function setScenePoster() {
@@ -629,30 +701,24 @@
     }
 
     function showPosterFallback() {
-      const wasShowingPosterFallback = isShowingPosterFallback;
       activeSceneVideoPath = "";
       activeSceneVideoIsFallback = false;
       isShowingPosterFallback = true;
       sceneVideo.classList.remove("dim");
       sceneVideo.classList.add("unavailable");
-      if (!wasShowingPosterFallback) {
-        sceneVideo.pause();
-        sceneVideoSource.removeAttribute("src");
-        sceneVideo.load();
-      }
+      sceneVideo.pause();
+      sceneVideoSource.removeAttribute("src");
+      sceneVideo.load();
     }
 
     function switchSceneVideo(videoPath, options = {}) {
       const { isFallbackVideo = false } = options;
       const target = videoPath || PORTAL.fallbackVideo;
-      if (!target) {
-        showPosterFallback();
-        return;
-      }
+      if (!target) { showPosterFallback(); return; }
       if (activeSceneVideoPath === target && !isShowingPosterFallback) return;
 
       activeSceneVideoPath = target;
-      activeSceneVideoIsFallback = isFallbackVideo || (!videoPath && target === PORTAL.fallbackVideo);
+      activeSceneVideoIsFallback = isFallbackVideo;
       isShowingPosterFallback = false;
       sceneVideo.classList.add("dim");
       sceneVideo.classList.remove("unavailable");
@@ -667,65 +733,31 @@
       }, 140);
     }
 
-    function updateMediaSession(mixtape) {
-      if (!("mediaSession" in navigator) || !mixtape) return;
+    function updateMediaSession() {
+      if (!("mediaSession" in navigator)) return;
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: mixtape.title,
-        artist: "Andrew",
-        album: "Palm Deck House",
+        title:  activeTrack ? activeTrack.title : PORTAL.mix.title,
+        artist: "Mixed by Andrew Rios",
+        album:  PORTAL.mix.title,
       });
       navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
     }
 
     async function playAudio() {
-      try {
-        await audio.play();
-        updatePlayState(true);
-      } catch (_error) {
-        updatePlayState(false);
-      }
+      try { await audio.play(); updatePlayState(true); }
+      catch (_) { updatePlayState(false); }
     }
 
     function togglePlayPause() {
-      if (audio.paused) {
-        playAudio();
-      } else {
-        audio.pause();
-      }
+      if (audio.paused) playAudio(); else audio.pause();
     }
 
-    function selectMixtape(index, options = {}) {
-      const {
-        autoplay = true,
-        direction = "next",
-      } = options;
-      const nextIndex = normalizeMixIndex(index);
-      const mix = PORTAL.mixtapes[nextIndex];
-      if (!mix) return;
-
-      rememberActiveMixPosition();
-      activeMix = nextIndex;
-      lastDirection = direction;
-
-      mixHeroTitle.textContent = mix.title;
-      mixHeroDescription.textContent = mix.description;
-      document.title = mix.title;
-      downloadBtn.href = mix.download || mix.audio;
-      downloadBtn.download = (mix.download || mix.audio).split("/").pop();
-      renderTracklist(mix.tracklist);
-
-      audio.src = mix.audio;
-      audio.load();
-      restoreMixPosition(mix);
+    function initMix(autoplay = false) {
+      document.title = PORTAL.mix.title;
+      buildDisplayList();
+      if (displayList.length > 0) selectTrack(displayList[0]);
       updateProgressUI();
-      updateMediaSession(mix);
-
-      if (autoplay) {
-        playAudio();
-      } else {
-        updatePlayState(false);
-      }
-
+      if (autoplay) playAudio(); else updatePlayState(false);
       revealControls();
     }
 
@@ -746,18 +778,7 @@
         if (isPlaying) scheduleAutoHide();
       });
 
-      prevSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
-      });
-
-      nextSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
-      });
-
-      playPauseBtn.addEventListener("click", () => {
-        togglePlayPause();
-        revealControls();
-      });
+      playPauseBtn.addEventListener("click", () => { togglePlayPause(); revealControls(); });
 
       rewindBtn.addEventListener("click", () => {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
@@ -772,9 +793,9 @@
         revealControls();
       });
 
-      tracklistBtn.addEventListener("click", () => {
-        setTracklistOpen(!tracklistOpen);
-      });
+      shuffleBtn.addEventListener("click", () => setShuffling(!isShuffling));
+
+      tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
 
       muteBtn.addEventListener("click", () => {
         audio.muted = !audio.muted;
@@ -782,102 +803,75 @@
         revealControls();
       });
 
-      downloadBtn.addEventListener("click", () => {
-        revealControls();
-      });
+      spotifyBtn.addEventListener("click", () => revealControls());
 
-      progressTrack.addEventListener("pointerdown", (event) => {
+      progressTrack.addEventListener("pointerdown", (e) => {
         isScrubbing = true;
-        seekByClientX(event.clientX);
-        progressTrack.setPointerCapture(event.pointerId);
+        seekByClientX(e.clientX);
+        progressTrack.setPointerCapture(e.pointerId);
       });
-
-      progressTrack.addEventListener("pointermove", (event) => {
-        if (!isScrubbing) return;
-        seekByClientX(event.clientX);
+      progressTrack.addEventListener("pointermove", (e) => {
+        if (isScrubbing) seekByClientX(e.clientX);
       });
+      progressTrack.addEventListener("pointerup", () => { isScrubbing = false; });
 
-      progressTrack.addEventListener("pointerup", () => {
-        isScrubbing = false;
-      });
-
-      progressTrack.addEventListener("keydown", (event) => {
+      progressTrack.addEventListener("keydown", (e) => {
         if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
         const step = Math.max(1, audio.duration * 0.02);
-        if (event.key === "ArrowLeft") {
-          event.preventDefault();
-          audio.currentTime = Math.max(0, audio.currentTime - step);
-        } else if (event.key === "ArrowRight") {
-          event.preventDefault();
-          audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
-        } else if (event.key === "Home") {
-          event.preventDefault();
-          audio.currentTime = 0;
-        } else if (event.key === "End") {
-          event.preventDefault();
-          audio.currentTime = audio.duration;
-        }
+        if (e.key === "ArrowLeft")       { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); audio.currentTime = Math.min(audio.duration, audio.currentTime + step); }
+        else if (e.key === "Home")       { e.preventDefault(); audio.currentTime = 0; }
+        else if (e.key === "End")        { e.preventDefault(); audio.currentTime = audio.duration; }
         updateProgressUI();
       });
 
       audio.addEventListener("loadedmetadata", updateProgressUI);
-      audio.addEventListener("timeupdate", () => {
-        rememberActiveMixPosition();
-        updateProgressUI();
-      });
-      audio.addEventListener("play", () => updatePlayState(true));
-      audio.addEventListener("pause", () => updatePlayState(false));
-      audio.addEventListener("ended", () => {
-        const mix = PORTAL.mixtapes[activeMix];
-        if (mix) mixPlaybackPositions[mix.id] = 0;
-        updatePlayState(false);
-      });
+      audio.addEventListener("timeupdate",     updateProgressUI);
+      audio.addEventListener("play",           () => updatePlayState(true));
+      audio.addEventListener("pause",          () => updatePlayState(false));
+      audio.addEventListener("ended",          () => advanceToNext());
 
       sceneVideo.addEventListener("error", () => {
         if (PORTAL.fallbackVideo && !activeSceneVideoIsFallback) {
           switchSceneVideo(PORTAL.fallbackVideo, { isFallbackVideo: true });
-          return;
+        } else {
+          showPosterFallback();
         }
-        showPosterFallback();
       });
 
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-          // Keep audio running, pause visual decode for lower memory.
           sceneVideo.pause();
         } else if (!isShowingPosterFallback && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.play().catch(() => {});
         }
       });
 
-      document.addEventListener("keydown", (event) => {
-        const inInput = event.target.closest("input, textarea, select, [contenteditable], button, a");
+      document.addEventListener("keydown", (e) => {
+        const inInput = e.target.closest("input, textarea, select, [contenteditable], button, a");
         if (inInput) return;
-        if (event.key === " ") {
-          event.preventDefault();
-          togglePlayPause();
-        } else if (event.key.toLowerCase() === "m") {
-          event.preventDefault();
-          audio.muted = !audio.muted;
-          updateMuteUI();
-        } else if (event.key === "ArrowLeft") {
-          event.preventDefault();
-          selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
-        } else if (event.key === "ArrowRight") {
-          event.preventDefault();
-          selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
-        } else if (event.key.toLowerCase() === "t") {
-          event.preventDefault();
-          setTracklistOpen(!tracklistOpen);
-        }
+        if (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
+        else if (e.key.toLowerCase() === "m") { e.preventDefault(); audio.muted = !audio.muted; updateMuteUI(); }
+        else if (e.key.toLowerCase() === "s") { e.preventDefault(); setShuffling(!isShuffling); }
+        else if (e.key.toLowerCase() === "t") { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
         revealControls();
       });
+
+      window.addEventListener("resize", refreshMarquee);
     }
 
     function initMediaSessionActions() {
       if (!("mediaSession" in navigator)) return;
-      navigator.mediaSession.setActionHandler("play", playAudio);
+      navigator.mediaSession.setActionHandler("play",  playAudio);
       navigator.mediaSession.setActionHandler("pause", () => audio.pause());
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx > 0) selectTrack(displayList[idx - 1]);
+      });
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx < displayList.length - 1) selectTrack(displayList[idx + 1]);
+      });
       navigator.mediaSession.setActionHandler("seekbackward", () => {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
         updateProgressUI();
@@ -887,12 +881,6 @@
         audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
         updateProgressUI();
       });
-      navigator.mediaSession.setActionHandler("previoustrack", () => {
-        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
-      });
-      navigator.mediaSession.setActionHandler("nexttrack", () => {
-        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
-      });
     }
 
     function init() {
@@ -901,7 +889,7 @@
       bindEvents();
       initMediaSessionActions();
       updateMuteUI();
-      selectMixtape(0, { autoplay: false, direction: lastDirection });
+      initMix(false);
       setTracklistOpen(false);
       setControlsVisible(true);
     }
