@@ -69,13 +69,8 @@
       transition: opacity 420ms ease;
     }
 
-    .scene-video.dim {
-      opacity: 0.35;
-    }
-
-    .scene-video.unavailable {
-      opacity: 0;
-    }
+    .scene-video.dim      { opacity: 0.35; }
+    .scene-video.unavailable { opacity: 0; }
 
     .scene-mask {
       position: fixed;
@@ -106,10 +101,7 @@
     }
 
     @media (min-width: 768px) {
-      .curator-credit {
-        font-size: 0.86rem;
-        opacity: 0.84;
-      }
+      .curator-credit { font-size: 0.86rem; opacity: 0.84; }
     }
 
     .controls {
@@ -118,13 +110,8 @@
       pointer-events: none;
     }
 
-    .controls.hidden {
-      opacity: 0;
-    }
-
-    .controls .ui {
-      pointer-events: auto;
-    }
+    .controls.hidden { opacity: 0; }
+    .controls .ui    { pointer-events: auto; }
 
     .glass {
       backdrop-filter: blur(24px) saturate(160%);
@@ -144,14 +131,8 @@
         border-color 200ms ease;
     }
 
-    .gloss:hover {
-      transform: scale(1.06);
-      border-color: rgba(255, 248, 240, 0.4);
-    }
-
-    .gloss:active {
-      transform: scale(0.94);
-    }
+    .gloss:hover  { transform: scale(1.06); border-color: rgba(255, 248, 240, 0.4); }
+    .gloss:active { transform: scale(0.94); }
 
     .primary-play {
       border-color: rgba(52, 204, 196, 0.58);
@@ -168,18 +149,17 @@
         inset 0 1px 0 rgba(255, 248, 240, 0.2);
     }
 
-    /* Shuffle active: teal tint matching the play button accent */
+    /* Shuffle button — glows teal when active */
     .shuffle-on {
       color: #34ccc4;
       border-color: rgba(52, 204, 196, 0.5) !important;
     }
 
-    /* Spotify button: Spotify-green tint */
+    /* Spotify button — subtle Spotify-green tint */
     .spotify-btn {
       border-color: rgba(30, 215, 96, 0.42);
       background: linear-gradient(to bottom, rgba(30, 215, 96, 0.16), rgba(30, 215, 96, 0.06));
     }
-
     .spotify-btn:hover {
       border-color: rgba(30, 215, 96, 0.65) !important;
     }
@@ -194,9 +174,7 @@
     }
 
     .progress:hover,
-    .progress:focus-visible {
-      height: 6px;
-    }
+    .progress:focus-visible { height: 6px; }
 
     .progress-fill {
       width: 0%;
@@ -229,9 +207,7 @@
       transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .track-panel.open {
-      max-height: min(34svh, 310px);
-    }
+    .track-panel.open { max-height: min(34svh, 310px); }
 
     .track-scroll {
       max-height: min(27svh, 250px);
@@ -240,23 +216,35 @@
       scrollbar-color: rgba(255, 248, 240, 0.18) transparent;
     }
 
-    .track-scroll::-webkit-scrollbar {
-      width: 8px;
+    .track-scroll::-webkit-scrollbar       { width: 8px; }
+    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
+
+    /* Track list items */
+    .track-item {
+      border-radius: 0.5rem;
+      padding: 0.375rem 0.5rem;
+      cursor: pointer;
+      color: rgba(255, 248, 240, 0.7);
+      transition: background 150ms ease, color 150ms ease;
+      user-select: none;
     }
 
-    .track-scroll::-webkit-scrollbar-thumb {
-      background: rgba(255, 248, 240, 0.18);
-      border-radius: 999px;
+    .track-item:hover {
+      background: rgba(255, 248, 240, 0.07);
+      color: rgba(255, 248, 240, 0.9);
     }
 
-    .tnum {
-      font-variant-numeric: tabular-nums;
+    /* Selected track — teal highlight */
+    .track-active {
+      background: rgba(52, 204, 196, 0.12);
+      color: rgba(255, 248, 240, 0.97);
+      box-shadow: inset 0 0 0 1px rgba(52, 204, 196, 0.26);
     }
+
+    .tnum { font-variant-numeric: tabular-nums; }
 
     /* Now-playing marquee */
-    .marquee-wrap {
-      overflow: hidden;
-    }
+    .marquee-wrap  { overflow: hidden; }
 
     .marquee-track {
       display: inline-flex;
@@ -270,9 +258,7 @@
       animation: marquee-scroll var(--marquee-dur, 14s) linear infinite;
     }
 
-    .marquee-track.scrolling:hover {
-      animation-play-state: paused;
-    }
+    .marquee-track.scrolling:hover { animation-play-state: paused; }
 
     @keyframes marquee-scroll {
       from { transform: translateX(0); }
@@ -280,10 +266,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
@@ -292,10 +275,7 @@
   <video
     id="sceneVideo"
     class="scene-video"
-    autoplay
-    muted
-    loop
-    playsinline
+    autoplay muted loop playsinline
     preload="metadata"
     poster="hero-poster.JPG"
     aria-hidden="true"
@@ -309,22 +289,21 @@
 
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
 
-      <header id="mixHeader" class="ui pt-3 text-center">
+      <header class="ui pt-3 text-center">
         <h1 id="mixHeroTitle" class="text-[clamp(2.2rem,8.4vw,4.6rem)] font-semibold leading-[0.95] tracking-[-0.03em] text-cream">
           Vagabond
         </h1>
         <p id="mixHeroDescription" class="mx-auto mt-2 max-w-[35ch] text-[0.93rem] leading-relaxed text-cream/72 md:text-[1rem]">
           The first glow over the palm deck as the horizon opens.
         </p>
-        <p class="curator-credit">
-          Mixed by Andrew Rios
-        </p>
+        <p class="curator-credit">Mixed by Andrew Rios</p>
       </header>
 
       <section class="ui glass mx-0 rounded-3xl p-3 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
 
-        <!-- Playback controls -->
+        <!-- Playback buttons: Rewind · Play · Forward · Shuffle · Tracklist · Mute -->
         <div class="flex flex-wrap items-center justify-center gap-2">
+
           <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M11 19a7 7 0 1 1 5.57-11.24"></path>
@@ -376,9 +355,12 @@
               <path d="M15 9l4 6"></path>
             </svg>
           </button>
+
         </div>
 
-        <!-- Now playing + Spotify -->
+        <!-- Now-playing marquee + Spotify button -->
+        <!-- The marquee shows whichever track is selected in the tracklist.  -->
+        <!-- The Spotify button opens that track's link.                      -->
         <div class="mt-3 flex items-center gap-2">
           <div id="marqueeWrap" class="marquee-wrap min-w-0 flex-1">
             <div id="marqueeTrack" class="marquee-track">
@@ -386,7 +368,9 @@
               <span id="nowPlayingClone" class="hidden" aria-hidden="true"></span>
             </div>
           </div>
-          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer" class="gloss spotify-btn inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-label="Open in Spotify">
+          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
+             class="gloss spotify-btn inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+             aria-label="Open in Spotify">
             <svg viewBox="0 0 24 24" class="h-[15px] w-[15px]" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/>
             </svg>
@@ -396,87 +380,120 @@
         <!-- Progress bar -->
         <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
           <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
-          <div id="progressTrack" class="progress" role="slider" tabindex="0" aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progressTrack" class="progress" role="slider" tabindex="0"
+               aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div id="progressFill" class="progress-fill"></div>
             <div id="progressThumb" class="progress-thumb"></div>
           </div>
           <span id="durationEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
         </div>
 
-        <!-- Tracklist panel -->
+        <!-- Tracklist panel — tap a track to select it, then hit the Spotify button -->
         <div id="trackPanel" class="track-panel mt-3">
-          <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed text-cream/78"></ol>
+          <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed"></ol>
         </div>
+
       </section>
     </div>
   </main>
 
   <script>
-    // ---------------------------------------------------------------
-    // PORTAL DATA — update audio, tracklist, nowPlaying, and spotify here
-    // ---------------------------------------------------------------
+    // ================================================================
+    //  PORTAL DATA  —  this is the only section you need to edit
+    // ================================================================
     const PORTAL = {
-      fallbackVideo: "",
+      fallbackVideo:  "",
       fallbackPoster: "hero-poster.JPG",
       mix: {
-        id: "vagabond",
-        title: "Vagabond",
+        title:       "Vagabond",
         description: "The first glow over the palm deck as the horizon opens.",
-        audio: "vagabond-mixtape.mp3",
-        nowPlaying: "Vagabond · Mixed by Andrew Rios",
-        spotify: "#",
+        audio:       "vagabond-mixtape.mp3",
+
+        // ── TRACKLIST ──────────────────────────────────────────────
+        //
+        //  For each track fill in:
+        //    title   → the name you want displayed
+        //    spotify → open Spotify, right-click a song,
+        //              Share → "Copy link to song", paste it here
+        //
+        //  • The order here = the order shown in the tracklist.
+        //  • Tap a track to select it; the Spotify button then
+        //    opens that exact song.
+        //  • Shuffle reorders the display but never changes these
+        //    entries — the selected track stays highlighted.
+        //  • To add a track: copy any block and paste it after.
+        //  • To remove a track: delete its { } block and its comma.
+        //
+        // ──────────────────────────────────────────────────────────
         tracklist: [
-          "01. Artist - Opening Horizon",
-          "02. Artist - Palm Rhythm",
-          "03. Artist - Warm Current",
-          "04. Artist - Coastal Groove",
+          {
+            title:   "01. Artist Name – Song Title",
+            spotify: "PASTE_SPOTIFY_LINK_HERE",
+          },
+          {
+            title:   "02. Artist Name – Song Title",
+            spotify: "PASTE_SPOTIFY_LINK_HERE",
+          },
+          {
+            title:   "03. Artist Name – Song Title",
+            spotify: "PASTE_SPOTIFY_LINK_HERE",
+          },
+          {
+            title:   "04. Artist Name – Song Title",
+            spotify: "PASTE_SPOTIFY_LINK_HERE",
+          },
         ],
       },
     };
+    // ================================================================
+    //  END OF EDITABLE DATA  —  no need to change anything below
+    // ================================================================
 
     const audio = new Audio();
     audio.preload = "metadata";
 
-    let isPlaying = false;
-    let isScrubbing = false;
+    let isPlaying          = false;
+    let isScrubbing        = false;
     let controlsAreVisible = true;
-    let tracklistOpen = false;
-    let isShuffling = false;
-    let hideTimer = null;
-    let activeSceneVideoPath = "";
-    let activeSceneVideoIsFallback = false;
-    let isShowingPosterFallback = false;
+    let tracklistOpen      = false;
+    let isShuffling        = false;
+    let hideTimer          = null;
+    let activeTrack        = null;
 
-    const scenePoster    = document.getElementById("scenePoster");
-    const sceneVideo     = document.getElementById("sceneVideo");
-    const sceneVideoSource = document.getElementById("sceneVideoSource");
-    const stage          = document.getElementById("stage");
-    const gestureArea    = document.getElementById("gestureArea");
-    const controls       = document.getElementById("controls");
-    const mixHeroTitle   = document.getElementById("mixHeroTitle");
+    let activeSceneVideoPath      = "";
+    let activeSceneVideoIsFallback = false;
+    let isShowingPosterFallback    = false;
+
+    const scenePoster       = document.getElementById("scenePoster");
+    const sceneVideo        = document.getElementById("sceneVideo");
+    const sceneVideoSource  = document.getElementById("sceneVideoSource");
+    const stage             = document.getElementById("stage");
+    const gestureArea       = document.getElementById("gestureArea");
+    const controls          = document.getElementById("controls");
+    const mixHeroTitle      = document.getElementById("mixHeroTitle");
     const mixHeroDescription = document.getElementById("mixHeroDescription");
-    const rewindBtn      = document.getElementById("rewindBtn");
-    const playPauseBtn   = document.getElementById("playPauseBtn");
-    const iconPlay       = document.getElementById("iconPlay");
-    const iconPause      = document.getElementById("iconPause");
-    const forwardBtn     = document.getElementById("forwardBtn");
-    const shuffleBtn     = document.getElementById("shuffleBtn");
-    const tracklistBtn   = document.getElementById("tracklistBtn");
-    const muteBtn        = document.getElementById("muteBtn");
-    const iconVol        = document.getElementById("iconVol");
-    const iconMuted      = document.getElementById("iconMuted");
-    const spotifyBtn     = document.getElementById("spotifyBtn");
-    const marqueeWrap    = document.getElementById("marqueeWrap");
-    const marqueeTrack   = document.getElementById("marqueeTrack");
-    const nowPlayingText = document.getElementById("nowPlayingText");
-    const nowPlayingClone = document.getElementById("nowPlayingClone");
-    const progressTrack  = document.getElementById("progressTrack");
-    const progressFill   = document.getElementById("progressFill");
-    const progressThumb  = document.getElementById("progressThumb");
-    const timeEl         = document.getElementById("timeEl");
-    const durationEl     = document.getElementById("durationEl");
-    const trackPanel     = document.getElementById("trackPanel");
-    const trackList      = document.getElementById("trackList");
+    const rewindBtn         = document.getElementById("rewindBtn");
+    const playPauseBtn      = document.getElementById("playPauseBtn");
+    const iconPlay          = document.getElementById("iconPlay");
+    const iconPause         = document.getElementById("iconPause");
+    const forwardBtn        = document.getElementById("forwardBtn");
+    const shuffleBtn        = document.getElementById("shuffleBtn");
+    const tracklistBtn      = document.getElementById("tracklistBtn");
+    const muteBtn           = document.getElementById("muteBtn");
+    const iconVol           = document.getElementById("iconVol");
+    const iconMuted         = document.getElementById("iconMuted");
+    const spotifyBtn        = document.getElementById("spotifyBtn");
+    const marqueeWrap       = document.getElementById("marqueeWrap");
+    const marqueeTrack      = document.getElementById("marqueeTrack");
+    const nowPlayingText    = document.getElementById("nowPlayingText");
+    const nowPlayingClone   = document.getElementById("nowPlayingClone");
+    const progressTrack     = document.getElementById("progressTrack");
+    const progressFill      = document.getElementById("progressFill");
+    const progressThumb     = document.getElementById("progressThumb");
+    const timeEl            = document.getElementById("timeEl");
+    const durationEl        = document.getElementById("durationEl");
+    const trackPanel        = document.getElementById("trackPanel");
+    const trackList         = document.getElementById("trackList");
 
     function formatTime(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
@@ -574,17 +591,31 @@
       return copy;
     }
 
+    // Render the tracklist. Active track stays highlighted across shuffles.
     function renderTracklist() {
-      const items = isShuffling
+      const source = isShuffling
         ? shuffleArray(PORTAL.mix.tracklist)
         : PORTAL.mix.tracklist;
+
       trackList.innerHTML = "";
-      items.forEach((track) => {
+      source.forEach((track) => {
         const li = document.createElement("li");
-        li.className = "rounded-lg bg-cream/[0.04] px-2 py-1.5";
-        li.textContent = track;
+        li.className = "track-item" + (track === activeTrack ? " track-active" : "");
+        li.textContent = track.title;
+        li.addEventListener("click", () => selectTrack(track));
         trackList.appendChild(li);
       });
+    }
+
+    // Select a track: update the marquee, the Spotify button, and the highlight.
+    function selectTrack(track) {
+      activeTrack = track;
+      nowPlayingText.textContent = track.title;
+      spotifyBtn.href = track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
+        ? track.spotify
+        : "#";
+      refreshMarquee();
+      renderTracklist();
     }
 
     function setShuffling(active) {
@@ -603,7 +634,7 @@
 
       requestAnimationFrame(() => {
         const wrapW = marqueeWrap.offsetWidth;
-        const rawW = nowPlayingText.offsetWidth;
+        const rawW  = nowPlayingText.offsetWidth;
         if (rawW <= wrapW) return;
 
         const GAP = 56;
@@ -613,8 +644,8 @@
         nowPlayingClone.classList.remove("hidden");
 
         requestAnimationFrame(() => {
-          const spanW = nowPlayingText.offsetWidth; // text + GAP
-          const dur = Math.max(6, spanW / 50);      // 50 px/s
+          const spanW = nowPlayingText.offsetWidth;
+          const dur   = Math.max(6, spanW / 50);
           marqueeTrack.style.setProperty("--marquee-dur", `${dur}s`);
           marqueeTrack.classList.add("scrolling");
         });
@@ -662,20 +693,16 @@
     function updateMediaSession() {
       if (!("mediaSession" in navigator)) return;
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: PORTAL.mix.title,
+        title:  PORTAL.mix.title,
         artist: "Andrew Rios",
-        album: "Palm Deck House",
+        album:  "Palm Deck House",
       });
       navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
     }
 
     async function playAudio() {
-      try {
-        await audio.play();
-        updatePlayState(true);
-      } catch (_) {
-        updatePlayState(false);
-      }
+      try { await audio.play(); updatePlayState(true); }
+      catch (_) { updatePlayState(false); }
     }
 
     function togglePlayPause() {
@@ -687,10 +714,9 @@
       mixHeroTitle.textContent = mix.title;
       mixHeroDescription.textContent = mix.description;
       document.title = mix.title;
-      spotifyBtn.href = mix.spotify || "#";
-      nowPlayingText.textContent = mix.nowPlaying || mix.title;
-      renderTracklist();
-      refreshMarquee();
+
+      // Select the first track so the marquee and Spotify button are ready
+      if (mix.tracklist.length > 0) selectTrack(mix.tracklist[0]);
 
       audio.src = mix.audio;
       audio.load();
@@ -758,24 +784,15 @@
       progressTrack.addEventListener("keydown", (e) => {
         if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
         const step = Math.max(1, audio.duration * 0.02);
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          audio.currentTime = Math.max(0, audio.currentTime - step);
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          audio.currentTime = Math.min(audio.duration, audio.currentTime + step);
-        } else if (e.key === "Home") {
-          e.preventDefault();
-          audio.currentTime = 0;
-        } else if (e.key === "End") {
-          e.preventDefault();
-          audio.currentTime = audio.duration;
-        }
+        if (e.key === "ArrowLeft")  { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); audio.currentTime = Math.min(audio.duration, audio.currentTime + step); }
+        else if (e.key === "Home") { e.preventDefault(); audio.currentTime = 0; }
+        else if (e.key === "End")  { e.preventDefault(); audio.currentTime = audio.duration; }
         updateProgressUI();
       });
 
       audio.addEventListener("loadedmetadata", updateProgressUI);
-      audio.addEventListener("timeupdate", updateProgressUI);
+      audio.addEventListener("timeupdate",     updateProgressUI);
       audio.addEventListener("play",   () => updatePlayState(true));
       audio.addEventListener("pause",  () => updatePlayState(false));
       audio.addEventListener("ended",  () => updatePlayState(false));
@@ -799,20 +816,10 @@
       document.addEventListener("keydown", (e) => {
         const inInput = e.target.closest("input, textarea, select, [contenteditable], button, a");
         if (inInput) return;
-        if (e.key === " ") {
-          e.preventDefault();
-          togglePlayPause();
-        } else if (e.key.toLowerCase() === "m") {
-          e.preventDefault();
-          audio.muted = !audio.muted;
-          updateMuteUI();
-        } else if (e.key.toLowerCase() === "s") {
-          e.preventDefault();
-          setShuffling(!isShuffling);
-        } else if (e.key.toLowerCase() === "t") {
-          e.preventDefault();
-          setTracklistOpen(!tracklistOpen);
-        }
+        if (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
+        else if (e.key.toLowerCase() === "m") { e.preventDefault(); audio.muted = !audio.muted; updateMuteUI(); }
+        else if (e.key.toLowerCase() === "s") { e.preventDefault(); setShuffling(!isShuffling); }
+        else if (e.key.toLowerCase() === "t") { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
         revealControls();
       });
 
@@ -821,7 +828,7 @@
 
     function initMediaSessionActions() {
       if (!("mediaSession" in navigator)) return;
-      navigator.mediaSession.setActionHandler("play", playAudio);
+      navigator.mediaSession.setActionHandler("play",  playAudio);
       navigator.mediaSession.setActionHandler("pause", () => audio.pause());
       navigator.mediaSession.setActionHandler("seekbackward", () => {
         audio.currentTime = Math.max(0, audio.currentTime - 10);
