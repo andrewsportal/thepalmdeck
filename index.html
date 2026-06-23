@@ -52,6 +52,7 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      pointer-events: none;
     }
 
     .scene-poster {
@@ -59,12 +60,12 @@
       background-position: center;
       background-size: cover;
       background-repeat: no-repeat;
-      z-index: -4;
+      z-index: 0;
     }
 
     .scene-video {
       object-fit: cover;
-      z-index: -3;
+      z-index: 1;
       transition: opacity 420ms ease;
     }
 
@@ -79,10 +80,38 @@
     .scene-mask {
       position: fixed;
       inset: 0;
-      z-index: -2;
-      background:
-        radial-gradient(circle at 16% 14%, rgba(255, 183, 3, 0.16), transparent 42%),
-        linear-gradient(to bottom, rgba(17, 17, 17, 0.23), rgba(17, 17, 17, 0.84));
+      z-index: 2;
+      background: linear-gradient(
+        to bottom,
+        rgba(17, 17, 17, 0.16) 0%,
+        rgba(17, 17, 17, 0.36) 48%,
+        rgba(17, 17, 17, 0.66) 100%
+      );
+    }
+
+    #stage {
+      position: relative;
+      z-index: 10;
+    }
+
+    .curator-credit {
+      margin-top: 0.55rem;
+      color: #34ccc4;
+      font-size: clamp(0.52rem, 1.55vw, 0.6rem);
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      line-height: 1.45;
+      text-shadow: 0 0 7px rgba(52, 204, 196, 0.32);
+      text-transform: uppercase;
+      opacity: 0.82;
+    }
+
+    @media (min-width: 768px) {
+      .curator-credit {
+        font-size: 0.64rem;
+        letter-spacing: 0.18em;
+        opacity: 0.9;
+      }
     }
 
     .controls {
@@ -257,12 +286,12 @@
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
 
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-between p-4 md:p-6">
-      <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape scene">
+      <button id="prevSceneBtn" type="button" class="edge-arrow left ui" aria-label="Previous mixtape">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
           <path d="M15 6l-6 6 6 6"></path>
         </svg>
       </button>
-      <button id="nextSceneBtn" type="button" class="edge-arrow right ui" aria-label="Next mixtape scene">
+      <button id="nextSceneBtn" type="button" class="edge-arrow right ui" aria-label="Next mixtape">
         <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
           <path d="M9 6l6 6-6 6"></path>
         </svg>
@@ -274,6 +303,9 @@
         </h1>
         <p id="mixHeroDescription" class="mx-auto mt-2 max-w-[35ch] text-[0.93rem] leading-relaxed text-cream/72 md:text-[1rem]">
           The first glow over the palm deck as the horizon opens.
+        </p>
+        <p class="curator-credit">
+          Mixed and curated by Andrew Rios
         </p>
       </header>
 
@@ -346,7 +378,7 @@
     // -------------------------------------------------------------
     // PORTAL DATA (single source of truth)
     // -------------------------------------------------------------
-    // Update title/description/audio/video/download/tracklist here.
+    // Update title/description/audio/download/tracklist here.
     const PORTAL = {
       fallbackVideo: "",
       fallbackPoster: "hero-poster.JPG",
@@ -355,9 +387,8 @@
           id: "mixtape1",
           title: "Vagabond",
           description: "The first glow over the palm deck as the horizon opens.",
-          audio: "mixtape1.mp3",
-          download: "mixtape1.mp3",
-          video: "scene-1.mp4",
+          audio: "vagabond-mixtape.mp3",
+          download: "vagabond-mixtape.mp3",
           tracklist: [
             "01. Artist - Opening Horizon",
             "02. Artist - Palm Rhythm",
@@ -367,11 +398,10 @@
         },
         {
           id: "mixtape2",
-          title: "Palm Current",
+          title: "Our House",
           description: "Dusk settles in while the dancefloor drifts into deeper rhythm.",
-          audio: "mixtape2.mp3",
-          download: "mixtape2.mp3",
-          video: "scene-2.mp4",
+          audio: "ourhouse-mixtape.mp3",
+          download: "ourhouse-mixtape.mp3",
           tracklist: [
             "01. Artist - Blue Lanterns",
             "02. Artist - Deck Conversations",
@@ -381,11 +411,10 @@
         },
         {
           id: "mixtape3",
-          title: "After Horizon",
+          title: "Midnight Reviere",
           description: "Night wraps the shoreline and the final movement lands softly.",
-          audio: "mixtape3.mp3",
-          download: "mixtape3.mp3",
-          video: "scene-3.mp4",
+          audio: "midnightreviere-mixtape.mp3",
+          download: "midnightreviere-mixtape.mp3",
           tracklist: [
             "01. Artist - Midnight Palms",
             "02. Artist - Quiet Movement",
@@ -409,6 +438,7 @@
     let activeSceneVideoPath = "";
     let activeSceneVideoIsFallback = false;
     let isShowingPosterFallback = false;
+    const mixPlaybackPositions = {};
 
     const scenePoster = document.getElementById("scenePoster");
     const sceneVideo = document.getElementById("sceneVideo");
@@ -548,6 +578,38 @@
       });
     }
 
+    function rememberActiveMixPosition() {
+      const mix = PORTAL.mixtapes[activeMix];
+      if (!mix || !Number.isFinite(audio.currentTime)) return;
+
+      const duration = audio.duration;
+      mixPlaybackPositions[mix.id] = Number.isFinite(duration) && duration > 0 && audio.currentTime >= duration - 0.5
+        ? 0
+        : audio.currentTime;
+    }
+
+    function restoreMixPosition(mix) {
+      const savedTime = mixPlaybackPositions[mix.id] || 0;
+      if (!savedTime) {
+        updateProgressUI();
+        return;
+      }
+
+      const applySavedTime = () => {
+        const duration = audio.duration;
+        audio.currentTime = Number.isFinite(duration) && duration > 0
+          ? Math.min(savedTime, Math.max(0, duration - 0.25))
+          : savedTime;
+        updateProgressUI();
+      };
+
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        applySavedTime();
+      } else {
+        audio.addEventListener("loadedmetadata", applySavedTime, { once: true });
+      }
+    }
+
     function setScenePoster() {
       sceneVideo.poster = PORTAL.fallbackPoster;
       scenePoster.style.backgroundImage = `url("${PORTAL.fallbackPoster}")`;
@@ -628,6 +690,7 @@
       const mix = PORTAL.mixtapes[nextIndex];
       if (!mix) return;
 
+      rememberActiveMixPosition();
       activeMix = nextIndex;
       lastDirection = direction;
 
@@ -638,11 +701,9 @@
       downloadBtn.download = (mix.download || mix.audio).split("/").pop();
       renderTracklist(mix.tracklist);
 
-      switchSceneVideo(mix.video);
-
       audio.src = mix.audio;
-      audio.currentTime = 0;
       audio.load();
+      restoreMixPosition(mix);
       updateProgressUI();
       updateMediaSession(mix);
 
@@ -673,11 +734,11 @@
       });
 
       prevSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
       });
 
       nextSceneBtn.addEventListener("click", () => {
-        selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
       });
 
       playPauseBtn.addEventListener("click", () => {
@@ -747,10 +808,17 @@
       });
 
       audio.addEventListener("loadedmetadata", updateProgressUI);
-      audio.addEventListener("timeupdate", updateProgressUI);
+      audio.addEventListener("timeupdate", () => {
+        rememberActiveMixPosition();
+        updateProgressUI();
+      });
       audio.addEventListener("play", () => updatePlayState(true));
       audio.addEventListener("pause", () => updatePlayState(false));
-      audio.addEventListener("ended", () => updatePlayState(false));
+      audio.addEventListener("ended", () => {
+        const mix = PORTAL.mixtapes[activeMix];
+        if (mix) mixPlaybackPositions[mix.id] = 0;
+        updatePlayState(false);
+      });
 
       sceneVideo.addEventListener("error", () => {
         if (PORTAL.fallbackVideo && !activeSceneVideoIsFallback) {
@@ -781,10 +849,10 @@
           updateMuteUI();
         } else if (event.key === "ArrowLeft") {
           event.preventDefault();
-          selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+          selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
         } else if (event.key === "ArrowRight") {
           event.preventDefault();
-          selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+          selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
         } else if (event.key.toLowerCase() === "t") {
           event.preventDefault();
           setTracklistOpen(!tracklistOpen);
@@ -807,15 +875,16 @@
         updateProgressUI();
       });
       navigator.mediaSession.setActionHandler("previoustrack", () => {
-        selectMixtape(activeMix - 1, { autoplay: true, direction: "prev" });
+        selectMixtape(activeMix - 1, { autoplay: false, direction: "prev" });
       });
       navigator.mediaSession.setActionHandler("nexttrack", () => {
-        selectMixtape(activeMix + 1, { autoplay: true, direction: "next" });
+        selectMixtape(activeMix + 1, { autoplay: false, direction: "next" });
       });
     }
 
     function init() {
       setScenePoster();
+      switchSceneVideo(PORTAL.fallbackVideo);
       bindEvents();
       initMediaSessionActions();
       updateMuteUI();
