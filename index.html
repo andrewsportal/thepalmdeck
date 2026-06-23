@@ -438,6 +438,7 @@
     let activeSceneVideoPath = "";
     let activeSceneVideoIsFallback = false;
     let isShowingPosterFallback = false;
+    const mixPlaybackPositions = {};
 
     const scenePoster = document.getElementById("scenePoster");
     const sceneVideo = document.getElementById("sceneVideo");
@@ -577,6 +578,38 @@
       });
     }
 
+    function rememberActiveMixPosition() {
+      const mix = PORTAL.mixtapes[activeMix];
+      if (!mix || !Number.isFinite(audio.currentTime)) return;
+
+      const duration = audio.duration;
+      mixPlaybackPositions[mix.id] = Number.isFinite(duration) && duration > 0 && audio.currentTime >= duration - 0.5
+        ? 0
+        : audio.currentTime;
+    }
+
+    function restoreMixPosition(mix) {
+      const savedTime = mixPlaybackPositions[mix.id] || 0;
+      if (!savedTime) {
+        updateProgressUI();
+        return;
+      }
+
+      const applySavedTime = () => {
+        const duration = audio.duration;
+        audio.currentTime = Number.isFinite(duration) && duration > 0
+          ? Math.min(savedTime, Math.max(0, duration - 0.25))
+          : savedTime;
+        updateProgressUI();
+      };
+
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        applySavedTime();
+      } else {
+        audio.addEventListener("loadedmetadata", applySavedTime, { once: true });
+      }
+    }
+
     function setScenePoster() {
       sceneVideo.poster = PORTAL.fallbackPoster;
       scenePoster.style.backgroundImage = `url("${PORTAL.fallbackPoster}")`;
@@ -657,6 +690,7 @@
       const mix = PORTAL.mixtapes[nextIndex];
       if (!mix) return;
 
+      rememberActiveMixPosition();
       activeMix = nextIndex;
       lastDirection = direction;
 
@@ -668,8 +702,8 @@
       renderTracklist(mix.tracklist);
 
       audio.src = mix.audio;
-      audio.currentTime = 0;
       audio.load();
+      restoreMixPosition(mix);
       updateProgressUI();
       updateMediaSession(mix);
 
@@ -774,10 +808,17 @@
       });
 
       audio.addEventListener("loadedmetadata", updateProgressUI);
-      audio.addEventListener("timeupdate", updateProgressUI);
+      audio.addEventListener("timeupdate", () => {
+        rememberActiveMixPosition();
+        updateProgressUI();
+      });
       audio.addEventListener("play", () => updatePlayState(true));
       audio.addEventListener("pause", () => updatePlayState(false));
-      audio.addEventListener("ended", () => updatePlayState(false));
+      audio.addEventListener("ended", () => {
+        const mix = PORTAL.mixtapes[activeMix];
+        if (mix) mixPlaybackPositions[mix.id] = 0;
+        updatePlayState(false);
+      });
 
       sceneVideo.addEventListener("error", () => {
         if (PORTAL.fallbackVideo && !activeSceneVideoIsFallback) {
