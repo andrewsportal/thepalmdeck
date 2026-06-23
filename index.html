@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Vagabond</title>
   <meta
     name="description"
-    content="A curated selection of the best tracks for dancing and relaxing on the palm deck."
+    content="Get behind the decks. House, soul &amp; funk — the ever-growing playlist, curated by Andrew Rios."
   />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -30,6 +30,7 @@
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html,
@@ -103,6 +104,7 @@
       opacity: 1;
       transition: opacity 320ms ease;
       pointer-events: none;
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
 
     .controls.hidden { opacity: 0; }
@@ -281,11 +283,11 @@
 
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
 
-      <section class="ui glass mx-0 rounded-3xl p-2.5 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
+      <section class="ui glass mx-0 rounded-3xl px-3 py-2.5 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
 
         <div class="flex flex-wrap items-center justify-center gap-2">
 
-          <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
+          <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M11 19a7 7 0 1 1 5.57-11.24"></path>
               <path d="M12 8H8v4"></path>
@@ -293,7 +295,7 @@
             </svg>
           </button>
 
-          <button id="playPauseBtn" type="button" class="gloss primary-play inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
+          <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
             <svg id="iconPlay" viewBox="0 0 24 24" class="h-[18px] w-[18px] translate-x-[1px]" fill="#fff8f0" aria-hidden="true">
               <path d="M8 5v14l11-7z"></path>
             </svg>
@@ -302,7 +304,7 @@
             </svg>
           </button>
 
-          <button id="forwardBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
+          <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
             <svg viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M13 19a7 7 0 1 0-5.57-11.24"></path>
               <path d="M12 8h4v4"></path>
@@ -310,7 +312,7 @@
             </svg>
           </button>
 
-          <button id="shuffleBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
+          <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
             <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M16 3h5v5"></path>
               <path d="M4 20 21 3"></path>
@@ -334,7 +336,7 @@
             </div>
           </div>
           <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
-             class="gloss spotify-btn inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+             class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
              aria-label="Open in Spotify">
             <svg viewBox="0 0 24 24" class="h-[15px] w-[15px]" fill="currentColor" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/>
