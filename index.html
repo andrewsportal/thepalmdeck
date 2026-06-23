@@ -95,7 +95,8 @@
       font-weight: 500;
       letter-spacing: 0.08em;
       color: rgba(52, 204, 196, 0.46);
-      margin-bottom: 0.65rem;
+      margin-top: 0.65rem;
+      margin-bottom: 0;
     }
 
     .controls {
@@ -304,8 +305,6 @@
 
       <section class="ui glass mx-0 rounded-3xl p-3 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
 
-        <p class="mixer-credit">Mixed by Andrew Rios</p>
-
         <div class="flex flex-wrap items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
@@ -347,19 +346,6 @@
             Tracklist
           </button>
 
-          <button id="muteBtn" type="button" class="gloss inline-flex h-10 w-10 items-center justify-center rounded-full" aria-label="Mute">
-            <svg id="iconVol" viewBox="0 0 24 24" class="h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M5 9v6h4l5 4V5L9 9z"></path>
-              <path d="M18.5 8.5a5 5 0 0 1 0 7"></path>
-              <path d="M20.8 6.1a8.6 8.6 0 0 1 0 11.8"></path>
-            </svg>
-            <svg id="iconMuted" viewBox="0 0 24 24" class="hidden h-4.5 w-4.5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M5 9v6h4l5 4V5L9 9z"></path>
-              <path d="M19 9l-4 6"></path>
-              <path d="M15 9l4 6"></path>
-            </svg>
-          </button>
-
         </div>
 
         <div class="mt-3 flex items-center gap-2">
@@ -391,6 +377,8 @@
         <div id="trackPanel" class="track-panel mt-3">
           <ol id="trackList" class="track-scroll space-y-1 text-[0.76rem] leading-relaxed"></ol>
         </div>
+
+        <p class="mixer-credit">Mixed by Andrew Rios</p>
 
       </section>
     </div>
@@ -476,9 +464,6 @@
     const forwardBtn         = document.getElementById("forwardBtn");
     const shuffleBtn         = document.getElementById("shuffleBtn");
     const tracklistBtn       = document.getElementById("tracklistBtn");
-    const muteBtn            = document.getElementById("muteBtn");
-    const iconVol            = document.getElementById("iconVol");
-    const iconMuted          = document.getElementById("iconMuted");
     const spotifyBtn         = document.getElementById("spotifyBtn");
     const marqueeWrap        = document.getElementById("marqueeWrap");
     const marqueeTrack       = document.getElementById("marqueeTrack");
@@ -541,13 +526,6 @@
         setControlsVisible(true);
       }
       updateMediaSession();
-    }
-
-    function updateMuteUI() {
-      const muted = audio.muted;
-      iconVol.classList.toggle("hidden", muted);
-      iconMuted.classList.toggle("hidden", !muted);
-      muteBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
     }
 
     // rAF-throttled: caps DOM writes to one per paint frame
@@ -804,12 +782,6 @@
 
       tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
 
-      muteBtn.addEventListener("click", () => {
-        audio.muted = !audio.muted;
-        updateMuteUI();
-        revealControls();
-      });
-
       spotifyBtn.addEventListener("click", () => revealControls());
 
       progressTrack.addEventListener("pointerdown", (e) => {
@@ -858,7 +830,6 @@
         const inInput = e.target.closest("input, textarea, select, [contenteditable], button, a");
         if (inInput) return;
         if (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
-        else if (e.key.toLowerCase() === "m") { e.preventDefault(); audio.muted = !audio.muted; updateMuteUI(); }
         else if (e.key.toLowerCase() === "s") { e.preventDefault(); setShuffling(!isShuffling); }
         else if (e.key.toLowerCase() === "t") { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
         revealControls();
@@ -895,10 +866,10 @@
       switchSceneVideo(PORTAL.fallbackVideo);
       bindEvents();
       initMediaSessionActions();
-      updateMuteUI();
       initMix(false);
       setTracklistOpen(false);
       setControlsVisible(true);
+
     }
 
     init();
