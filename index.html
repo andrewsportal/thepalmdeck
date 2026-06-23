@@ -67,11 +67,8 @@
     .scene-video {
       object-fit: cover;
       z-index: 1;
-      transition: opacity 420ms ease;
+      transition: opacity 1200ms ease;
     }
-
-    .scene-video.dim         { opacity: 0.35; }
-    .scene-video.unavailable { opacity: 0; }
 
     .scene-mask {
       position: fixed;
@@ -266,15 +263,11 @@
 </head>
 <body>
   <div id="scenePoster" class="scene-poster" aria-hidden="true"></div>
-  <video
-    id="sceneVideo"
-    class="scene-video"
-    autoplay muted loop playsinline
-    preload="metadata"
-    poster="hero-poster.JPG"
-    aria-hidden="true"
-  >
-    <source id="sceneVideoSource" type="video/mp4" />
+  <video id="sceneVideoA" class="scene-video" muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
+    <source src="thepalmdeck.MP4" type="video/mp4" />
+  </video>
+  <video id="sceneVideoB" class="scene-video" muted playsinline preload="auto" aria-hidden="true" style="opacity:0">
+    <source src="thepalmdeck.MP4" type="video/mp4" />
   </video>
   <div class="scene-mask" aria-hidden="true"></div>
 
@@ -369,7 +362,6 @@
     //  PORTAL DATA  —  only edit this section
     // ================================================================
     const PORTAL = {
-      fallbackVideo:  "",
       fallbackPoster: "hero-poster.JPG",
       mix: {
         title: "Vagabond",
@@ -427,13 +419,14 @@
     let displayList        = [];
     let progressRafPending = false;
 
-    let activeSceneVideoPath       = "";
-    let activeSceneVideoIsFallback = false;
-    let isShowingPosterFallback    = false;
+    const XFADE_S  = 1.2;
+    let xfCurrent  = null;
+    let xfStandby  = null;
+    let xfading    = false;
 
-    const scenePoster        = document.getElementById("scenePoster");
-    const sceneVideo         = document.getElementById("sceneVideo");
-    const sceneVideoSource   = document.getElementById("sceneVideoSource");
+    const scenePoster  = document.getElementById("scenePoster");
+    const sceneVideoA  = document.getElementById("sceneVideoA");
+    const sceneVideoB  = document.getElementById("sceneVideoB");
     const stage              = document.getElementById("stage");
     const gestureArea        = document.getElementById("gestureArea");
     const controls           = document.getElementById("controls");
@@ -654,41 +647,33 @@
     }
 
     function setScenePoster() {
-      sceneVideo.poster = PORTAL.fallbackPoster;
       scenePoster.style.backgroundImage = `url("${PORTAL.fallbackPoster}")`;
     }
 
-    function showPosterFallback() {
-      activeSceneVideoPath = "";
-      activeSceneVideoIsFallback = false;
-      isShowingPosterFallback = true;
-      sceneVideo.classList.remove("dim");
-      sceneVideo.classList.add("unavailable");
-      sceneVideo.pause();
-      sceneVideoSource.removeAttribute("src");
-      sceneVideo.load();
-    }
+    function initSceneLoop() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      xfCurrent = sceneVideoA;
+      xfStandby = sceneVideoB;
 
-    function switchSceneVideo(videoPath, options = {}) {
-      const { isFallbackVideo = false } = options;
-      const target = videoPath || PORTAL.fallbackVideo;
-      if (!target) { showPosterFallback(); return; }
-      if (activeSceneVideoPath === target && !isShowingPosterFallback) return;
+      function runCrossfade() {
+        if (xfading || !isFinite(xfCurrent.duration) || xfCurrent.duration <= 0) return;
+        if (xfCurrent.currentTime < xfCurrent.duration - XFADE_S) return;
+        xfading = true;
+        xfStandby.currentTime = 0;
+        xfStandby.style.opacity = "1";
+        xfCurrent.style.opacity = "0";
+        xfStandby.play().catch(() => {});
+        window.setTimeout(() => {
+          xfCurrent.pause();
+          xfCurrent.currentTime = 0;
+          [xfCurrent, xfStandby] = [xfStandby, xfCurrent];
+          xfading = false;
+        }, XFADE_S * 1000 + 50);
+      }
 
-      activeSceneVideoPath = target;
-      activeSceneVideoIsFallback = isFallbackVideo;
-      isShowingPosterFallback = false;
-      sceneVideo.classList.add("dim");
-      sceneVideo.classList.remove("unavailable");
-      window.setTimeout(() => {
-        if (activeSceneVideoPath !== target || isShowingPosterFallback) return;
-        sceneVideoSource.setAttribute("src", target);
-        sceneVideo.load();
-        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          sceneVideo.play().catch(() => {});
-        }
-        sceneVideo.classList.remove("dim");
-      }, 140);
+      sceneVideoA.addEventListener("timeupdate", runCrossfade);
+      sceneVideoB.addEventListener("timeupdate", runCrossfade);
+      sceneVideoA.play().catch(() => {});
     }
 
     function updateMediaSession() {
@@ -783,19 +768,17 @@
       audio.addEventListener("pause",          () => updatePlayState(false));
       audio.addEventListener("ended",          () => advanceToNext());
 
-      sceneVideo.addEventListener("error", () => {
-        if (PORTAL.fallbackVideo && !activeSceneVideoIsFallback) {
-          switchSceneVideo(PORTAL.fallbackVideo, { isFallbackVideo: true });
-        } else {
-          showPosterFallback();
-        }
+      sceneVideoA.addEventListener("error", () => {
+        sceneVideoA.style.opacity = "0";
+        sceneVideoB.style.opacity = "0";
       });
 
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-          sceneVideo.pause();
-        } else if (!isShowingPosterFallback && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          sceneVideo.play().catch(() => {});
+          sceneVideoA.pause();
+          sceneVideoB.pause();
+        } else if (xfCurrent && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          xfCurrent.play().catch(() => {});
         }
       });
 
@@ -836,7 +819,7 @@
 
     function init() {
       setScenePoster();
-      switchSceneVideo(PORTAL.fallbackVideo);
+      initSceneLoop();
       bindEvents();
       initMediaSessionActions();
       initMix(false);
