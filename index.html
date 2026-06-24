@@ -691,6 +691,7 @@
       let reverseRaf      = null;
       let reverseLastTs   = null;
       let isReversing     = false;
+      let resumeTimers     = [];
 
       function showVideo() {
         sceneFallback.classList.remove("visible");
@@ -721,6 +722,11 @@
         isReversing = false;
       }
 
+      function clearResumeTimers() {
+        resumeTimers.forEach((timer) => window.clearTimeout(timer));
+        resumeTimers = [];
+      }
+
       function watchForward() {
         forwardWatchRaf = null;
         if (sceneVideo.paused || isReversing) return;
@@ -735,6 +741,7 @@
       }
 
       function startForward() {
+        if (document.hidden) return;
         cancelReverse();
         cancelForwardWatch();
         sceneVideo.loop = false;
@@ -788,6 +795,7 @@
       }
 
       function playSceneVideo() {
+        if (document.hidden) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.pause();
           if (sceneVideo.readyState > 0) showVideo();
@@ -800,19 +808,54 @@
         startForward();
       }
 
+      function suspendSceneVideo() {
+        clearResumeTimers();
+        cancelForwardWatch();
+        cancelReverse();
+        sceneVideo.pause();
+      }
+
+      function resumeSceneVideo() {
+        if (document.hidden) return;
+
+        if (sceneVideo.readyState === 0) {
+          sceneVideo.load();
+        }
+
+        if (sceneVideo.currentTime >= loopEnd()) {
+          sceneVideo.currentTime = 0;
+        }
+
+        playSceneVideo();
+      }
+
+      function scheduleSceneVideoResume() {
+        clearResumeTimers();
+        [0, 250, 900].forEach((delay) => {
+          resumeTimers.push(window.setTimeout(resumeSceneVideo, delay));
+        });
+      }
+
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("ended", startReverse);
+      sceneVideo.addEventListener("pause", () => {
+        if (!document.hidden && !isReversing) scheduleSceneVideoResume();
+      });
+      sceneVideo.addEventListener("stalled", scheduleSceneVideoResume);
+      sceneVideo.addEventListener("suspend", () => {
+        if (!document.hidden) scheduleSceneVideoResume();
+      });
       sceneVideo.addEventListener("error", showFallback);
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-          cancelForwardWatch();
-          cancelReverse();
-          sceneVideo.pause();
+          suspendSceneVideo();
         } else {
-          playSceneVideo();
+          scheduleSceneVideoResume();
         }
       });
+      window.addEventListener("pageshow", scheduleSceneVideoResume);
+      window.addEventListener("focus", scheduleSceneVideoResume);
 
       if (sceneVideo.readyState > 0) {
         showVideo();
