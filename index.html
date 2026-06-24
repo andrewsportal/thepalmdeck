@@ -250,6 +250,77 @@
       letter-spacing: -0.04em;
     }
 
+    .skip-icon {
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      width: 1.52rem;
+      height: 1.52rem;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      line-height: 1;
+    }
+
+    .skip-arrow {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1;
+      transform: translateY(-0.01rem);
+    }
+
+    .skip-number {
+      position: relative;
+      z-index: 1;
+      font-size: 0.46rem;
+      font-weight: 760;
+      letter-spacing: -0.03em;
+      transform: translateY(0.035rem);
+    }
+
+    .icon-text {
+      display: inline-grid;
+      place-items: center;
+      width: 1.2rem;
+      height: 1.2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .play-symbol {
+      transform: translateX(0.065rem);
+    }
+
+    .pause-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+
+    .pause-symbol span {
+      width: 0.28rem;
+      height: 0.94rem;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .shuffle-icon {
+      width: 1.45rem;
+      height: 1.45rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.05;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .link-icon {
       width: 0.96rem;
       height: 0.96rem;
@@ -441,6 +512,7 @@
 </head>
 <body>
   <video id="sceneVideo" class="scene-video" autoplay muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
+    <source src="thepalmdeck-loop.mov" type="video/quicktime" />
     <source src="thepalmdeck.mov" type="video/quicktime" />
     Your browser does not support the background video.
   </video>
@@ -459,36 +531,30 @@
         <div class="flex flex-wrap items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M13.5 7.2 8.4 12.3l5.1 5.1"></path>
-              <path d="M8.9 12.3a9.7 9.7 0 1 1-2.25 6.25"></path>
-              <text x="11.65" y="20.25">10</text>
-            </svg>
+            <span class="skip-icon" aria-hidden="true">
+              <span class="skip-arrow">↺</span>
+              <span class="skip-number">10</span>
+            </span>
           </button>
 
           <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
-            <svg id="iconPlay" viewBox="0 0 24 24" class="control-icon-fill translate-x-[1px]" aria-hidden="true">
-              <path d="M7.8 5.4c0-.72.8-1.15 1.4-.75l9.55 6.6c.52.36.52 1.14 0 1.5l-9.55 6.6c-.6.4-1.4-.03-1.4-.75V5.4z"></path>
-            </svg>
-            <svg id="iconPause" viewBox="0 0 24 24" class="control-icon-fill hidden" aria-hidden="true">
-              <path d="M7.2 5.4c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9H8.1c-.5 0-.9-.4-.9-.9V5.4zm5.35 0c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9h-2.45c-.5 0-.9-.4-.9-.9V5.4z"></path>
-            </svg>
+            <span id="iconPlay" class="icon-text play-symbol" aria-hidden="true">▶</span>
+            <span id="iconPause" class="pause-symbol hidden" aria-hidden="true"><span></span><span></span></span>
           </button>
 
           <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M18.5 7.2 23.6 12.3l-5.1 5.1"></path>
-              <path d="M23.1 12.3a9.7 9.7 0 1 0 2.25 6.25"></path>
-              <text x="11.65" y="20.25">10</text>
-            </svg>
+            <span class="skip-icon" aria-hidden="true">
+              <span class="skip-arrow">↻</span>
+              <span class="skip-number">10</span>
+            </span>
           </button>
 
           <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M5.2 10.2h4.1c2.6 0 4.25 1.25 5.75 3.9l1.9 3.35c1.36 2.35 2.95 3.35 5.75 3.35h4.1"></path>
-              <path d="m23.1 16.9 3.7 3.9-3.7 3.9"></path>
-              <path d="M5.2 21.8h4.1c2.7 0 4.25-1.1 5.75-3.85l1.9-3.55c1.25-2.35 2.95-3.2 5.75-3.2h4.1"></path>
-              <path d="m23.1 7.3 3.7 3.9-3.7 3.9"></path>
+            <svg viewBox="0 0 28 28" class="shuffle-icon" aria-hidden="true">
+              <path d="M4.5 8.25h3.25c2.8 0 4.45 1.45 6.15 5.75 1.7 4.3 3.35 5.75 6.15 5.75h3.45"></path>
+              <path d="m20.25 16.8 3.25 2.95-3.25 2.95"></path>
+              <path d="M4.5 19.75h3.25c2.8 0 4.45-1.45 6.15-5.75 1.7-4.3 3.35-5.75 6.15-5.75h3.45"></path>
+              <path d="m20.25 5.3 3.25 2.95-3.25 2.95"></path>
             </svg>
           </button>
 
@@ -851,6 +917,10 @@
         resumeTimers = [];
       }
 
+      function usesNativeSceneLoop() {
+        return sceneVideo.currentSrc.includes("thepalmdeck-loop");
+      }
+
       function watchForward() {
         forwardWatchRaf = null;
         if (sceneVideo.paused || isReversing) return;
@@ -879,6 +949,25 @@
           });
           showVideo();
           forwardWatchRaf = requestAnimationFrame(watchForward);
+        } catch (_) {
+          if (sceneVideo.readyState > 0) showVideo(); else showFallback();
+        }
+      }
+
+      function startNativeSceneLoop() {
+        if (document.hidden) return;
+        sceneDirection = 1;
+        cancelReverse();
+        cancelForwardWatch();
+        sceneVideo.loop = true;
+        sceneVideo.playbackRate = 1;
+
+        try {
+          const playPromise = sceneVideo.play();
+          if (playPromise) playPromise.catch(() => {
+            if (sceneVideo.readyState > 0) showVideo(); else showFallback();
+          });
+          showVideo();
         } catch (_) {
           if (sceneVideo.readyState > 0) showVideo(); else showFallback();
         }
@@ -922,6 +1011,10 @@
 
       function playSceneVideo() {
         if (document.hidden) return;
+        if (usesNativeSceneLoop()) {
+          startNativeSceneLoop();
+          return;
+        }
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.pause();
           if (sceneVideo.readyState > 0) showVideo();
@@ -946,6 +1039,11 @@
 
         if (sceneVideo.readyState === 0) {
           sceneVideo.load();
+        }
+
+        if (usesNativeSceneLoop()) {
+          startNativeSceneLoop();
+          return;
         }
 
         if (sceneVideo.currentTime >= loopEnd()) {
