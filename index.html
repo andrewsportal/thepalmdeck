@@ -67,7 +67,7 @@
     .scene-video {
       object-fit: cover;
       z-index: 1;
-      transition: opacity 1200ms ease;
+      transition: opacity 400ms ease;
     }
 
     .scene-mask {
@@ -263,10 +263,7 @@
 </head>
 <body>
   <div id="scenePoster" class="scene-poster" aria-hidden="true"></div>
-  <video id="sceneVideoA" class="scene-video" muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
-    <source src="thepalmdeck.MP4" type="video/mp4" />
-  </video>
-  <video id="sceneVideoB" class="scene-video" muted playsinline preload="auto" aria-hidden="true" style="opacity:0">
+  <video id="sceneVideo" class="scene-video" muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
     <source src="thepalmdeck.MP4" type="video/mp4" />
   </video>
   <div class="scene-mask" aria-hidden="true"></div>
@@ -419,14 +416,8 @@
     let displayList        = [];
     let progressRafPending = false;
 
-    const XFADE_S  = 1.2;
-    let xfCurrent  = null;
-    let xfStandby  = null;
-    let xfading    = false;
-
-    const scenePoster  = document.getElementById("scenePoster");
-    const sceneVideoA  = document.getElementById("sceneVideoA");
-    const sceneVideoB  = document.getElementById("sceneVideoB");
+    const scenePoster = document.getElementById("scenePoster");
+    const sceneVideo  = document.getElementById("sceneVideo");
     const stage              = document.getElementById("stage");
     const gestureArea        = document.getElementById("gestureArea");
     const controls           = document.getElementById("controls");
@@ -650,30 +641,57 @@
       scenePoster.style.backgroundImage = `url("${PORTAL.fallbackPoster}")`;
     }
 
-    function initSceneLoop() {
+    function initBoomerang() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      xfCurrent = sceneVideoA;
-      xfStandby = sceneVideoB;
 
-      function runCrossfade() {
-        if (xfading || !isFinite(xfCurrent.duration) || xfCurrent.duration <= 0) return;
-        if (xfCurrent.currentTime < xfCurrent.duration - XFADE_S) return;
-        xfading = true;
-        xfStandby.currentTime = 0;
-        xfStandby.style.opacity = "1";
-        xfCurrent.style.opacity = "0";
-        xfStandby.play().catch(() => {});
-        window.setTimeout(() => {
-          xfCurrent.pause();
-          xfCurrent.currentTime = 0;
-          [xfCurrent, xfStandby] = [xfStandby, xfCurrent];
-          xfading = false;
-        }, XFADE_S * 1000 + 50);
+      sceneVideo.pause();
+      sceneVideo.currentTime = 0;
+
+      let direction = 1;
+      let lastTs    = null;
+      let running   = false;
+
+      function tick(ts) {
+        if (!running) return;
+        if (lastTs !== null && isFinite(sceneVideo.duration) && sceneVideo.duration > 0) {
+          const delta = Math.min((ts - lastTs) / 1000, 0.1);
+          const next  = sceneVideo.currentTime + direction * delta;
+          if (next >= sceneVideo.duration) {
+            sceneVideo.currentTime = sceneVideo.duration;
+            direction = -1;
+          } else if (next <= 0) {
+            sceneVideo.currentTime = 0;
+            direction = 1;
+          } else {
+            sceneVideo.currentTime = next;
+          }
+        }
+        lastTs = ts;
+        requestAnimationFrame(tick);
       }
 
-      sceneVideoA.addEventListener("timeupdate", runCrossfade);
-      sceneVideoB.addEventListener("timeupdate", runCrossfade);
-      sceneVideoA.play().catch(() => {});
+      function start() {
+        running = true;
+        lastTs  = null;
+        requestAnimationFrame(tick);
+      }
+
+      function stop() { running = false; }
+
+      if (sceneVideo.readyState >= 3) {
+        start();
+      } else {
+        sceneVideo.addEventListener("canplay", start, { once: true });
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) { stop(); } else { start(); }
+      });
+
+      sceneVideo.addEventListener("error", () => {
+        stop();
+        sceneVideo.style.opacity = "0";
+      });
     }
 
     function updateMediaSession() {
@@ -768,20 +786,6 @@
       audio.addEventListener("pause",          () => updatePlayState(false));
       audio.addEventListener("ended",          () => advanceToNext());
 
-      sceneVideoA.addEventListener("error", () => {
-        sceneVideoA.style.opacity = "0";
-        sceneVideoB.style.opacity = "0";
-      });
-
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-          sceneVideoA.pause();
-          sceneVideoB.pause();
-        } else if (xfCurrent && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          xfCurrent.play().catch(() => {});
-        }
-      });
-
       document.addEventListener("keydown", (e) => {
         const inInput = e.target.closest("input, textarea, select, [contenteditable], button, a");
         if (inInput) return;
@@ -819,7 +823,7 @@
 
     function init() {
       setScenePoster();
-      initSceneLoop();
+      initBoomerang();
       bindEvents();
       initMediaSessionActions();
       initMix(false);
