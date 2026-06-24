@@ -149,19 +149,19 @@
     .gloss:active { transform: scale(0.94); }
 
     .control-icon {
-      width: 1.35rem;
-      height: 1.35rem;
+      width: 1.48rem;
+      height: 1.48rem;
       overflow: visible;
       fill: none;
       stroke: currentColor;
-      stroke-width: 1.85;
+      stroke-width: 2.15;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
     .control-icon-fill {
-      width: 1.08rem;
-      height: 1.08rem;
+      width: 1.18rem;
+      height: 1.18rem;
       fill: currentColor;
     }
 
@@ -169,17 +169,17 @@
       fill: currentColor;
       stroke: none;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-      font-size: 7px;
-      font-weight: 700;
-      letter-spacing: -0.08em;
+      font-size: 8.4px;
+      font-weight: 750;
+      letter-spacing: -0.04em;
     }
 
     .link-icon {
-      width: 0.86rem;
-      height: 0.86rem;
+      width: 0.96rem;
+      height: 0.96rem;
       fill: none;
       stroke: currentColor;
-      stroke-width: 2;
+      stroke-width: 2.1;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -272,18 +272,18 @@
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255, 248, 240, 0.26);
+      color: rgba(255, 248, 240, 0.42);
       text-decoration: none;
       transition: color 150ms ease, transform 150ms ease;
     }
 
     .track-link:hover {
-      color: rgba(255, 248, 240, 0.75);
+      color: rgba(255, 248, 240, 0.86);
       transform: scale(1.2);
     }
 
     .track-active .track-link {
-      color: rgba(255, 248, 240, 0.42);
+      color: rgba(255, 248, 240, 0.58);
     }
 
     .tnum { font-variant-numeric: tabular-nums; }
@@ -336,10 +336,10 @@
         <div class="flex flex-wrap items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
-            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M11.7 5.6H6.7v5"></path>
-              <path d="M7 8.6a8.2 8.2 0 1 1-1.15 4.18"></path>
-              <text x="11.2" y="17.4">10</text>
+            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
+              <path d="M13.5 7.2 8.4 12.3l5.1 5.1"></path>
+              <path d="M8.9 12.3a9.7 9.7 0 1 1-2.25 6.25"></path>
+              <text x="11.65" y="20.25">10</text>
             </svg>
           </button>
 
@@ -353,19 +353,19 @@
           </button>
 
           <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
-            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M16.3 5.6h5v5"></path>
-              <path d="M21 8.6a8.2 8.2 0 1 0 1.15 4.18"></path>
-              <text x="10.5" y="17.4">10</text>
+            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
+              <path d="M18.5 7.2 23.6 12.3l-5.1 5.1"></path>
+              <path d="M23.1 12.3a9.7 9.7 0 1 0 2.25 6.25"></path>
+              <text x="11.65" y="20.25">10</text>
             </svg>
           </button>
 
           <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
-            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M5 8.4h3.15c2.25 0 3.75 1.15 5.05 3.35l1.6 2.7c1.28 2.17 2.78 3.15 5.05 3.15H23"></path>
-              <path d="M19.8 14.4 23 17.6l-3.2 3.2"></path>
-              <path d="M5 19.6h3.15c2.25 0 3.75-1.15 5.05-3.35l1.6-2.7c1.28-2.17 2.78-3.15 5.05-3.15H23"></path>
-              <path d="M19.8 7.2 23 10.4l-3.2 3.2"></path>
+            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
+              <path d="M5.2 10.2h4.1c2.6 0 4.25 1.25 5.75 3.9l1.9 3.35c1.36 2.35 2.95 3.35 5.75 3.35h4.1"></path>
+              <path d="m23.1 16.9 3.7 3.9-3.7 3.9"></path>
+              <path d="M5.2 21.8h4.1c2.7 0 4.25-1.1 5.75-3.85l1.9-3.55c1.25-2.35 2.95-3.2 5.75-3.2h4.1"></path>
+              <path d="m23.1 7.3 3.7 3.9-3.7 3.9"></path>
             </svg>
           </button>
 
@@ -385,10 +385,10 @@
           <a id="trackLinkBtn" href="#" target="_blank" rel="noopener noreferrer"
              class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
              aria-label="Open track link">
-            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M10 7H7.8A2.8 2.8 0 0 0 5 9.8v10.4A2.8 2.8 0 0 0 7.8 23h10.4a2.8 2.8 0 0 0 2.8-2.8V18"></path>
-              <path d="M15 5h8v8"></path>
-              <path d="M13.7 14.3 23 5"></path>
+            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
+              <path d="M12 7H8.9A3.9 3.9 0 0 0 5 10.9v12.2A3.9 3.9 0 0 0 8.9 27h12.2a3.9 3.9 0 0 0 3.9-3.9V20"></path>
+              <path d="M17.5 5H27v9.5"></path>
+              <path d="M16.2 15.8 27 5"></path>
             </svg>
           </a>
         </div>
@@ -616,7 +616,7 @@
         link.rel = "noopener noreferrer";
         link.className = "track-link";
         link.setAttribute("aria-label", "Open track link");
-        link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M8 4.5H5.8A1.8 1.8 0 0 0 4 6.3v7.9A1.8 1.8 0 0 0 5.8 16h7.9a1.8 1.8 0 0 0 1.8-1.8V12"></path><path d="M11 4h5v5"></path><path d="M9.8 10.2 16 4"></path></svg>`;
+        link.innerHTML = `<svg viewBox="0 0 22 22" class="link-icon" aria-hidden="true"><path d="M8.3 4.8H6.1A2.3 2.3 0 0 0 3.8 7.1v8.8a2.3 2.3 0 0 0 2.3 2.3h8.8a2.3 2.3 0 0 0 2.3-2.3v-2.2"></path><path d="M12.2 3.8h6v6"></path><path d="M11.1 10.9 18.2 3.8"></path></svg>`;
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
 
