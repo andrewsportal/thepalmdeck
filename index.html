@@ -26,18 +26,6 @@
   <style>
     :root {
       color-scheme: dark;
-      --cream: #fff8f0;
-      --cream-strong: rgba(255, 250, 244, 0.96);
-      --cream-soft: rgba(255, 248, 240, 0.66);
-      --cream-muted: rgba(255, 248, 240, 0.42);
-      --hairline: rgba(255, 248, 240, 0.14);
-      --hairline-strong: rgba(255, 248, 240, 0.24);
-      --surface-top: rgba(38, 42, 42, 0.68);
-      --surface-bottom: rgba(16, 17, 19, 0.76);
-      --surface-button-top: rgba(255, 250, 244, 0.18);
-      --surface-button-bottom: rgba(255, 250, 244, 0.075);
-      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -50,11 +38,10 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background: #0f1011;
-      color: var(--cream);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
+      background: #111111;
+      color: #fff8f0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       -webkit-font-smoothing: antialiased;
-      font-synthesis-weight: none;
       text-rendering: optimizeLegibility;
       overflow: hidden;
       overscroll-behavior: none;
@@ -70,8 +57,7 @@
       object-fit: cover;
       z-index: 1;
       opacity: 0;
-      filter: saturate(0.98) contrast(1.02);
-      transition: opacity 650ms var(--ease-soft);
+      transition: opacity 400ms ease;
     }
 
     .scene-video.loaded {
@@ -82,14 +68,12 @@
       position: fixed;
       inset: 0;
       z-index: 2;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255, 248, 240, 0.05), transparent 34%),
-        linear-gradient(
-          to bottom,
-          rgba(10, 12, 14, 0.08) 0%,
-          rgba(10, 12, 14, 0.22) 48%,
-          rgba(10, 12, 14, 0.66) 100%
-        );
+      background: linear-gradient(
+        to bottom,
+        rgba(17, 17, 17, 0.08) 0%,
+        rgba(17, 17, 17, 0.28) 52%,
+        rgba(17, 17, 17, 0.62) 100%
+      );
     }
 
     .scene-fallback {
@@ -100,10 +84,10 @@
       place-items: center;
       padding: 1.5rem;
       text-align: center;
-      color: rgba(255, 248, 240, 0.78);
+      color: rgba(255, 248, 240, 0.76);
       background:
-        radial-gradient(circle at 50% 30%, rgba(232, 93, 4, 0.18), transparent 34%),
-        #101112;
+        radial-gradient(circle at 50% 30%, rgba(232, 93, 4, 0.24), transparent 34%),
+        #111111;
     }
 
     .scene-fallback.visible {
@@ -115,7 +99,6 @@
       font-size: 0.82rem;
       line-height: 1.5;
       letter-spacing: 0.02em;
-      text-wrap: balance;
     }
 
     #stage {
@@ -126,16 +109,16 @@
     .mixer-credit {
       text-align: center;
       font-size: 0.68rem;
-      font-weight: 560;
-      letter-spacing: 0.115em;
-      color: rgba(255, 248, 240, 0.36);
-      margin-top: 0.65rem;
-      margin-bottom: 0.35rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: rgba(255, 248, 240, 0.32);
+      margin-top: 0.45rem;
+      margin-bottom: 0.5rem;
     }
 
     .controls {
       opacity: 1;
-      transition: opacity 360ms var(--ease-soft);
+      transition: opacity 320ms ease;
       pointer-events: none;
       padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
@@ -144,100 +127,41 @@
     .controls .ui    { pointer-events: auto; }
 
     .glass {
-      position: relative;
-      overflow: hidden;
-      border-radius: 28px;
-      backdrop-filter: blur(34px) saturate(180%);
-      -webkit-backdrop-filter: blur(34px) saturate(180%);
-      background:
-        linear-gradient(180deg, var(--surface-top), var(--surface-bottom)),
-        rgba(20, 22, 24, 0.68);
-      border: 1px solid var(--hairline);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.08) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.26) inset,
-        0 22px 56px rgba(0, 0, 0, 0.42),
-        0 6px 18px rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      background: rgba(23, 23, 25, 0.56);
+      border: 1px solid rgba(255, 248, 240, 0.12);
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
       transform: translateZ(0);
     }
 
-    .glass::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      border-radius: inherit;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 36%),
-        radial-gradient(circle at 50% 0%, rgba(255, 248, 240, 0.08), transparent 38%);
-      opacity: 0.72;
-    }
-
-    .glass > * {
-      position: relative;
-      z-index: 1;
-    }
-
     .gloss {
-      border: 1px solid var(--hairline-strong);
-      background:
-        linear-gradient(to bottom, var(--surface-button-top), var(--surface-button-bottom)),
-        rgba(255, 248, 240, 0.05);
-      color: var(--cream-strong);
+      border: 1px solid rgba(255, 248, 240, 0.25);
+      background: linear-gradient(to bottom, rgba(255, 248, 240, 0.15), rgba(255, 248, 240, 0.06));
+      color: #fff8f0;
       cursor: pointer;
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.12) inset,
-        0 8px 20px rgba(0, 0, 0, 0.2);
-      touch-action: manipulation;
       transition:
-        transform 260ms var(--ease-out),
-        border-color 220ms ease,
-        background 220ms ease,
-        box-shadow 220ms ease,
-        color 220ms ease;
+        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 200ms ease;
     }
 
-    .gloss:hover  {
-      transform: translateY(-1px) scale(1.035);
-      border-color: rgba(255, 248, 240, 0.36);
-      background:
-        linear-gradient(to bottom, rgba(255, 250, 244, 0.22), rgba(255, 250, 244, 0.095)),
-        rgba(255, 248, 240, 0.06);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.16) inset,
-        0 12px 24px rgba(0, 0, 0, 0.24);
-    }
-
-    .gloss:active {
-      transform: translateY(1px) scale(0.965);
-      border-color: rgba(255, 248, 240, 0.22);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.08) inset,
-        0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .gloss:focus-visible,
-    .progress:focus-visible,
-    .track-item:focus-visible,
-    .track-link:focus-visible {
-      outline: 2px solid rgba(255, 248, 240, 0.72);
-      outline-offset: 3px;
-    }
+    .gloss:hover  { transform: scale(1.06); border-color: rgba(255, 248, 240, 0.4); }
+    .gloss:active { transform: scale(0.94); }
 
     .control-icon {
-      width: 1.48rem;
-      height: 1.48rem;
+      width: 1.35rem;
+      height: 1.35rem;
       overflow: visible;
       fill: none;
       stroke: currentColor;
-      stroke-width: 2.15;
+      stroke-width: 1.85;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
     .control-icon-fill {
-      width: 1.18rem;
-      height: 1.18rem;
+      width: 1.08rem;
+      height: 1.08rem;
       fill: currentColor;
     }
 
@@ -245,62 +169,42 @@
       fill: currentColor;
       stroke: none;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-      font-size: 8.4px;
-      font-weight: 750;
-      letter-spacing: -0.04em;
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: -0.08em;
     }
 
     .link-icon {
-      width: 0.96rem;
-      height: 0.96rem;
+      width: 0.86rem;
+      height: 0.86rem;
       fill: none;
       stroke: currentColor;
-      stroke-width: 2.1;
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
     .shuffle-on {
       border-color: rgba(255, 248, 240, 0.5);
-      background:
-        linear-gradient(to bottom, rgba(255, 248, 240, 0.28), rgba(255, 248, 240, 0.12)),
-        rgba(255, 248, 240, 0.08);
-      box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.18) inset,
-        0 10px 24px rgba(0, 0, 0, 0.24);
-    }
-
-    #tracklistBtn {
-      min-width: 7.55rem;
-      font-weight: 650;
-      letter-spacing: 0.13em;
-      color: rgba(255, 250, 244, 0.9);
     }
 
     .progress {
       height: 4px;
       border-radius: 999px;
       position: relative;
-      background: rgba(255, 248, 240, 0.16);
+      background: rgba(255, 248, 240, 0.18);
       cursor: pointer;
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
-      transition:
-        height 180ms var(--ease-out),
-        background 180ms ease;
+      transition: height 180ms ease;
     }
 
     .progress:hover,
-    .progress:focus-visible {
-      height: 6px;
-      background: rgba(255, 248, 240, 0.22);
-    }
+    .progress:focus-visible { height: 6px; }
 
     .progress-fill {
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, rgba(255, 250, 244, 0.92), rgba(255, 248, 240, 0.68));
-      box-shadow: 0 0 18px rgba(255, 248, 240, 0.14);
+      background: rgba(255, 248, 240, 0.72);
     }
 
     .progress-thumb {
@@ -312,24 +216,13 @@
       left: 0%;
       transform: translate(-50%, -50%) scale(0);
       background: #fff8f0;
-      box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.32),
-        0 0 0 1px rgba(255, 248, 240, 0.3);
       pointer-events: none;
-      transition: transform 200ms var(--ease-out);
+      transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .progress:hover .progress-thumb,
     .progress:focus-visible .progress-thumb {
       transform: translate(-50%, -50%) scale(1);
-    }
-
-    #timeEl,
-    #durationEl {
-      font-size: 0.69rem;
-      font-weight: 520;
-      color: rgba(255, 248, 240, 0.56);
-      letter-spacing: -0.01em;
     }
 
     .track-panel {
@@ -349,63 +242,48 @@
     }
 
     .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb {
-      background: rgba(255, 248, 240, 0.2);
-      border: 2px solid transparent;
-      background-clip: padding-box;
-      border-radius: 999px;
-    }
+    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
 
     .track-item {
       display: flex;
       align-items: center;
-      gap: 0.56rem;
-      border-radius: 12px;
-      padding: 0.48rem 0.62rem;
+      gap: 0.5rem;
+      border-radius: 0.5rem;
+      padding: 0.375rem 0.5rem;
       cursor: pointer;
-      color: rgba(255, 248, 240, 0.68);
-      transition:
-        background 180ms ease,
-        color 180ms ease,
-        box-shadow 180ms ease,
-        transform 180ms var(--ease-out);
+      color: rgba(255, 248, 240, 0.7);
+      transition: background 150ms ease, color 150ms ease;
       user-select: none;
     }
 
     .track-item:hover {
-      background: rgba(255, 248, 240, 0.075);
+      background: rgba(255, 248, 240, 0.07);
       color: rgba(255, 248, 240, 0.9);
-      transform: translateY(-1px);
     }
 
     .track-active {
-      background:
-        linear-gradient(180deg, rgba(255, 248, 240, 0.16), rgba(255, 248, 240, 0.085));
+      background: rgba(255, 248, 240, 0.1);
       color: rgba(255, 248, 240, 0.97);
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 248, 240, 0.22),
-        0 6px 16px rgba(0, 0, 0, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(255, 248, 240, 0.18);
     }
 
-    .track-link {
+    .track-spotify-link {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255, 248, 240, 0.42);
+      color: rgba(255, 248, 240, 0.26);
       text-decoration: none;
-      transition:
-        color 150ms ease,
-        transform 180ms var(--ease-out);
+      transition: color 150ms ease, transform 150ms ease;
     }
 
-    .track-link:hover {
-      color: rgba(255, 248, 240, 0.86);
+    .track-spotify-link:hover {
+      color: rgba(255, 248, 240, 0.75);
       transform: scale(1.2);
     }
 
-    .track-active .track-link {
-      color: rgba(255, 248, 240, 0.58);
+    .track-active .track-spotify-link {
+      color: rgba(255, 248, 240, 0.42);
     }
 
     .tnum { font-variant-numeric: tabular-nums; }
@@ -415,9 +293,8 @@
     .marquee-track {
       display: inline-flex;
       white-space: nowrap;
-      font-size: 0.74rem;
-      font-weight: 520;
-      color: rgba(255, 248, 240, 0.64);
+      font-size: 0.72rem;
+      color: rgba(255, 248, 240, 0.58);
       letter-spacing: 0.01em;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -459,10 +336,10 @@
         <div class="flex flex-wrap items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M13.5 7.2 8.4 12.3l5.1 5.1"></path>
-              <path d="M8.9 12.3a9.7 9.7 0 1 1-2.25 6.25"></path>
-              <text x="11.65" y="20.25">10</text>
+            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+              <path d="M11.7 5.6H6.7v5"></path>
+              <path d="M7 8.6a8.2 8.2 0 1 1-1.15 4.18"></path>
+              <text x="11.2" y="17.4">10</text>
             </svg>
           </button>
 
@@ -476,19 +353,19 @@
           </button>
 
           <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M18.5 7.2 23.6 12.3l-5.1 5.1"></path>
-              <path d="M23.1 12.3a9.7 9.7 0 1 0 2.25 6.25"></path>
-              <text x="11.65" y="20.25">10</text>
+            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+              <path d="M16.3 5.6h5v5"></path>
+              <path d="M21 8.6a8.2 8.2 0 1 0 1.15 4.18"></path>
+              <text x="10.5" y="17.4">10</text>
             </svg>
           </button>
 
           <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M5.2 10.2h4.1c2.6 0 4.25 1.25 5.75 3.9l1.9 3.35c1.36 2.35 2.95 3.35 5.75 3.35h4.1"></path>
-              <path d="m23.1 16.9 3.7 3.9-3.7 3.9"></path>
-              <path d="M5.2 21.8h4.1c2.7 0 4.25-1.1 5.75-3.85l1.9-3.55c1.25-2.35 2.95-3.2 5.75-3.2h4.1"></path>
-              <path d="m23.1 7.3 3.7 3.9-3.7 3.9"></path>
+            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+              <path d="M5 8.4h3.15c2.25 0 3.75 1.15 5.05 3.35l1.6 2.7c1.28 2.17 2.78 3.15 5.05 3.15H23"></path>
+              <path d="M19.8 14.4 23 17.6l-3.2 3.2"></path>
+              <path d="M5 19.6h3.15c2.25 0 3.75-1.15 5.05-3.35l1.6-2.7c1.28-2.17 2.78-3.15 5.05-3.15H23"></path>
+              <path d="M19.8 7.2 23 10.4l-3.2 3.2"></path>
             </svg>
           </button>
 
@@ -505,13 +382,13 @@
               <span id="nowPlayingClone" class="hidden" aria-hidden="true"></span>
             </div>
           </div>
-          <a id="trackLinkBtn" href="#" target="_blank" rel="noopener noreferrer"
+          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
              class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-             aria-label="Open track link">
-            <svg viewBox="0 0 32 32" class="control-icon" aria-hidden="true">
-              <path d="M12 7H8.9A3.9 3.9 0 0 0 5 10.9v12.2A3.9 3.9 0 0 0 8.9 27h12.2a3.9 3.9 0 0 0 3.9-3.9V20"></path>
-              <path d="M17.5 5H27v9.5"></path>
-              <path d="M16.2 15.8 27 5"></path>
+             aria-label="Open in Spotify">
+            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+              <path d="M10 7H7.8A2.8 2.8 0 0 0 5 9.8v10.4A2.8 2.8 0 0 0 7.8 23h10.4a2.8 2.8 0 0 0 2.8-2.8V18"></path>
+              <path d="M15 5h8v8"></path>
+              <path d="M13.7 14.3 23 5"></path>
             </svg>
           </a>
         </div>
@@ -538,17 +415,50 @@
 
   <script>
     // ================================================================
-    //  PORTAL SETTINGS
+    //  PORTAL DATA  —  only edit this section
     // ================================================================
     const PORTAL = {
       mix: {
         title: "Vagabond",
-        tracklistUrl: "tracklist.txt",
-        tracklist: [],
+
+        // ── TRACKLIST ──────────────────────────────────────────────
+        //
+        //  audio   → filename in your repo. Name your files song1, song2, song3…
+        //            and include the extension: song1.mp3 / song1.flac / song1.aac
+        //            Any format the browser supports works (mp3, aac, flac, m4a, wav).
+        //  title   → text shown in the tracklist and the now-playing marquee
+        //  spotify → in Spotify: right-click a song → Share → Copy link to song
+        //
+        //  • Songs play one after another automatically.
+        //  • Tap a row while playing  → switches to that song immediately.
+        //  • Tap a row while paused   → selects it; press play to start.
+        //  • When shuffled, auto-advance follows the shuffled queue order.
+        //  • Lock-screen previous/next controls skip between tracks.
+        //  • To add a track  → copy any block below and paste it after.
+        //  • To remove a track → delete its { } block and the comma before it.
+        //
+        // ──────────────────────────────────────────────────────────
+        tracklist: [
+          {
+            audio:   "song1.mp3",
+            title:   "01. Go Back (feat. Julia Church) — John Summit, Sub Focus, Julia Church",
+            spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
+          },
+          {
+            audio:   "song2.mp3",
+            title:   "02. What A Life — John Summit, Guz, Stevie Appleton",
+            spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
+          },
+          {
+            audio:   "song3.mp3",
+            title:   "03. Remember (John Summit Remix) — deadmau5, Kaskade, John Summit",
+            spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
+          },
+        ],
       },
     };
     // ================================================================
-    //  END SETTINGS  —  edit tracklist.txt to update songs
+    //  END OF EDITABLE DATA  —  no need to change anything below
     // ================================================================
 
     const audio = new Audio();
@@ -577,7 +487,7 @@
     const forwardBtn         = document.getElementById("forwardBtn");
     const shuffleBtn         = document.getElementById("shuffleBtn");
     const tracklistBtn       = document.getElementById("tracklistBtn");
-    const trackLinkBtn       = document.getElementById("trackLinkBtn");
+    const spotifyBtn         = document.getElementById("spotifyBtn");
     const marqueeWrap        = document.getElementById("marqueeWrap");
     const marqueeTrack       = document.getElementById("marqueeTrack");
     const nowPlayingText     = document.getElementById("nowPlayingText");
@@ -692,33 +602,10 @@
         : [...PORTAL.mix.tracklist];
     }
 
-    function parseTracklistText(text) {
-      return text
-        .split(/\n\s*\n/)
-        .map((block) => block
-          .split(/\r?\n/)
-          .map((line) => line.trim())
-          .filter((line) => line && !line.startsWith("#")))
-        .filter((lines) => lines.length > 0)
-        .map((lines, index) => ({
-          audio: `song${index + 1}.mp3`,
-          title: lines[0],
-          link: lines.find((line) => /^https?:\/\//i.test(line)) || "#",
-        }));
-    }
-
-    async function loadTracklist() {
-      try {
-        const response = await fetch(PORTAL.mix.tracklistUrl, { cache: "no-store" });
-        if (!response.ok) throw new Error("Tracklist file could not be loaded.");
-        PORTAL.mix.tracklist = parseTracklistText(await response.text());
-      } catch (_) {
-        PORTAL.mix.tracklist = [];
-      }
-    }
-
-    function trackHref(track) {
-      return track.link || "#";
+    function spotifyHref(track) {
+      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
+        ? track.spotify
+        : "#";
     }
 
     function renderTracklist() {
@@ -734,12 +621,12 @@
         li.appendChild(titleSpan);
 
         const link = document.createElement("a");
-        link.href = trackHref(track);
+        link.href = spotifyHref(track);
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        link.className = "track-link";
-        link.setAttribute("aria-label", "Open track link");
-        link.innerHTML = `<svg viewBox="0 0 22 22" class="link-icon" aria-hidden="true"><path d="M8.3 4.8H6.1A2.3 2.3 0 0 0 3.8 7.1v8.8a2.3 2.3 0 0 0 2.3 2.3h8.8a2.3 2.3 0 0 0 2.3-2.3v-2.2"></path><path d="M12.2 3.8h6v6"></path><path d="M11.1 10.9 18.2 3.8"></path></svg>`;
+        link.className = "track-spotify-link";
+        link.setAttribute("aria-label", "Open in Spotify");
+        link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M8 4.5H5.8A1.8 1.8 0 0 0 4 6.3v7.9A1.8 1.8 0 0 0 5.8 16h7.9a1.8 1.8 0 0 0 1.8-1.8V12"></path><path d="M11 4h5v5"></path><path d="M9.8 10.2 16 4"></path></svg>`;
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
 
@@ -755,7 +642,7 @@
       audio.load();
 
       nowPlayingText.textContent = track.title;
-      trackLinkBtn.href = trackHref(track);
+      spotifyBtn.href = spotifyHref(track);
       refreshMarquee();
       renderTracklist();
       updateMediaSession();
@@ -814,7 +701,6 @@
       let reverseRaf      = null;
       let reverseLastTs   = null;
       let isReversing     = false;
-      let resumeTimers     = [];
 
       function showVideo() {
         sceneFallback.classList.remove("visible");
@@ -845,11 +731,6 @@
         isReversing = false;
       }
 
-      function clearResumeTimers() {
-        resumeTimers.forEach((timer) => window.clearTimeout(timer));
-        resumeTimers = [];
-      }
-
       function watchForward() {
         forwardWatchRaf = null;
         if (sceneVideo.paused || isReversing) return;
@@ -864,7 +745,6 @@
       }
 
       function startForward() {
-        if (document.hidden) return;
         cancelReverse();
         cancelForwardWatch();
         sceneVideo.loop = false;
@@ -918,7 +798,6 @@
       }
 
       function playSceneVideo() {
-        if (document.hidden) return;
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.pause();
           if (sceneVideo.readyState > 0) showVideo();
@@ -931,54 +810,19 @@
         startForward();
       }
 
-      function suspendSceneVideo() {
-        clearResumeTimers();
-        cancelForwardWatch();
-        cancelReverse();
-        sceneVideo.pause();
-      }
-
-      function resumeSceneVideo() {
-        if (document.hidden) return;
-
-        if (sceneVideo.readyState === 0) {
-          sceneVideo.load();
-        }
-
-        if (sceneVideo.currentTime >= loopEnd()) {
-          sceneVideo.currentTime = 0;
-        }
-
-        playSceneVideo();
-      }
-
-      function scheduleSceneVideoResume() {
-        clearResumeTimers();
-        [0, 250, 900].forEach((delay) => {
-          resumeTimers.push(window.setTimeout(resumeSceneVideo, delay));
-        });
-      }
-
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("ended", startReverse);
-      sceneVideo.addEventListener("pause", () => {
-        if (!document.hidden && !isReversing) scheduleSceneVideoResume();
-      });
-      sceneVideo.addEventListener("stalled", scheduleSceneVideoResume);
-      sceneVideo.addEventListener("suspend", () => {
-        if (!document.hidden) scheduleSceneVideoResume();
-      });
       sceneVideo.addEventListener("error", showFallback);
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-          suspendSceneVideo();
+          cancelForwardWatch();
+          cancelReverse();
+          sceneVideo.pause();
         } else {
-          scheduleSceneVideoResume();
+          playSceneVideo();
         }
       });
-      window.addEventListener("pageshow", scheduleSceneVideoResume);
-      window.addEventListener("focus", scheduleSceneVideoResume);
 
       if (sceneVideo.readyState > 0) {
         showVideo();
@@ -1006,18 +850,10 @@
       if (audio.paused) playAudio(); else audio.pause();
     }
 
-    async function initMix(autoplay = false) {
+    function initMix(autoplay = false) {
       document.title = PORTAL.mix.title;
-      await loadTracklist();
       buildDisplayList();
-      if (displayList.length > 0) {
-        selectTrack(displayList[0]);
-      } else {
-        nowPlayingText.textContent = "Add tracks to tracklist.txt";
-        trackLinkBtn.href = "#";
-        refreshMarquee();
-        renderTracklist();
-      }
+      if (displayList.length > 0) selectTrack(displayList[0]);
       updateProgressUI();
       if (autoplay) playAudio(); else updatePlayState(false);
       revealControls();
@@ -1059,7 +895,7 @@
 
       tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
 
-      trackLinkBtn.addEventListener("click", () => revealControls());
+      spotifyBtn.addEventListener("click", () => revealControls());
 
       progressTrack.addEventListener("pointerdown", (e) => {
         isScrubbing = true;
@@ -1122,11 +958,11 @@
       });
     }
 
-    async function init() {
+    function init() {
       initSceneVideo();
       bindEvents();
       initMediaSessionActions();
-      await initMix(false);
+      initMix(false);
       setTracklistOpen(false);
       setControlsVisible(true);
     }
