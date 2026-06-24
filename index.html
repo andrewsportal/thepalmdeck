@@ -26,6 +26,18 @@
   <style>
     :root {
       color-scheme: dark;
+      --cream: #fff8f0;
+      --cream-strong: rgba(255, 250, 244, 0.96);
+      --cream-soft: rgba(255, 248, 240, 0.66);
+      --cream-muted: rgba(255, 248, 240, 0.42);
+      --hairline: rgba(255, 248, 240, 0.14);
+      --hairline-strong: rgba(255, 248, 240, 0.24);
+      --surface-top: rgba(38, 42, 42, 0.68);
+      --surface-bottom: rgba(16, 17, 19, 0.76);
+      --surface-button-top: rgba(255, 250, 244, 0.18);
+      --surface-button-bottom: rgba(255, 250, 244, 0.075);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -38,10 +50,11 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background: #111111;
-      color: #fff8f0;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: #0f1011;
+      color: var(--cream);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
+      font-synthesis-weight: none;
       text-rendering: optimizeLegibility;
       overflow: hidden;
       overscroll-behavior: none;
@@ -57,7 +70,8 @@
       object-fit: cover;
       z-index: 1;
       opacity: 0;
-      transition: opacity 400ms ease;
+      filter: saturate(0.98) contrast(1.02);
+      transition: opacity 650ms var(--ease-soft);
     }
 
     .scene-video.loaded {
@@ -68,12 +82,14 @@
       position: fixed;
       inset: 0;
       z-index: 2;
-      background: linear-gradient(
-        to bottom,
-        rgba(17, 17, 17, 0.08) 0%,
-        rgba(17, 17, 17, 0.28) 52%,
-        rgba(17, 17, 17, 0.62) 100%
-      );
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 248, 240, 0.05), transparent 34%),
+        linear-gradient(
+          to bottom,
+          rgba(10, 12, 14, 0.08) 0%,
+          rgba(10, 12, 14, 0.22) 48%,
+          rgba(10, 12, 14, 0.66) 100%
+        );
     }
 
     .scene-fallback {
@@ -84,10 +100,10 @@
       place-items: center;
       padding: 1.5rem;
       text-align: center;
-      color: rgba(255, 248, 240, 0.76);
+      color: rgba(255, 248, 240, 0.78);
       background:
-        radial-gradient(circle at 50% 30%, rgba(232, 93, 4, 0.24), transparent 34%),
-        #111111;
+        radial-gradient(circle at 50% 30%, rgba(232, 93, 4, 0.18), transparent 34%),
+        #101112;
     }
 
     .scene-fallback.visible {
@@ -99,6 +115,7 @@
       font-size: 0.82rem;
       line-height: 1.5;
       letter-spacing: 0.02em;
+      text-wrap: balance;
     }
 
     #stage {
@@ -109,16 +126,16 @@
     .mixer-credit {
       text-align: center;
       font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      color: rgba(255, 248, 240, 0.32);
-      margin-top: 0.45rem;
-      margin-bottom: 0.5rem;
+      font-weight: 560;
+      letter-spacing: 0.115em;
+      color: rgba(255, 248, 240, 0.36);
+      margin-top: 0.65rem;
+      margin-bottom: 0.35rem;
     }
 
     .controls {
       opacity: 1;
-      transition: opacity 320ms ease;
+      transition: opacity 360ms var(--ease-soft);
       pointer-events: none;
       padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
@@ -127,26 +144,85 @@
     .controls .ui    { pointer-events: auto; }
 
     .glass {
-      backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(23, 23, 25, 0.56);
-      border: 1px solid rgba(255, 248, 240, 0.12);
-      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
+      background:
+        linear-gradient(180deg, var(--surface-top), var(--surface-bottom)),
+        rgba(20, 22, 24, 0.68);
+      border: 1px solid var(--hairline);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.08) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.26) inset,
+        0 22px 56px rgba(0, 0, 0, 0.42),
+        0 6px 18px rgba(0, 0, 0, 0.22);
       transform: translateZ(0);
     }
 
-    .gloss {
-      border: 1px solid rgba(255, 248, 240, 0.25);
-      background: linear-gradient(to bottom, rgba(255, 248, 240, 0.15), rgba(255, 248, 240, 0.06));
-      color: #fff8f0;
-      cursor: pointer;
-      transition:
-        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 200ms ease;
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 36%),
+        radial-gradient(circle at 50% 0%, rgba(255, 248, 240, 0.08), transparent 38%);
+      opacity: 0.72;
     }
 
-    .gloss:hover  { transform: scale(1.06); border-color: rgba(255, 248, 240, 0.4); }
-    .gloss:active { transform: scale(0.94); }
+    .glass > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gloss {
+      border: 1px solid var(--hairline-strong);
+      background:
+        linear-gradient(to bottom, var(--surface-button-top), var(--surface-button-bottom)),
+        rgba(255, 248, 240, 0.05);
+      color: var(--cream-strong);
+      cursor: pointer;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.12) inset,
+        0 8px 20px rgba(0, 0, 0, 0.2);
+      touch-action: manipulation;
+      transition:
+        transform 260ms var(--ease-out),
+        border-color 220ms ease,
+        background 220ms ease,
+        box-shadow 220ms ease,
+        color 220ms ease;
+    }
+
+    .gloss:hover  {
+      transform: translateY(-1px) scale(1.035);
+      border-color: rgba(255, 248, 240, 0.36);
+      background:
+        linear-gradient(to bottom, rgba(255, 250, 244, 0.22), rgba(255, 250, 244, 0.095)),
+        rgba(255, 248, 240, 0.06);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.16) inset,
+        0 12px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .gloss:active {
+      transform: translateY(1px) scale(0.965);
+      border-color: rgba(255, 248, 240, 0.22);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.08) inset,
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .gloss:focus-visible,
+    .progress:focus-visible,
+    .track-item:focus-visible,
+    .track-link:focus-visible {
+      outline: 2px solid rgba(255, 248, 240, 0.72);
+      outline-offset: 3px;
+    }
 
     .control-icon {
       width: 1.48rem;
@@ -186,25 +262,45 @@
 
     .shuffle-on {
       border-color: rgba(255, 248, 240, 0.5);
+      background:
+        linear-gradient(to bottom, rgba(255, 248, 240, 0.28), rgba(255, 248, 240, 0.12)),
+        rgba(255, 248, 240, 0.08);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.18) inset,
+        0 10px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    #tracklistBtn {
+      min-width: 7.55rem;
+      font-weight: 650;
+      letter-spacing: 0.13em;
+      color: rgba(255, 250, 244, 0.9);
     }
 
     .progress {
       height: 4px;
       border-radius: 999px;
       position: relative;
-      background: rgba(255, 248, 240, 0.18);
+      background: rgba(255, 248, 240, 0.16);
       cursor: pointer;
-      transition: height 180ms ease;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+      transition:
+        height 180ms var(--ease-out),
+        background 180ms ease;
     }
 
     .progress:hover,
-    .progress:focus-visible { height: 6px; }
+    .progress:focus-visible {
+      height: 6px;
+      background: rgba(255, 248, 240, 0.22);
+    }
 
     .progress-fill {
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: rgba(255, 248, 240, 0.72);
+      background: linear-gradient(90deg, rgba(255, 250, 244, 0.92), rgba(255, 248, 240, 0.68));
+      box-shadow: 0 0 18px rgba(255, 248, 240, 0.14);
     }
 
     .progress-thumb {
@@ -216,13 +312,24 @@
       left: 0%;
       transform: translate(-50%, -50%) scale(0);
       background: #fff8f0;
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.32),
+        0 0 0 1px rgba(255, 248, 240, 0.3);
       pointer-events: none;
-      transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 200ms var(--ease-out);
     }
 
     .progress:hover .progress-thumb,
     .progress:focus-visible .progress-thumb {
       transform: translate(-50%, -50%) scale(1);
+    }
+
+    #timeEl,
+    #durationEl {
+      font-size: 0.69rem;
+      font-weight: 520;
+      color: rgba(255, 248, 240, 0.56);
+      letter-spacing: -0.01em;
     }
 
     .track-panel {
@@ -242,29 +349,42 @@
     }
 
     .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
+    .track-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 248, 240, 0.2);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      border-radius: 999px;
+    }
 
     .track-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      border-radius: 0.5rem;
-      padding: 0.375rem 0.5rem;
+      gap: 0.56rem;
+      border-radius: 12px;
+      padding: 0.48rem 0.62rem;
       cursor: pointer;
-      color: rgba(255, 248, 240, 0.7);
-      transition: background 150ms ease, color 150ms ease;
+      color: rgba(255, 248, 240, 0.68);
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms var(--ease-out);
       user-select: none;
     }
 
     .track-item:hover {
-      background: rgba(255, 248, 240, 0.07);
+      background: rgba(255, 248, 240, 0.075);
       color: rgba(255, 248, 240, 0.9);
+      transform: translateY(-1px);
     }
 
     .track-active {
-      background: rgba(255, 248, 240, 0.1);
+      background:
+        linear-gradient(180deg, rgba(255, 248, 240, 0.16), rgba(255, 248, 240, 0.085));
       color: rgba(255, 248, 240, 0.97);
-      box-shadow: inset 0 0 0 1px rgba(255, 248, 240, 0.18);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 248, 240, 0.22),
+        0 6px 16px rgba(0, 0, 0, 0.16);
     }
 
     .track-link {
@@ -274,7 +394,9 @@
       padding: 2px;
       color: rgba(255, 248, 240, 0.42);
       text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
+      transition:
+        color 150ms ease,
+        transform 180ms var(--ease-out);
     }
 
     .track-link:hover {
@@ -293,8 +415,9 @@
     .marquee-track {
       display: inline-flex;
       white-space: nowrap;
-      font-size: 0.72rem;
-      color: rgba(255, 248, 240, 0.58);
+      font-size: 0.74rem;
+      font-weight: 520;
+      color: rgba(255, 248, 240, 0.64);
       letter-spacing: 0.01em;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
