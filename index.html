@@ -814,6 +814,7 @@
       let reverseRaf      = null;
       let reverseLastTs   = null;
       let isReversing     = false;
+      let sceneDirection  = 1;
       let resumeTimers     = [];
 
       function showVideo() {
@@ -865,6 +866,7 @@
 
       function startForward() {
         if (document.hidden) return;
+        sceneDirection = 1;
         cancelReverse();
         cancelForwardWatch();
         sceneVideo.loop = false;
@@ -885,6 +887,7 @@
       function startReverse() {
         cancelForwardWatch();
         cancelReverse();
+        sceneDirection = -1;
 
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.currentTime = 0;
@@ -946,10 +949,16 @@
         }
 
         if (sceneVideo.currentTime >= loopEnd()) {
-          sceneVideo.currentTime = 0;
+          sceneVideo.currentTime = loopEnd();
+          startReverse();
+          return;
         }
 
-        playSceneVideo();
+        if (sceneDirection === -1 && sceneVideo.currentTime > 0.03) {
+          startReverse();
+        } else {
+          startForward();
+        }
       }
 
       function scheduleSceneVideoResume() {
@@ -962,9 +971,6 @@
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("ended", startReverse);
-      sceneVideo.addEventListener("pause", () => {
-        if (!document.hidden && !isReversing) scheduleSceneVideoResume();
-      });
       sceneVideo.addEventListener("stalled", scheduleSceneVideoResume);
       sceneVideo.addEventListener("suspend", () => {
         if (!document.hidden) scheduleSceneVideoResume();
