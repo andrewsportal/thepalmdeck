@@ -33,8 +33,7 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -62,9 +61,7 @@
       transition: opacity 400ms ease;
     }
 
-    .scene-video.loaded {
-      opacity: 1;
-    }
+    .scene-video.loaded { opacity: 1; }
 
     .scene-mask {
       position: fixed;
@@ -72,9 +69,9 @@
       z-index: 2;
       background: linear-gradient(
         to bottom,
-        rgba(17, 17, 17, 0.08) 0%,
-        rgba(17, 17, 17, 0.28) 52%,
-        rgba(17, 17, 17, 0.62) 100%
+        rgba(17,17,17,0.08) 0%,
+        rgba(17,17,17,0.28) 52%,
+        rgba(17,17,17,0.62) 100%
       );
     }
 
@@ -86,15 +83,13 @@
       place-items: center;
       padding: 1.5rem;
       text-align: center;
-      color: rgba(255, 248, 240, 0.76);
+      color: rgba(255,248,240,0.76);
       background:
-        radial-gradient(circle at 50% 30%, rgba(232, 93, 4, 0.24), transparent 34%),
+        radial-gradient(circle at 50% 30%, rgba(232,93,4,0.24), transparent 34%),
         #111111;
     }
 
-    .scene-fallback.visible {
-      display: grid;
-    }
+    .scene-fallback.visible { display: grid; }
 
     .scene-fallback p {
       max-width: 28rem;
@@ -103,9 +98,15 @@
       letter-spacing: 0.02em;
     }
 
+    /*
+      z-index intentionally removed from #stage.
+      Adding z-index here would create an isolated stacking context that
+      traps the backdrop-filter compositor layer and buries fixed overlays
+      (like #infoBtn) even when they have a higher z-index in the root context.
+      gestureArea (z-10) and controls (z-20) handle their own stacking directly.
+    */
     #stage {
       position: relative;
-      z-index: 10;
     }
 
     .mixer-credit {
@@ -113,7 +114,7 @@
       font-size: 0.68rem;
       font-weight: 500;
       letter-spacing: 0.08em;
-      color: rgba(255, 248, 240, 0.32);
+      color: rgba(255,248,240,0.32);
       margin-top: 0.45rem;
       margin-bottom: 0.5rem;
     }
@@ -131,15 +132,15 @@
     .glass {
       backdrop-filter: blur(20px) saturate(150%);
       -webkit-backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(23, 23, 25, 0.56);
-      border: 1px solid rgba(255, 248, 240, 0.12);
-      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.36);
+      background: rgba(23,23,25,0.56);
+      border: 1px solid rgba(255,248,240,0.12);
+      box-shadow: 0 16px 38px rgba(0,0,0,0.36);
       transform: translateZ(0);
     }
 
     .gloss {
-      border: 1px solid rgba(255, 248, 240, 0.25);
-      background: linear-gradient(to bottom, rgba(255, 248, 240, 0.15), rgba(255, 248, 240, 0.06));
+      border: 1px solid rgba(255,248,240,0.25);
+      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
       color: #fff8f0;
       cursor: pointer;
       transition:
@@ -147,7 +148,7 @@
         border-color 200ms ease;
     }
 
-    .gloss:hover  { transform: scale(1.06); border-color: rgba(255, 248, 240, 0.4); }
+    .gloss:hover  { transform: scale(1.06); border-color: rgba(255,248,240,0.4); }
     .gloss:active { transform: scale(0.94); }
 
     .control-icon {
@@ -188,14 +189,14 @@
     }
 
     .shuffle-on {
-      border-color: rgba(255, 248, 240, 0.5);
+      border-color: rgba(255,248,240,0.5);
     }
 
     .progress {
       height: 4px;
       border-radius: 999px;
       position: relative;
-      background: rgba(255, 248, 240, 0.18);
+      background: rgba(255,248,240,0.18);
       cursor: pointer;
       transition: height 180ms ease;
     }
@@ -207,7 +208,7 @@
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: rgba(255, 248, 240, 0.72);
+      background: rgba(255,248,240,0.72);
     }
 
     .progress-thumb {
@@ -241,11 +242,11 @@
       max-height: min(27svh, 250px);
       overflow: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 248, 240, 0.18) transparent;
+      scrollbar-color: rgba(255,248,240,0.18) transparent;
     }
 
     .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255, 248, 240, 0.18); border-radius: 999px; }
+    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255,248,240,0.18); border-radius: 999px; }
 
     .track-item {
       display: flex;
@@ -254,20 +255,20 @@
       border-radius: 0.5rem;
       padding: 0.375rem 0.5rem;
       cursor: pointer;
-      color: rgba(255, 248, 240, 0.7);
+      color: rgba(255,248,240,0.7);
       transition: background 150ms ease, color 150ms ease;
       user-select: none;
     }
 
     .track-item:hover {
-      background: rgba(255, 248, 240, 0.07);
-      color: rgba(255, 248, 240, 0.9);
+      background: rgba(255,248,240,0.07);
+      color: rgba(255,248,240,0.9);
     }
 
     .track-active {
-      background: rgba(255, 248, 240, 0.1);
-      color: rgba(255, 248, 240, 0.97);
-      box-shadow: inset 0 0 0 1px rgba(255, 248, 240, 0.18);
+      background: rgba(255,248,240,0.1);
+      color: rgba(255,248,240,0.97);
+      box-shadow: inset 0 0 0 1px rgba(255,248,240,0.18);
     }
 
     .track-spotify-link {
@@ -275,18 +276,18 @@
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255, 248, 240, 0.26);
+      color: rgba(255,248,240,0.26);
       text-decoration: none;
       transition: color 150ms ease, transform 150ms ease;
     }
 
     .track-spotify-link:hover {
-      color: rgba(255, 248, 240, 0.75);
+      color: rgba(255,248,240,0.75);
       transform: scale(1.2);
     }
 
     .track-active .track-spotify-link {
-      color: rgba(255, 248, 240, 0.42);
+      color: rgba(255,248,240,0.42);
     }
 
     .tnum { font-variant-numeric: tabular-nums; }
@@ -297,7 +298,7 @@
       display: inline-flex;
       white-space: nowrap;
       font-size: 0.72rem;
-      color: rgba(255, 248, 240, 0.58);
+      color: rgba(255,248,240,0.58);
       letter-spacing: 0.01em;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -318,12 +319,12 @@
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
 
-    /* ── Info button: fixed top-right, always above everything ── */
+    /* Fixed top-right, last in DOM, highest z-index — always above the video and controls */
     .info-btn {
       position: fixed;
       top: max(8px, env(safe-area-inset-top));
       right: max(8px, env(safe-area-inset-right));
-      z-index: 100;
+      z-index: 9999;
     }
 
     .info-panel {
@@ -331,7 +332,7 @@
       top: max(1rem, calc(env(safe-area-inset-top) + 1rem));
       left: 50%;
       transform: translateX(-50%) translateY(calc(-100% - 2rem));
-      z-index: 99;
+      z-index: 9998;
       width: min(calc(100vw - 2rem), 28rem);
       border-radius: 1.5rem;
       padding: 1.25rem 1.5rem;
@@ -354,18 +355,18 @@
 <body>
   <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="hero-poster.JPG" aria-hidden="true">
     <source src="boomerang.MP4" type="video/mp4" />
-    Your browser does not support the background video.
   </video>
+
   <div id="sceneFallback" class="scene-fallback" aria-live="polite">
-    <p>The Palm Deck video could not be loaded. Make sure <strong>boomerang.MP4</strong> is included next to this page.</p>
+    <p>The background video could not be loaded. Make sure <strong>boomerang.MP4</strong> is in the same folder as this page.</p>
   </div>
+
   <div class="scene-mask" aria-hidden="true"></div>
 
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
 
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
-
       <section class="ui glass mx-0 rounded-3xl px-3 py-2.5 md:mx-auto md:w-full md:max-w-4xl md:p-4" aria-label="Audio controls">
 
         <div class="flex flex-wrap items-center justify-center gap-2">
@@ -380,10 +381,10 @@
 
           <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
             <svg id="iconPlay" viewBox="0 0 24 24" class="control-icon-fill translate-x-[1px]" aria-hidden="true">
-              <path d="M7.8 5.4c0-.72.8-1.15 1.4-.75l9.55 6.6c.52.36.52 1.14 0 1.5l-9.55 6.6c-.6.4-1.4-.03-1.4-.75V5.4z"></path>
+              <path d="M7.8 5.4c0-.72.8-1.15 1.4-.75l9.55 6.6c.52.36.52 1.14 0 1.5l-9.55 6.6c-.6.4-1.4-.03-1.4-.75V5.4z"/>
             </svg>
             <svg id="iconPause" viewBox="0 0 24 24" class="control-icon-fill hidden" aria-hidden="true">
-              <path d="M7.2 5.4c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9H8.1c-.5 0-.9-.4-.9-.9V5.4zm5.35 0c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9h-2.45c-.5 0-.9-.4-.9-.9V5.4z"></path>
+              <path d="M7.2 5.4c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9H8.1c-.5 0-.9-.4-.9-.9V5.4zm5.35 0c0-.5.4-.9.9-.9h2.45c.5 0 .9.4.9.9v13.2c0 .5-.4.9-.9.9h-2.45c-.5 0-.9-.4-.9-.9V5.4z"/>
             </svg>
           </button>
 
@@ -448,7 +449,12 @@
     </div>
   </main>
 
-  <!-- Info button and panel placed AFTER #stage so they always render on top -->
+  <!--
+    Info button and panel are last in <body> and carry z-index 9999/9998.
+    Being last in DOM order AND highest in z-index means no stacking context
+    on any earlier element can bury them — they are always above the video,
+    the mask, and the audio controls.
+  -->
   <button id="infoBtn" type="button" class="glass gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
     <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
       <circle cx="14" cy="14" r="9"/>
@@ -469,28 +475,18 @@
       mix: {
         title: "Vagabond",
 
-        // ── ABOUT ──────────────────────────────────────────────────
-        //  Shown in the info panel (tap ⓘ top-right). Keep it short.
-        // ──────────────────────────────────────────────────────────
+        // Shown in the info panel (tap ⓘ top-right). Keep it short.
         description: "House, soul & funk — a curated mix for long afternoons at the deck. Tap play and let it ride.",
 
-        // ── TRACKLIST ──────────────────────────────────────────────
+        // audio   → filename in your repo (e.g. song1.mp3)
+        // title   → shown in tracklist and now-playing marquee
+        // spotify → right-click track in Spotify → Share → Copy link to song
         //
-        //  audio   → filename in your repo. Name your files song1, song2, song3…
-        //            and include the extension: song1.mp3 / song1.flac / song1.aac
-        //            Any format the browser supports works (mp3, aac, flac, m4a, wav).
-        //  title   → text shown in the tracklist and the now-playing marquee
-        //  spotify → in Spotify: right-click a song → Share → Copy link to song
-        //
-        //  • Songs play one after another automatically.
-        //  • Tap a row while playing  → switches to that song immediately.
-        //  • Tap a row while paused   → selects it; press play to start.
-        //  • When shuffled, auto-advance follows the shuffled queue order.
-        //  • Lock-screen previous/next controls skip between tracks.
-        //  • To add a track  → copy any block below and paste it after.
-        //  • To remove a track → delete its { } block and the comma before it.
-        //
-        // ──────────────────────────────────────────────────────────
+        // • Songs play one after another automatically.
+        // • Tap a row while playing  → switches to that song immediately.
+        // • Tap a row while paused   → selects it; press play to start.
+        // • To add a track  → copy any block below and paste it after.
+        // • To remove a track → delete its { } block and the comma before it.
         tracklist: [
           {
             audio:   "song1.mp3",
@@ -511,7 +507,7 @@
       },
     };
     // ================================================================
-    //  END OF EDITABLE DATA  —  no need to change anything below
+    //  END OF EDITABLE DATA
     // ================================================================
 
     const audio = new Audio();
@@ -528,39 +524,37 @@
     let displayList        = [];
     let progressRafPending = false;
 
-    const sceneVideo         = document.getElementById("sceneVideo");
-    const sceneFallback      = document.getElementById("sceneFallback");
-    const stage              = document.getElementById("stage");
-    const gestureArea        = document.getElementById("gestureArea");
-    const controls           = document.getElementById("controls");
-    const rewindBtn          = document.getElementById("rewindBtn");
-    const playPauseBtn       = document.getElementById("playPauseBtn");
-    const iconPlay           = document.getElementById("iconPlay");
-    const iconPause          = document.getElementById("iconPause");
-    const forwardBtn         = document.getElementById("forwardBtn");
-    const shuffleBtn         = document.getElementById("shuffleBtn");
-    const tracklistBtn       = document.getElementById("tracklistBtn");
-    const spotifyBtn         = document.getElementById("spotifyBtn");
-    const marqueeWrap        = document.getElementById("marqueeWrap");
-    const marqueeTrack       = document.getElementById("marqueeTrack");
-    const nowPlayingText     = document.getElementById("nowPlayingText");
-    const nowPlayingClone    = document.getElementById("nowPlayingClone");
-    const progressTrack      = document.getElementById("progressTrack");
-    const progressFill       = document.getElementById("progressFill");
-    const progressThumb      = document.getElementById("progressThumb");
-    const timeEl             = document.getElementById("timeEl");
-    const durationEl         = document.getElementById("durationEl");
-    const trackPanel         = document.getElementById("trackPanel");
-    const trackList          = document.getElementById("trackList");
-    const infoBtn            = document.getElementById("infoBtn");
-    const infoPanel          = document.getElementById("infoPanel");
-    const infoText           = document.getElementById("infoText");
+    const sceneVideo      = document.getElementById("sceneVideo");
+    const sceneFallback   = document.getElementById("sceneFallback");
+    const stage           = document.getElementById("stage");
+    const gestureArea     = document.getElementById("gestureArea");
+    const controls        = document.getElementById("controls");
+    const rewindBtn       = document.getElementById("rewindBtn");
+    const playPauseBtn    = document.getElementById("playPauseBtn");
+    const iconPlay        = document.getElementById("iconPlay");
+    const iconPause       = document.getElementById("iconPause");
+    const forwardBtn      = document.getElementById("forwardBtn");
+    const shuffleBtn      = document.getElementById("shuffleBtn");
+    const tracklistBtn    = document.getElementById("tracklistBtn");
+    const spotifyBtn      = document.getElementById("spotifyBtn");
+    const marqueeWrap     = document.getElementById("marqueeWrap");
+    const marqueeTrack    = document.getElementById("marqueeTrack");
+    const nowPlayingText  = document.getElementById("nowPlayingText");
+    const nowPlayingClone = document.getElementById("nowPlayingClone");
+    const progressTrack   = document.getElementById("progressTrack");
+    const progressFill    = document.getElementById("progressFill");
+    const progressThumb   = document.getElementById("progressThumb");
+    const timeEl          = document.getElementById("timeEl");
+    const durationEl      = document.getElementById("durationEl");
+    const trackPanel      = document.getElementById("trackPanel");
+    const trackList       = document.getElementById("trackList");
+    const infoBtn         = document.getElementById("infoBtn");
+    const infoPanel       = document.getElementById("infoPanel");
+    const infoText        = document.getElementById("infoText");
 
-    function formatTime(seconds) {
-      if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60);
-      return `${m}:${String(s).padStart(2, "0")}`;
+    function formatTime(s) {
+      if (!Number.isFinite(s) || s < 0) return "0:00";
+      return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
     }
 
     function clearHideTimer() {
@@ -615,9 +609,9 @@
 
     function _doUpdateProgressUI() {
       progressRafPending = false;
-      const duration = audio.duration;
+      const dur = audio.duration;
       const now = audio.currentTime;
-      if (!Number.isFinite(duration) || duration <= 0) {
+      if (!Number.isFinite(dur) || dur <= 0) {
         progressFill.style.width = "0%";
         progressThumb.style.left = "0%";
         progressTrack.setAttribute("aria-valuenow", "0");
@@ -626,13 +620,13 @@
         durationEl.textContent = "0:00";
         return;
       }
-      const pct = Math.min(100, Math.max(0, (now / duration) * 100));
+      const pct = Math.min(100, Math.max(0, (now / dur) * 100));
       progressFill.style.width = `${pct}%`;
       progressThumb.style.left = `${pct}%`;
       progressTrack.setAttribute("aria-valuenow", String(Math.round(pct)));
-      progressTrack.setAttribute("aria-valuetext", `${formatTime(now)} of ${formatTime(duration)}`);
+      progressTrack.setAttribute("aria-valuetext", `${formatTime(now)} of ${formatTime(dur)}`);
       timeEl.textContent = formatTime(now);
-      durationEl.textContent = formatTime(duration);
+      durationEl.textContent = formatTime(dur);
     }
 
     function updateProgressUI() {
@@ -644,8 +638,7 @@
     function seekByClientX(clientX) {
       if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
       const rect = progressTrack.getBoundingClientRect();
-      const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-      audio.currentTime = (x / rect.width) * audio.duration;
+      audio.currentTime = (Math.min(Math.max(clientX - rect.left, 0), rect.width) / rect.width) * audio.duration;
       updateProgressUI();
     }
 
@@ -659,15 +652,11 @@
     }
 
     function buildDisplayList() {
-      displayList = isShuffling
-        ? shuffleArray(PORTAL.mix.tracklist)
-        : [...PORTAL.mix.tracklist];
+      displayList = isShuffling ? shuffleArray(PORTAL.mix.tracklist) : [...PORTAL.mix.tracklist];
     }
 
     function spotifyHref(track) {
-      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
-        ? track.spotify
-        : "#";
+      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE" ? track.spotify : "#";
     }
 
     function renderTracklist() {
@@ -699,16 +688,13 @@
     function selectTrack(track, forcePlay = false) {
       const wasPlaying = !audio.paused;
       activeTrack = track;
-
       audio.src = track.audio;
       audio.load();
-
       nowPlayingText.textContent = track.title;
       spotifyBtn.href = spotifyHref(track);
       refreshMarquee();
       renderTracklist();
       updateMediaSession();
-
       if (wasPlaying || forcePlay) playAudio();
     }
 
@@ -749,8 +735,7 @@
         nowPlayingClone.classList.remove("hidden");
 
         requestAnimationFrame(() => {
-          const spanW = nowPlayingText.offsetWidth;
-          const dur   = Math.max(6, spanW / 50);
+          const dur = Math.max(6, nowPlayingText.offsetWidth / 50);
           marqueeTrack.style.setProperty("--marquee-dur", `${dur}s`);
           marqueeTrack.style.willChange = "transform";
           marqueeTrack.classList.add("scrolling");
@@ -759,15 +744,8 @@
     }
 
     function initSceneVideo() {
-      function showVideo() {
-        sceneFallback.classList.remove("visible");
-        sceneVideo.classList.add("loaded");
-      }
-
-      function showFallback() {
-        sceneVideo.classList.remove("loaded");
-        sceneFallback.classList.add("visible");
-      }
+      const showVideo    = () => { sceneFallback.classList.remove("visible"); sceneVideo.classList.add("loaded"); };
+      const showFallback = () => { sceneVideo.classList.remove("loaded"); sceneFallback.classList.add("visible"); };
 
       function playSceneVideo() {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -775,35 +753,20 @@
           if (sceneVideo.readyState > 0) showVideo();
           return;
         }
-
         const p = sceneVideo.play();
-        if (p) p.catch(() => {
-          if (sceneVideo.readyState > 0) showVideo(); else showFallback();
-        });
+        if (p) p.catch(() => { if (sceneVideo.readyState > 0) showVideo(); else showFallback(); });
       }
 
-      // The video file is a pre-rendered boomerang (forward + reverse in one clip).
-      // Native loop restarts from the beginning each cycle — no RAF scrubbing needed.
       sceneVideo.loop = true;
-
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("error", showFallback);
 
-      // Pause when the tab is hidden to save resources; resume seamlessly on return.
-      // Because the clip is only ~2 s long the loop point is never perceptible.
       document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-          sceneVideo.pause();
-        } else {
-          playSceneVideo();
-        }
+        if (document.hidden) sceneVideo.pause(); else playSceneVideo();
       });
 
-      if (sceneVideo.readyState > 0) {
-        showVideo();
-      }
-
+      if (sceneVideo.readyState > 0) showVideo();
       playSceneVideo();
     }
 
@@ -881,9 +844,7 @@
       });
 
       shuffleBtn.addEventListener("click", () => setShuffling(!isShuffling));
-
       tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
-
       spotifyBtn.addEventListener("click", () => revealControls());
 
       progressTrack.addEventListener("pointerdown", (e) => {
@@ -891,15 +852,13 @@
         seekByClientX(e.clientX);
         progressTrack.setPointerCapture(e.pointerId);
       });
-      progressTrack.addEventListener("pointermove", (e) => {
-        if (isScrubbing) seekByClientX(e.clientX);
-      });
+      progressTrack.addEventListener("pointermove", (e) => { if (isScrubbing) seekByClientX(e.clientX); });
       progressTrack.addEventListener("pointerup", () => { isScrubbing = false; });
 
       progressTrack.addEventListener("keydown", (e) => {
         if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
         const step = Math.max(1, audio.duration * 0.02);
-        if (e.key === "ArrowLeft")       { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); }
+        if      (e.key === "ArrowLeft")  { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); }
         else if (e.key === "ArrowRight") { e.preventDefault(); audio.currentTime = Math.min(audio.duration, audio.currentTime + step); }
         else if (e.key === "Home")       { e.preventDefault(); audio.currentTime = 0; }
         else if (e.key === "End")        { e.preventDefault(); audio.currentTime = audio.duration; }
@@ -910,14 +869,13 @@
       audio.addEventListener("timeupdate",     updateProgressUI);
       audio.addEventListener("play",           () => updatePlayState(true));
       audio.addEventListener("pause",          () => updatePlayState(false));
-      audio.addEventListener("ended",          () => advanceToNext());
+      audio.addEventListener("ended",          advanceToNext);
 
       document.addEventListener("keydown", (e) => {
-        const inInput = e.target.closest("input, textarea, select, [contenteditable], button, a");
-        if (inInput) return;
-        if (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
-        else if (e.key.toLowerCase() === "s") { e.preventDefault(); setShuffling(!isShuffling); }
-        else if (e.key.toLowerCase() === "t") { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
+        if (e.target.closest("input, textarea, select, [contenteditable], button, a")) return;
+        if      (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
+        else if (e.key.toLowerCase() === "s")      { e.preventDefault(); setShuffling(!isShuffling); }
+        else if (e.key.toLowerCase() === "t")      { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
         revealControls();
       });
 
