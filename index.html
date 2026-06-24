@@ -353,7 +353,7 @@
         <!-- All five controls on one row, no wrapping -->
         <div class="flex items-center justify-center gap-2">
 
-          <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Previous track">
+          <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M20.341 4.247l-8 7a1 1 0 0 0 0 1.506l8 7c.647 .565 1.659 .106 1.659 -.753v-14c0 -.86 -1.012 -1.318 -1.659 -.753z"/>
@@ -373,7 +373,7 @@
             </svg>
           </button>
 
-          <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Next track">
+          <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Fast-forward 10 seconds">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M2 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z"/>
@@ -840,14 +840,15 @@
       playPauseBtn.addEventListener("click", () => { togglePlayPause(); revealControls(); });
 
       rewindBtn.addEventListener("click", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx > 0) selectTrack(displayList[idx - 1], isPlaying);
+        audio.currentTime = Math.max(0, audio.currentTime - 10);
+        updateProgressUI();
         revealControls();
       });
 
       forwardBtn.addEventListener("click", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx >= 0 && idx < displayList.length - 1) selectTrack(displayList[idx + 1], isPlaying);
+        if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+        audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        updateProgressUI();
         revealControls();
       });
 
