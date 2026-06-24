@@ -317,6 +317,37 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+
+    .info-btn {
+      position: fixed;
+      top: max(8px, env(safe-area-inset-top));
+      right: max(8px, env(safe-area-inset-right));
+      z-index: 30;
+    }
+
+    .info-panel {
+      position: fixed;
+      top: max(1rem, calc(env(safe-area-inset-top) + 1rem));
+      left: 50%;
+      transform: translateX(-50%) translateY(calc(-100% - 2rem));
+      z-index: 29;
+      width: min(calc(100vw - 2rem), 28rem);
+      border-radius: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 280ms ease;
+      user-select: none;
+    }
+
+    .info-panel.open {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
   </style>
 </head>
 <body>
@@ -328,6 +359,18 @@
     <p>The Palm Deck video could not be loaded. Make sure <strong>boomerang.MP4</strong> is included next to this page.</p>
   </div>
   <div class="scene-mask" aria-hidden="true"></div>
+
+  <button id="infoBtn" type="button" class="gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
+    <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+      <circle cx="14" cy="14" r="9"/>
+      <line x1="14" y1="12.5" x2="14" y2="19"/>
+      <circle cx="14" cy="9.5" r="1.1" fill="currentColor" stroke="none"/>
+    </svg>
+  </button>
+
+  <div id="infoPanel" class="info-panel glass" role="dialog" aria-label="About this mix">
+    <p id="infoText" class="text-[0.82rem] leading-relaxed text-center" style="color:rgba(255,248,240,0.76)"></p>
+  </div>
 
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
@@ -424,6 +467,11 @@
       mix: {
         title: "Vagabond",
 
+        // ── ABOUT ──────────────────────────────────────────────────
+        //  Shown in the info panel (tap ⓘ top-right). Keep it short.
+        // ──────────────────────────────────────────────────────────
+        description: "House, soul & funk — a curated mix for long afternoons at the deck. Tap play and let it ride.",
+
         // ── TRACKLIST ──────────────────────────────────────────────
         //
         //  audio   → filename in your repo. Name your files song1, song2, song3…
@@ -472,6 +520,7 @@
     let controlsAreVisible = true;
     let tracklistOpen      = false;
     let isShuffling        = false;
+    let infoOpen           = false;
     let hideTimer          = null;
     let activeTrack        = null;
     let displayList        = [];
@@ -501,6 +550,9 @@
     const durationEl         = document.getElementById("durationEl");
     const trackPanel         = document.getElementById("trackPanel");
     const trackList          = document.getElementById("trackList");
+    const infoBtn            = document.getElementById("infoBtn");
+    const infoPanel          = document.getElementById("infoPanel");
+    const infoText           = document.getElementById("infoText");
 
     function formatTime(seconds) {
       if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
@@ -537,6 +589,12 @@
       tracklistBtn.setAttribute("aria-expanded", String(open));
       tracklistBtn.textContent = open ? "Hide List" : "Tracklist";
       if (open) revealControls(); else scheduleAutoHide();
+    }
+
+    function setInfoOpen(open) {
+      infoOpen = open;
+      infoPanel.classList.toggle("open", open);
+      infoBtn.setAttribute("aria-expanded", String(open));
     }
 
     function updatePlayState(playing) {
@@ -768,6 +826,7 @@
 
     function initMix(autoplay = false) {
       document.title = PORTAL.mix.title;
+      if (PORTAL.mix.description) infoText.textContent = PORTAL.mix.description;
       buildDisplayList();
       if (displayList.length > 0) selectTrack(displayList[0]);
       updateProgressUI();
@@ -777,6 +836,7 @@
 
     function bindEvents() {
       gestureArea.addEventListener("pointerdown", () => {
+        if (infoOpen) { setInfoOpen(false); return; }
         if (!controlsAreVisible) {
           revealControls();
         } else if (isPlaying && !tracklistOpen) {
@@ -785,6 +845,17 @@
         } else {
           revealControls();
         }
+      });
+
+      infoBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setInfoOpen(!infoOpen);
+        revealControls();
+      });
+
+      infoPanel.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setInfoOpen(false);
       });
 
       stage.addEventListener("pointermove", () => {
