@@ -415,50 +415,17 @@
 
   <script>
     // ================================================================
-    //  PORTAL DATA  —  only edit this section
+    //  PORTAL SETTINGS
     // ================================================================
     const PORTAL = {
       mix: {
         title: "Vagabond",
-
-        // ── TRACKLIST ──────────────────────────────────────────────
-        //
-        //  audio   → filename in your repo. Name your files song1, song2, song3…
-        //            and include the extension: song1.mp3 / song1.flac / song1.aac
-        //            Any format the browser supports works (mp3, aac, flac, m4a, wav).
-        //  title   → text shown in the tracklist and the now-playing marquee
-        //  spotify → in Spotify: right-click a song → Share → Copy link to song
-        //
-        //  • Songs play one after another automatically.
-        //  • Tap a row while playing  → switches to that song immediately.
-        //  • Tap a row while paused   → selects it; press play to start.
-        //  • When shuffled, auto-advance follows the shuffled queue order.
-        //  • Lock-screen previous/next controls skip between tracks.
-        //  • To add a track  → copy any block below and paste it after.
-        //  • To remove a track → delete its { } block and the comma before it.
-        //
-        // ──────────────────────────────────────────────────────────
-        tracklist: [
-          {
-            audio:   "song1.mp3",
-            title:   "01. Go Back (feat. Julia Church) — John Summit, Sub Focus, Julia Church",
-            spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
-          },
-          {
-            audio:   "song2.mp3",
-            title:   "02. What A Life — John Summit, Guz, Stevie Appleton",
-            spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
-          },
-          {
-            audio:   "song3.mp3",
-            title:   "03. Remember (John Summit Remix) — deadmau5, Kaskade, John Summit",
-            spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
-          },
-        ],
+        tracklistUrl: "tracklist.txt",
+        tracklist: [],
       },
     };
     // ================================================================
-    //  END OF EDITABLE DATA  —  no need to change anything below
+    //  END SETTINGS  —  edit tracklist.txt to update songs
     // ================================================================
 
     const audio = new Audio();
@@ -600,6 +567,31 @@
       displayList = isShuffling
         ? shuffleArray(PORTAL.mix.tracklist)
         : [...PORTAL.mix.tracklist];
+    }
+
+    function parseTracklistText(text) {
+      return text
+        .split(/\n\s*\n/)
+        .map((block) => block
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter((line) => line && !line.startsWith("#")))
+        .filter((lines) => lines.length > 0)
+        .map((lines, index) => ({
+          audio: `song${index + 1}.mp3`,
+          title: lines[0],
+          spotify: lines.find((line) => /^https?:\/\//i.test(line)) || "#",
+        }));
+    }
+
+    async function loadTracklist() {
+      try {
+        const response = await fetch(PORTAL.mix.tracklistUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error("Tracklist file could not be loaded.");
+        PORTAL.mix.tracklist = parseTracklistText(await response.text());
+      } catch (_) {
+        PORTAL.mix.tracklist = [];
+      }
     }
 
     function spotifyHref(track) {
@@ -850,10 +842,18 @@
       if (audio.paused) playAudio(); else audio.pause();
     }
 
-    function initMix(autoplay = false) {
+    async function initMix(autoplay = false) {
       document.title = PORTAL.mix.title;
+      await loadTracklist();
       buildDisplayList();
-      if (displayList.length > 0) selectTrack(displayList[0]);
+      if (displayList.length > 0) {
+        selectTrack(displayList[0]);
+      } else {
+        nowPlayingText.textContent = "Add tracks to tracklist.txt";
+        spotifyBtn.href = "#";
+        refreshMarquee();
+        renderTracklist();
+      }
       updateProgressUI();
       if (autoplay) playAudio(); else updatePlayState(false);
       revealControls();
@@ -958,11 +958,11 @@
       });
     }
 
-    function init() {
+    async function init() {
       initSceneVideo();
       bindEvents();
       initMediaSessionActions();
-      initMix(false);
+      await initMix(false);
       setTracklistOpen(false);
       setControlsVisible(true);
     }

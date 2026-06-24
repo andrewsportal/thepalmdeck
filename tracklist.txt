@@ -1,0 +1,13 @@
+# Add one song per block.
+# Line 1: track number, song title, em dash, artist
+# Line 2: Spotify link
+# Leave a blank line before the next song.
+
+01. Go Back (feat. Julia Church) — John Summit, Sub Focus, Julia Church
+https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw
+
+02. What A Life — John Summit, Guz, Stevie Appleton
+https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w
+
+03. Remember (John Summit Remix) — deadmau5, Kaskade, John Summit
+https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q
