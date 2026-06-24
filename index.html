@@ -747,6 +747,15 @@
           if (sceneVideo.readyState > 0) showVideo();
           return;
         }
+        // iOS Safari can clear the video from memory after ~60s in background.
+        // If readyState dropped to 0, reload the source before attempting play.
+        if (sceneVideo.readyState === 0) {
+          sceneVideo.addEventListener("canplay", () => {
+            sceneVideo.play().catch(() => {});
+          }, { once: true });
+          sceneVideo.load();
+          return;
+        }
         const p = sceneVideo.play();
         if (p) p.catch(() => { if (sceneVideo.readyState > 0) showVideo(); else showFallback(); });
       }
@@ -756,9 +765,26 @@
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("error", showFallback);
 
+      // Resume after tab/app switch — 150ms delay lets the browser finish restoring context
       document.addEventListener("visibilitychange", () => {
-        if (document.hidden) sceneVideo.pause(); else playSceneVideo();
+        if (document.hidden) {
+          sceneVideo.pause();
+        } else {
+          setTimeout(playSceneVideo, 150);
+        }
       });
+
+      // Resume after browser restores page from bfcache (back/forward navigation)
+      window.addEventListener("pageshow", (e) => {
+        if (e.persisted) setTimeout(playSceneVideo, 150);
+      });
+
+      // Health check: if the page is visible and the video has stopped unexpectedly, restart it
+      setInterval(() => {
+        if (!document.hidden && sceneVideo.paused && !sceneVideo.error) {
+          playSceneVideo();
+        }
+      }, 3000);
 
       if (sceneVideo.readyState > 0) showVideo();
       playSceneVideo();
