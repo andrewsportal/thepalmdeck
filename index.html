@@ -317,12 +317,12 @@
   </style>
 </head>
 <body>
-  <video id="sceneVideo" class="scene-video" autoplay muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
-    <source src="thepalmdeck.mov" type="video/quicktime" />
+  <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="hero-poster.JPG" aria-hidden="true">
+    <source src="boomerang.MP4" type="video/mp4" />
     Your browser does not support the background video.
   </video>
   <div id="sceneFallback" class="scene-fallback" aria-live="polite">
-    <p>The Palm Deck video could not be loaded. Make sure <strong>thepalmdeck.mov</strong> is included next to this page.</p>
+    <p>The Palm Deck video could not be loaded. Make sure <strong>boomerang.MP4</strong> is included next to this page.</p>
   </div>
   <div class="scene-mask" aria-hidden="true"></div>
 
@@ -473,7 +473,6 @@
     let activeTrack        = null;
     let displayList        = [];
     let progressRafPending = false;
-    const SCENE_LOOP_SECONDS = 1;
 
     const sceneVideo         = document.getElementById("sceneVideo");
     const sceneFallback      = document.getElementById("sceneFallback");
@@ -697,11 +696,6 @@
     }
 
     function initSceneVideo() {
-      let forwardWatchRaf = null;
-      let reverseRaf      = null;
-      let reverseLastTs   = null;
-      let isReversing     = false;
-
       function showVideo() {
         sceneFallback.classList.remove("visible");
         sceneVideo.classList.add("loaded");
@@ -712,91 +706,6 @@
         sceneFallback.classList.add("visible");
       }
 
-      function loopEnd() {
-        return Number.isFinite(sceneVideo.duration)
-          ? Math.min(SCENE_LOOP_SECONDS, sceneVideo.duration)
-          : SCENE_LOOP_SECONDS;
-      }
-
-      function cancelForwardWatch() {
-        if (forwardWatchRaf === null) return;
-        cancelAnimationFrame(forwardWatchRaf);
-        forwardWatchRaf = null;
-      }
-
-      function cancelReverse() {
-        if (reverseRaf !== null) cancelAnimationFrame(reverseRaf);
-        reverseRaf = null;
-        reverseLastTs = null;
-        isReversing = false;
-      }
-
-      function watchForward() {
-        forwardWatchRaf = null;
-        if (sceneVideo.paused || isReversing) return;
-
-        if (sceneVideo.currentTime >= loopEnd()) {
-          sceneVideo.pause();
-          startReverse();
-          return;
-        }
-
-        forwardWatchRaf = requestAnimationFrame(watchForward);
-      }
-
-      function startForward() {
-        cancelReverse();
-        cancelForwardWatch();
-        sceneVideo.loop = false;
-        sceneVideo.playbackRate = 1;
-
-        try {
-          const playPromise = sceneVideo.play();
-          if (playPromise) playPromise.catch(() => {
-            if (sceneVideo.readyState > 0) showVideo(); else showFallback();
-          });
-          showVideo();
-          forwardWatchRaf = requestAnimationFrame(watchForward);
-        } catch (_) {
-          if (sceneVideo.readyState > 0) showVideo(); else showFallback();
-        }
-      }
-
-      function startReverse() {
-        cancelForwardWatch();
-        cancelReverse();
-
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          sceneVideo.currentTime = 0;
-          sceneVideo.pause();
-          showVideo();
-          return;
-        }
-
-        isReversing = true;
-        sceneVideo.currentTime = Math.min(sceneVideo.currentTime, loopEnd());
-
-        function reverseStep(ts) {
-          if (!isReversing) return;
-
-          if (reverseLastTs !== null) {
-            const delta = Math.min((ts - reverseLastTs) / 1000, 0.08);
-            sceneVideo.currentTime = Math.max(0, sceneVideo.currentTime - delta);
-          }
-          reverseLastTs = ts;
-
-          if (sceneVideo.currentTime <= 0.03) {
-            sceneVideo.currentTime = 0;
-            startForward();
-            return;
-          }
-
-          reverseRaf = requestAnimationFrame(reverseStep);
-        }
-
-        reverseRaf = requestAnimationFrame(reverseStep);
-      }
-
       function playSceneVideo() {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           sceneVideo.pause();
@@ -804,20 +713,24 @@
           return;
         }
 
-        if (sceneVideo.currentTime >= loopEnd()) {
-          sceneVideo.currentTime = 0;
-        }
-        startForward();
+        const p = sceneVideo.play();
+        if (p) p.catch(() => {
+          if (sceneVideo.readyState > 0) showVideo(); else showFallback();
+        });
       }
+
+      // The video file is a pre-rendered boomerang (forward + reverse in one clip).
+      // Native loop restarts from the beginning each cycle — no RAF scrubbing needed.
+      sceneVideo.loop = true;
 
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
-      sceneVideo.addEventListener("ended", startReverse);
       sceneVideo.addEventListener("error", showFallback);
+
+      // Pause when the tab is hidden to save resources; resume seamlessly on return.
+      // Because the clip is only ~2 s long the loop point is never perceptible.
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-          cancelForwardWatch();
-          cancelReverse();
           sceneVideo.pause();
         } else {
           playSceneVideo();
