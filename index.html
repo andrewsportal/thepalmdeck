@@ -174,6 +174,16 @@
       letter-spacing: -0.08em;
     }
 
+    .link-icon {
+      width: 0.86rem;
+      height: 0.86rem;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .shuffle-on {
       border-color: rgba(255, 248, 240, 0.5);
     }
@@ -375,8 +385,10 @@
           <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
              class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
              aria-label="Open in Spotify">
-            <svg viewBox="0 0 24 24" class="h-[15px] w-[15px]" fill="currentColor" aria-hidden="true">
-              <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/>
+            <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+              <path d="M10 7H7.8A2.8 2.8 0 0 0 5 9.8v10.4A2.8 2.8 0 0 0 7.8 23h10.4a2.8 2.8 0 0 0 2.8-2.8V18"></path>
+              <path d="M15 5h8v8"></path>
+              <path d="M13.7 14.3 23 5"></path>
             </svg>
           </a>
         </div>
@@ -614,7 +626,7 @@
         link.rel = "noopener noreferrer";
         link.className = "track-spotify-link";
         link.setAttribute("aria-label", "Open in Spotify");
-        link.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 0 1-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.72a.78.78 0 0 1-1.072.257C14.087 12.18 11.02 11.73 7.3 12.7a.78.78 0 0 1-.386-1.51c4.162-1.065 7.538-.604 10.638 1.44a.78.78 0 0 1 .257 1.074zm.105-2.832a.935.935 0 0 1-1.285.308C13.9 9.45 9.675 9.17 5.535 10.29a.935.935 0 0 1-.468-1.81c4.581-1.186 9.256-.95 12.75 1.1a.935.935 0 0 1 .308 1.286z"/></svg>`;
+        link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M8 4.5H5.8A1.8 1.8 0 0 0 4 6.3v7.9A1.8 1.8 0 0 0 5.8 16h7.9a1.8 1.8 0 0 0 1.8-1.8V12"></path><path d="M11 4h5v5"></path><path d="M9.8 10.2 16 4"></path></svg>`;
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
 
