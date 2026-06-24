@@ -98,6 +98,13 @@
       letter-spacing: 0.02em;
     }
 
+    /*
+      z-index intentionally removed from #stage.
+      Adding z-index here would create an isolated stacking context that
+      traps the backdrop-filter compositor layer and buries fixed overlays
+      (like #infoBtn) even when they have a higher z-index in the root context.
+      gestureArea (z-10) and controls (z-20) handle their own stacking directly.
+    */
     #stage {
       position: relative;
     }
@@ -135,8 +142,8 @@
     .gloss:active { transform: scale(0.94); }
 
     .control-icon {
-      width: 1.35rem;
-      height: 1.35rem;
+      width: 1.55rem;
+      height: 1.55rem;
       overflow: visible;
       fill: none;
       stroke: currentColor;
@@ -150,9 +157,14 @@
       height: 1.35rem;
     }
 
+    .btn-icon-nav {
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
     .btn-icon-play {
-      width: 1.55rem;
-      height: 1.55rem;
+      width: 1.2rem;
+      height: 1.2rem;
     }
 
     .link-icon {
@@ -292,6 +304,7 @@
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
 
+    /* Fixed top-right, last in DOM, highest z-index — always above the video and controls */
     .info-btn {
       position: fixed;
       top: max(1rem, env(safe-area-inset-top));
@@ -299,6 +312,11 @@
       z-index: 9999;
     }
 
+    /*
+      Popover anchored to top-right, below the info button.
+      transform-origin: top right means the scale animation grows
+      from the button's corner — matches iOS popover behaviour.
+    */
     .info-panel {
       position: fixed;
       top: max(4.5rem, calc(env(safe-area-inset-top) + 3.5rem));
@@ -342,10 +360,11 @@
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
       <section class="ui glass mx-0 rounded-3xl px-4 py-3 md:mx-auto md:w-full md:max-w-4xl md:p-5" aria-label="Audio controls">
 
+        <!-- All five controls on one row, no wrapping -->
         <div class="flex items-center justify-center gap-2">
 
           <button id="prevBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Previous track">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-nav" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M19.496 4.136l-12 7a1 1 0 0 0 0 1.728l12 7a1 1 0 0 0 1.504 -.864v-14a1 1 0 0 0 -1.504 -.864z"/>
               <path d="M4 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
@@ -357,7 +376,7 @@
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/>
             </svg>
-            <svg id="iconPause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon hidden" aria-hidden="true">
+            <svg id="iconPause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play hidden" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/>
               <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/>
@@ -365,7 +384,7 @@
           </button>
 
           <button id="nextBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Next track">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-nav" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z"/>
               <path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
@@ -423,6 +442,12 @@
     </div>
   </main>
 
+  <!--
+    Info button and panel are last in <body> and carry z-index 9999/9998.
+    Being last in DOM order AND highest in z-index means no stacking context
+    on any earlier element can bury them — they are always above the video,
+    the mask, and the audio controls.
+  -->
   <button id="infoBtn" type="button" class="glass gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
     <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
       <circle cx="14" cy="14" r="9"/>
@@ -721,6 +746,8 @@
           if (sceneVideo.readyState > 0) showVideo();
           return;
         }
+        // iOS Safari can clear the video from memory after ~60s in background.
+        // If readyState dropped to 0, reload the source before attempting play.
         if (sceneVideo.readyState === 0) {
           sceneVideo.addEventListener("canplay", () => {
             sceneVideo.play().catch(() => {});
@@ -737,6 +764,7 @@
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("error", showFallback);
 
+      // Resume after tab/app switch — 150ms delay lets the browser finish restoring context
       document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
           sceneVideo.pause();
@@ -745,10 +773,12 @@
         }
       });
 
+      // Resume after browser restores page from bfcache (back/forward navigation)
       window.addEventListener("pageshow", (e) => {
         if (e.persisted) setTimeout(playSceneVideo, 150);
       });
 
+      // Health check: if the page is visible and the video has stopped unexpectedly, restart it
       setInterval(() => {
         if (!document.hidden && sceneVideo.paused && !sceneVideo.error) {
           playSceneVideo();
