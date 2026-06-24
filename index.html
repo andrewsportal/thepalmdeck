@@ -318,11 +318,12 @@
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
 
+    /* ── Info button: fixed top-right, always above everything ── */
     .info-btn {
       position: fixed;
       top: max(8px, env(safe-area-inset-top));
       right: max(8px, env(safe-area-inset-right));
-      z-index: 30;
+      z-index: 100;
     }
 
     .info-panel {
@@ -330,7 +331,7 @@
       top: max(1rem, calc(env(safe-area-inset-top) + 1rem));
       left: 50%;
       transform: translateX(-50%) translateY(calc(-100% - 2rem));
-      z-index: 29;
+      z-index: 99;
       width: min(calc(100vw - 2rem), 28rem);
       border-radius: 1.5rem;
       padding: 1.25rem 1.5rem;
@@ -359,18 +360,6 @@
     <p>The Palm Deck video could not be loaded. Make sure <strong>boomerang.MP4</strong> is included next to this page.</p>
   </div>
   <div class="scene-mask" aria-hidden="true"></div>
-
-  <button id="infoBtn" type="button" class="gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
-    <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-      <circle cx="14" cy="14" r="9"/>
-      <line x1="14" y1="12.5" x2="14" y2="19"/>
-      <circle cx="14" cy="9.5" r="1.1" fill="currentColor" stroke="none"/>
-    </svg>
-  </button>
-
-  <div id="infoPanel" class="info-panel glass" role="dialog" aria-label="About this mix">
-    <p id="infoText" class="text-[0.82rem] leading-relaxed text-center" style="color:rgba(255,248,240,0.76)"></p>
-  </div>
 
   <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
     <div id="gestureArea" class="absolute inset-0 z-10"></div>
@@ -458,6 +447,19 @@
       </section>
     </div>
   </main>
+
+  <!-- Info button and panel placed AFTER #stage so they always render on top -->
+  <button id="infoBtn" type="button" class="glass gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
+    <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
+      <circle cx="14" cy="14" r="9"/>
+      <line x1="14" y1="12.5" x2="14" y2="19"/>
+      <circle cx="14" cy="9.5" r="1.1" fill="currentColor" stroke="none"/>
+    </svg>
+  </button>
+
+  <div id="infoPanel" class="info-panel glass" role="dialog" aria-label="About this mix">
+    <p id="infoText" class="text-[0.82rem] leading-relaxed text-center" style="color:rgba(255,248,240,0.76)"></p>
+  </div>
 
   <script>
     // ================================================================
