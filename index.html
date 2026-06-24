@@ -47,24 +47,12 @@
       overscroll-behavior: none;
     }
 
-    .scene-poster,
     .scene-video {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
-    }
-
-    .scene-poster {
-      background-image: url("hero-poster.JPG");
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
-      z-index: 0;
-    }
-
-    .scene-video {
       object-fit: cover;
       z-index: 1;
       transition: opacity 400ms ease;
@@ -262,8 +250,7 @@
   </style>
 </head>
 <body>
-  <div id="scenePoster" class="scene-poster" aria-hidden="true"></div>
-  <video id="sceneVideo" class="scene-video" muted playsinline preload="auto" poster="hero-poster.JPG" aria-hidden="true">
+  <video id="sceneVideo" class="scene-video" muted playsinline preload="auto" aria-hidden="true">
     <source src="thepalmdeck.MP4" type="video/mp4" />
   </video>
   <div class="scene-mask" aria-hidden="true"></div>
@@ -359,7 +346,6 @@
     //  PORTAL DATA  —  only edit this section
     // ================================================================
     const PORTAL = {
-      fallbackPoster: "hero-poster.JPG",
       mix: {
         title: "Vagabond",
 
@@ -416,8 +402,7 @@
     let displayList        = [];
     let progressRafPending = false;
 
-    const scenePoster = document.getElementById("scenePoster");
-    const sceneVideo  = document.getElementById("sceneVideo");
+    const sceneVideo = document.getElementById("sceneVideo");
     const stage              = document.getElementById("stage");
     const gestureArea        = document.getElementById("gestureArea");
     const controls           = document.getElementById("controls");
@@ -637,15 +622,8 @@
       });
     }
 
-    function setScenePoster() {
-      scenePoster.style.backgroundImage = `url("${PORTAL.fallbackPoster}")`;
-    }
-
     function initBoomerang() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      sceneVideo.pause();
-      sceneVideo.currentTime = 0;
 
       let direction = 1;
       let lastTs    = null;
@@ -671,6 +649,8 @@
       }
 
       function start() {
+        sceneVideo.pause();
+        sceneVideo.currentTime = 0;
         running = true;
         lastTs  = null;
         requestAnimationFrame(tick);
@@ -823,7 +803,6 @@
     }
 
     function init() {
-      setScenePoster();
       initBoomerang();
       bindEvents();
       initMediaSessionActions();
