@@ -267,7 +267,7 @@
       box-shadow: inset 0 0 0 1px rgba(255, 248, 240, 0.18);
     }
 
-    .track-spotify-link {
+    .track-link {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
@@ -277,12 +277,12 @@
       transition: color 150ms ease, transform 150ms ease;
     }
 
-    .track-spotify-link:hover {
+    .track-link:hover {
       color: rgba(255, 248, 240, 0.75);
       transform: scale(1.2);
     }
 
-    .track-active .track-spotify-link {
+    .track-active .track-link {
       color: rgba(255, 248, 240, 0.42);
     }
 
@@ -382,9 +382,9 @@
               <span id="nowPlayingClone" class="hidden" aria-hidden="true"></span>
             </div>
           </div>
-          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
+          <a id="trackLinkBtn" href="#" target="_blank" rel="noopener noreferrer"
              class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-             aria-label="Open in Spotify">
+             aria-label="Open track link">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
               <path d="M10 7H7.8A2.8 2.8 0 0 0 5 9.8v10.4A2.8 2.8 0 0 0 7.8 23h10.4a2.8 2.8 0 0 0 2.8-2.8V18"></path>
               <path d="M15 5h8v8"></path>
@@ -454,7 +454,7 @@
     const forwardBtn         = document.getElementById("forwardBtn");
     const shuffleBtn         = document.getElementById("shuffleBtn");
     const tracklistBtn       = document.getElementById("tracklistBtn");
-    const spotifyBtn         = document.getElementById("spotifyBtn");
+    const trackLinkBtn       = document.getElementById("trackLinkBtn");
     const marqueeWrap        = document.getElementById("marqueeWrap");
     const marqueeTrack       = document.getElementById("marqueeTrack");
     const nowPlayingText     = document.getElementById("nowPlayingText");
@@ -580,7 +580,7 @@
         .map((lines, index) => ({
           audio: `song${index + 1}.mp3`,
           title: lines[0],
-          spotify: lines.find((line) => /^https?:\/\//i.test(line)) || "#",
+          link: lines.find((line) => /^https?:\/\//i.test(line)) || "#",
         }));
     }
 
@@ -594,10 +594,8 @@
       }
     }
 
-    function spotifyHref(track) {
-      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE"
-        ? track.spotify
-        : "#";
+    function trackHref(track) {
+      return track.link || "#";
     }
 
     function renderTracklist() {
@@ -613,11 +611,11 @@
         li.appendChild(titleSpan);
 
         const link = document.createElement("a");
-        link.href = spotifyHref(track);
+        link.href = trackHref(track);
         link.target = "_blank";
         link.rel = "noopener noreferrer";
-        link.className = "track-spotify-link";
-        link.setAttribute("aria-label", "Open in Spotify");
+        link.className = "track-link";
+        link.setAttribute("aria-label", "Open track link");
         link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M8 4.5H5.8A1.8 1.8 0 0 0 4 6.3v7.9A1.8 1.8 0 0 0 5.8 16h7.9a1.8 1.8 0 0 0 1.8-1.8V12"></path><path d="M11 4h5v5"></path><path d="M9.8 10.2 16 4"></path></svg>`;
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
@@ -634,7 +632,7 @@
       audio.load();
 
       nowPlayingText.textContent = track.title;
-      spotifyBtn.href = spotifyHref(track);
+      trackLinkBtn.href = trackHref(track);
       refreshMarquee();
       renderTracklist();
       updateMediaSession();
@@ -850,7 +848,7 @@
         selectTrack(displayList[0]);
       } else {
         nowPlayingText.textContent = "Add tracks to tracklist.txt";
-        spotifyBtn.href = "#";
+        trackLinkBtn.href = "#";
         refreshMarquee();
         renderTracklist();
       }
@@ -895,7 +893,7 @@
 
       tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
 
-      spotifyBtn.addEventListener("click", () => revealControls());
+      trackLinkBtn.addEventListener("click", () => revealControls());
 
       progressTrack.addEventListener("pointerdown", (e) => {
         isScrubbing = true;
