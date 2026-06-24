@@ -6,7 +6,7 @@
   <title>Vagabond</title>
   <meta
     name="description"
-    content="Get behind the decks. The ever-growing groove, soul & funk house music playlist, curated by Andrew Rios"
+    content="The ever-growing groove, soul & funk of house music playlist. Curated by Andrew Rios"
   />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -365,7 +365,8 @@
     <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
       <section class="ui glass mx-0 rounded-3xl px-4 py-3 md:mx-auto md:w-full md:max-w-4xl md:p-5" aria-label="Audio controls">
 
-        <div class="flex flex-wrap items-center justify-center gap-3">
+        <!-- All five controls on one row, no wrapping -->
+        <div class="flex items-center justify-center gap-2">
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
@@ -401,7 +402,7 @@
             </svg>
           </button>
 
-          <button id="tracklistBtn" type="button" class="gloss inline-flex h-10 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
+          <button id="tracklistBtn" type="button" class="gloss inline-flex h-11 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
             Tracklist
           </button>
 
@@ -470,7 +471,7 @@
         title: "Vagabond",
 
         // Shown in the info panel (tap ⓘ top-right). Keep it short.
-        description: "Get behind the decks. The ever-growing groove, soul & funk house music playlist, curated by Andrew Rios",
+        description: "The ever-growing groove, soul & funk of house music playlist. Curated by Andrew Rios",
 
         // audio   → filename in your repo (e.g. song1.mp3)
         // title   → shown in tracklist and now-playing marquee
