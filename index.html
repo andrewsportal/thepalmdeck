@@ -353,11 +353,11 @@
         <!-- All five controls on one row, no wrapping -->
         <div class="flex items-center justify-center gap-2">
 
-          <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
+          <button id="prevBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Previous track">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M20.341 4.247l-8 7a1 1 0 0 0 0 1.506l8 7c.647 .565 1.659 .106 1.659 -.753v-14c0 -.86 -1.012 -1.318 -1.659 -.753z"/>
-              <path d="M9.341 4.247l-8 7a1 1 0 0 0 0 1.506l8 7c.647 .565 1.659 .106 1.659 -.753v-14c0 -.86 -1.012 -1.318 -1.659 -.753z"/>
+              <path d="M19.496 4.136l-12 7a1 1 0 0 0 0 1.728l12 7a1 1 0 0 0 1.504 -.864v-14a1 1 0 0 0 -1.504 -.864z"/>
+              <path d="M4 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
             </svg>
           </button>
 
@@ -373,11 +373,11 @@
             </svg>
           </button>
 
-          <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Fast-forward 10 seconds">
+          <button id="nextBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Next track">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M2 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z"/>
-              <path d="M13 5v14c0 .86 1.012 1.318 1.659 .753l8 -7a1 1 0 0 0 0 -1.506l-8 -7c-.647 -.565 -1.659 -.106 -1.659 .753z"/>
+              <path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z"/>
+              <path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
             </svg>
           </button>
 
@@ -512,11 +512,11 @@
     const stage           = document.getElementById("stage");
     const gestureArea     = document.getElementById("gestureArea");
     const controls        = document.getElementById("controls");
-    const rewindBtn       = document.getElementById("rewindBtn");
+    const prevBtn         = document.getElementById("prevBtn");
     const playPauseBtn    = document.getElementById("playPauseBtn");
     const iconPlay        = document.getElementById("iconPlay");
     const iconPause       = document.getElementById("iconPause");
-    const forwardBtn      = document.getElementById("forwardBtn");
+    const nextBtn         = document.getElementById("nextBtn");
     const shuffleBtn      = document.getElementById("shuffleBtn");
     const tracklistBtn    = document.getElementById("tracklistBtn");
     const spotifyBtn      = document.getElementById("spotifyBtn");
@@ -839,16 +839,15 @@
 
       playPauseBtn.addEventListener("click", () => { togglePlayPause(); revealControls(); });
 
-      rewindBtn.addEventListener("click", () => {
-        audio.currentTime = Math.max(0, audio.currentTime - 10);
-        updateProgressUI();
+      prevBtn.addEventListener("click", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx > 0) selectTrack(displayList[idx - 1], isPlaying);
         revealControls();
       });
 
-      forwardBtn.addEventListener("click", () => {
-        if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-        audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-        updateProgressUI();
+      nextBtn.addEventListener("click", () => {
+        const idx = displayList.indexOf(activeTrack);
+        if (idx >= 0 && idx < displayList.length - 1) selectTrack(displayList[idx + 1], isPlaying);
         revealControls();
       });
 
