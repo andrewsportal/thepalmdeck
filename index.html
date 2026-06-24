@@ -40,9 +40,11 @@
       height: 100%;
       background: #111111;
       color: #fff8f0;
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      font-family: -apple-system, "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", "Inter", sans-serif;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1;
       overflow: hidden;
       overscroll-behavior: none;
     }
@@ -168,10 +170,11 @@
     .control-icon text {
       fill: currentColor;
       stroke: none;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-      font-size: 7px;
-      font-weight: 700;
-      letter-spacing: -0.08em;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, sans-serif;
+      font-size: 7.5px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      text-anchor: middle;
     }
 
     .link-icon {
@@ -337,9 +340,9 @@
 
           <button id="rewindBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Rewind 10 seconds">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M11.7 5.6H6.7v5"></path>
-              <path d="M7 8.6a8.2 8.2 0 1 1-1.15 4.18"></path>
-              <text x="11.2" y="17.4">10</text>
+              <path d="M18.5 6.2A9 9 0 1 1 9.5 6.2"/>
+              <path d="M11.8 5.7L9.5 6.2L10 3.9"/>
+              <text x="14" y="17.5">10</text>
             </svg>
           </button>
 
@@ -354,18 +357,18 @@
 
           <button id="forwardBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Forward 10 seconds">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M16.3 5.6h5v5"></path>
-              <path d="M21 8.6a8.2 8.2 0 1 0 1.15 4.18"></path>
-              <text x="10.5" y="17.4">10</text>
+              <path d="M9.5 6.2A9 9 0 1 0 18.5 6.2"/>
+              <path d="M16.2 5.7L18.5 6.2L18 3.9"/>
+              <text x="14" y="17.5">10</text>
             </svg>
           </button>
 
           <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M5 8.4h3.15c2.25 0 3.75 1.15 5.05 3.35l1.6 2.7c1.28 2.17 2.78 3.15 5.05 3.15H23"></path>
-              <path d="M19.8 14.4 23 17.6l-3.2 3.2"></path>
-              <path d="M5 19.6h3.15c2.25 0 3.75-1.15 5.05-3.35l1.6-2.7c1.28-2.17 2.78-3.15 5.05-3.15H23"></path>
-              <path d="M19.8 7.2 23 10.4l-3.2 3.2"></path>
+              <path d="M5 8.4h3.15c2.25 0 3.75 1.15 5.05 3.35l1.6 2.7c1.28 2.17 2.78 3.15 5.05 3.15H23"/>
+              <path d="M20.5 15.1L23 17.6L20.5 20.1"/>
+              <path d="M5 19.6h3.15c2.25 0 3.75-1.15 5.05-3.35l1.6-2.7c1.28-2.17 2.78-3.15 5.05-3.15H23"/>
+              <path d="M20.5 7.9L23 10.4L20.5 12.9"/>
             </svg>
           </button>
 
@@ -386,9 +389,9 @@
              class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
              aria-label="Open in Spotify">
             <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-              <path d="M10 7H7.8A2.8 2.8 0 0 0 5 9.8v10.4A2.8 2.8 0 0 0 7.8 23h10.4a2.8 2.8 0 0 0 2.8-2.8V18"></path>
-              <path d="M15 5h8v8"></path>
-              <path d="M13.7 14.3 23 5"></path>
+              <path d="M13 22H8.5A3.5 3.5 0 0 1 5 18.5V8.5A3.5 3.5 0 0 1 8.5 5H14"/>
+              <path d="M18 5h5.5v5.5"/>
+              <path d="M15 13L23.5 4.5"/>
             </svg>
           </a>
         </div>
@@ -625,7 +628,7 @@
         link.rel = "noopener noreferrer";
         link.className = "track-spotify-link";
         link.setAttribute("aria-label", "Open in Spotify");
-        link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M8 4.5H5.8A1.8 1.8 0 0 0 4 6.3v7.9A1.8 1.8 0 0 0 5.8 16h7.9a1.8 1.8 0 0 0 1.8-1.8V12"></path><path d="M11 4h5v5"></path><path d="M9.8 10.2 16 4"></path></svg>`;
+        link.innerHTML = `<svg viewBox="0 0 20 20" class="link-icon" aria-hidden="true"><path d="M9 16H6A2.5 2.5 0 0 1 3.5 13.5V6A2.5 2.5 0 0 1 6 3.5H10"/><path d="M12.5 3.5H16.5V7.5"/><path d="M10.5 9.5L16.5 3.5"/></svg>`;
         link.addEventListener("click", (e) => e.stopPropagation());
         li.appendChild(link);
 
