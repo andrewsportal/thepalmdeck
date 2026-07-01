@@ -78,18 +78,14 @@
     .scene-fallback {
       position: fixed;
       inset: 0;
-      z-index: 3;
-      display: none;
-      place-items: center;
-      padding: 1.5rem;
-      text-align: center;
-      color: rgba(255,248,240,0.76);
-      background:
-        radial-gradient(circle at 50% 30%, rgba(232,93,4,0.24), transparent 34%),
-        #111111;
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+      background: url('og-image.jpg') center/cover no-repeat, #111111;
+      transition: opacity 400ms ease;
     }
 
-    .scene-fallback.visible { display: grid; }
+    .scene-fallback.visible { opacity: 1; }
 
     .scene-fallback p {
       max-width: 28rem;
@@ -344,13 +340,11 @@
   </style>
 </head>
 <body>
-  <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="hero-poster.JPG" aria-hidden="true">
+  <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="og-image.jpg" aria-hidden="true">
     <source src="boomerang.MP4" type="video/mp4" />
   </video>
 
-  <div id="sceneFallback" class="scene-fallback" aria-live="polite">
-    <p>The background video could not be loaded. Make sure <strong>boomerang.MP4</strong> is in the same folder as this page.</p>
-  </div>
+  <div id="sceneFallback" class="scene-fallback" aria-hidden="true"></div>
 
   <div class="scene-mask" aria-hidden="true"></div>
 
