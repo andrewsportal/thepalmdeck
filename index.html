@@ -34,6 +34,8 @@
   <style>
     :root {
       color-scheme: dark;
+      --coral: #E85D04;
+      --gold:  #FFB703;
     }
 
     * {
@@ -96,6 +98,8 @@
     /* Sizing */
     .h-11           { height: 2.75rem; }
     .w-11           { width: 2.75rem; }
+    .h-12           { height: 3rem; }
+    .w-12           { width: 3rem; }
     .h-\[100svh\]   { height: 100svh; }
     .w-full         { width: 100%; }
     .min-w-0        { min-width: 0; }
@@ -230,11 +234,40 @@
       cursor: pointer;
       transition:
         transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 200ms ease;
+        border-color 200ms ease,
+        filter 200ms ease;
     }
 
-    .gloss:hover  { transform: scale(1.06); border-color: rgba(255,248,240,0.4); }
-    .gloss:active { transform: scale(0.94); }
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
+    .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
+    .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
+
+    /* Primary transport action (play/pause): brighter fill + heavier rim so it
+       reads as the focal control, per Apple transport hierarchy. */
+    .btn-primary {
+      border-color: rgba(255,248,240,0.45);
+      background: linear-gradient(to bottom, rgba(255,248,240,0.28), rgba(255,248,240,0.12));
+    }
+
+    /* Cross-fade the play/pause glyphs instead of an instant swap. Both icons
+       are stacked and centred; the utility .hidden is overridden to fade. */
+    #playPauseBtn { position: relative; }
+    #playPauseBtn .btn-icon-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+    #iconPlay  { transform: translate(calc(-50% + 1px), -50%) scale(1); }
+    #iconPause { transform: translate(-50%, -50%) scale(1); }
+    #iconPlay.hidden,
+    #iconPause.hidden {
+      display: block;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #iconPlay.hidden  { transform: translate(calc(-50% + 1px), -50%) scale(0.7); }
+    #iconPause.hidden { transform: translate(-50%, -50%) scale(0.7); }
 
     .control-icon {
       width: 1.55rem;
@@ -268,8 +301,11 @@
       fill: currentColor;
     }
 
+    /* Active toggle takes the brand accent so "on" reads instantly. */
     .shuffle-on {
-      border-color: rgba(255,248,240,0.5);
+      border-color: rgba(232,93,4,0.85);
+      background: linear-gradient(to bottom, rgba(232,93,4,0.30), rgba(232,93,4,0.12));
+      color: var(--gold);
     }
 
     .progress {
@@ -288,7 +324,7 @@
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: rgba(255,248,240,0.72);
+      background: linear-gradient(90deg, var(--coral), var(--gold));
     }
 
     .progress-thumb {
@@ -346,9 +382,9 @@
     }
 
     .track-active {
-      background: rgba(255,248,240,0.1);
-      color: rgba(255,248,240,0.97);
-      box-shadow: inset 0 0 0 1px rgba(255,248,240,0.18);
+      background: linear-gradient(to right, rgba(232,93,4,0.16), rgba(232,93,4,0.05));
+      color: #fff8f0;
+      box-shadow: inset 0 0 0 1px rgba(232,93,4,0.35);
     }
 
     .track-spotify-link {
@@ -418,7 +454,7 @@
       right: max(1rem, env(safe-area-inset-right));
       z-index: 9998;
       width: min(calc(100vw - 2rem), 22rem);
-      border-radius: 1.25rem;
+      border-radius: 1.5rem;
       padding: 1.25rem 1.5rem;
       cursor: pointer;
       opacity: 0;
@@ -476,8 +512,8 @@
             </svg>
           </button>
 
-          <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
-            <svg id="iconPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play translate-x-[1px]" aria-hidden="true">
+          <button id="playPauseBtn" type="button" class="gloss btn-primary inline-flex h-12 w-12 items-center justify-center rounded-full" aria-label="Play">
+            <svg id="iconPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/>
             </svg>
