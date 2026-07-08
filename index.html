@@ -3,1179 +3,1562 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <!-- Ask browsers to revalidate so edits show up promptly instead of a stale
-       cached copy. (GitHub Pages/Safari still cache; hard-refresh or add ?v= to
-       the URL to force-bust while iterating.) -->
-  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
-  <title>The Palm Deck</title>
-  <meta
-    name="description"
-    content="Between lost and found. Neon nights and the joyride that finds you. Curated by Andrew Rios."
-  />
-  <meta name="author" content="Andrew Rios" />
-  <meta name="theme-color" content="#111111" />
+  <meta name="description" content="Peep This Tube — a minimal, distraction-free theater for watching videos by Andrew Rios." />
+  <meta name="theme-color" content="#000000" />
   <meta name="color-scheme" content="dark" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="The Palm Deck" />
-
-  <!-- Social sharing (Open Graph + Twitter). If deployed to a fixed domain,
-       swap the relative image paths for absolute URLs for best previews. -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="The Palm Deck" />
-  <meta property="og:title" content="The Palm Deck — Vagabond" />
-  <meta property="og:description" content="Between lost and found. Neon nights and the joyride that finds you. Curated by Andrew Rios." />
-  <meta property="og:image" content="og-image.JPG" />
-  <meta property="og:image:alt" content="The Palm Deck — a neon-lit beach bar and pool party under a crescent moon." />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="The Palm Deck — Vagabond" />
-  <meta name="twitter:description" content="Between lost and found. Neon nights and the joyride that finds you. Curated by Andrew Rios." />
-  <meta name="twitter:image" content="og-image.JPG" />
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><circle cx='16' cy='16' r='9' fill='none' stroke='%2312C6E0' stroke-width='2.4'/><circle cx='16' cy='16' r='2.6' fill='%234AF2E4'/></svg>" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Peep This Tube — Minimal Theater</title>
   <style>
     :root {
       color-scheme: dark;
-      /* Neon aqua accent — matches the "THE PALM DECK" sign above the bar. */
-      --accent:        #12C6E0;
-      --accent-bright: #4AF2E4;
-      --accent-rgb:    18 198 224;
+      --player-inset-x: 0px;
+      --player-inset-top: 0px;
+      --player-inset-bottom: 0px;
+      --player-focus-y: 50%;
+      --text: rgba(255, 255, 255, 0.98);
+      --text-soft: rgba(235, 235, 240, 0.82);
+      --text-muted: rgba(210, 210, 216, 0.62);
+      --line: rgba(255, 255, 255, 0.14);
+      --line-strong: rgba(255, 255, 255, 0.28);
+      --accent: #DB8B32;
+      --accent-tint: #E89A45;
+      --accent-soft: rgba(219, 139, 50, 0.3);
+      --focus: rgba(232, 154, 69, 0.5);
+      --hairline-top: rgba(255, 255, 255, 0.14);
+      --panel: rgba(28, 28, 30, 0.52);
+      --panel-strong: rgba(28, 28, 30, 0.72);
+      --panel-elevated: rgba(44, 44, 46, 0.62);
+      --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.44);
+      --shadow-tight: 0 6px 18px rgba(0, 0, 0, 0.34);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --t: 280ms var(--ease);
+      --seek-fill: rgba(255, 255, 255, 0.96);
+      --seek-track: rgba(255, 255, 255, 0.22);
+      accent-color: var(--accent);
     }
 
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
-      height: 100%;
-      background: #111111;
-      color: #fff8f0;
-      font-family: -apple-system, "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", "Inter", sans-serif;
-      line-height: 1.5;
+      min-height: 100%;
+      background:
+        radial-gradient(120% 110% at 50% 100%, rgba(219, 139, 50, 0.08), transparent 48%),
+        #000;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
-      font-feature-settings: "kern" 1;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
       overflow: hidden;
       overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* ------------------------------------------------------------------
-       Utility layer — the exact set of Tailwind classes this page uses,
-       compiled to static CSS. This replaces the runtime cdn.tailwindcss.com
-       compiler so the page ships no render-blocking JS and paints instantly.
-       Markup class names are unchanged. Component styles below intentionally
-       override these where they set the same property (e.g. .controls
-       padding-bottom for the safe-area inset).
-       ------------------------------------------------------------------ */
-
-    /* Minimal reset for the elements actually used (was Tailwind Preflight) */
-    button {
-      font: inherit;
-      color: inherit;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      border: 0;
-      text-transform: none;
-      -webkit-appearance: button;
-      appearance: button;
+    .app {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
+      background: #000;
+      isolation: isolate;
     }
-    ol  { list-style: none; margin: 0; padding: 0; }
-    p   { margin: 0; }
-    a   { color: inherit; text-decoration: none; }
-    svg { display: block; vertical-align: middle; }
 
-    /* Position */
-    .relative        { position: relative; }
-    .absolute        { position: absolute; }
-    .inset-0         { inset: 0; }
-    .z-10            { z-index: 10; }
-    .z-20            { z-index: 20; }
-    .overflow-hidden { overflow: hidden; }
+    @supports (height: 100dvh) {
+      .app {
+        min-height: 100dvh;
+      }
+    }
 
-    /* Sizing */
-    .h-11           { height: 2.75rem; }
-    .w-11           { width: 2.75rem; }
-    .h-12           { height: 3rem; }
-    .w-12           { width: 3rem; }
-    .h-\[100svh\]   { height: 100svh; }
-    .w-full         { width: 100%; }
-    .min-w-0        { min-width: 0; }
-    .flex-1         { flex: 1 1 0%; }
-    .shrink-0       { flex-shrink: 0; }
+    .player-stage {
+      position: absolute;
+      inset: var(--player-inset-top) var(--player-inset-x) var(--player-inset-bottom) var(--player-inset-x);
+      overflow: hidden;
+      background: #000;
+    }
 
-    /* Flex / grid */
-    .flex        { display: flex; }
-    .inline-flex { display: inline-flex; }
-    .flex-col    { flex-direction: column; }
-    .grid        { display: grid; }
-    .grid-cols-\[auto_1fr_auto\] { grid-template-columns: auto 1fr auto; }
-    .items-center   { align-items: center; }
-    .justify-center { justify-content: center; }
-    .justify-end    { justify-content: flex-end; }
-    .gap-2          { gap: 0.5rem; }
-
-    /* Spacing */
-    .p-4  { padding: 1rem; }
-    .px-4 { padding-left: 1rem; padding-right: 1rem; }
-    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
-    .px-0\.5 { padding-left: 0.125rem; padding-right: 0.125rem; }
-    .pb-1 { padding-bottom: 0.25rem; }
-    .mx-0 { margin-left: 0; margin-right: 0; }
-    .mt-3 { margin-top: 0.75rem; }
-    .space-y-0\.5 > * + * { margin-top: 0.125rem; }
-
-    /* Radius */
-    .rounded-full { border-radius: 9999px; }
-    .rounded-3xl  { border-radius: 1.5rem; }
-
-    /* Typography */
-    .text-\[0\.62rem\] { font-size: 0.62rem; }
-    .text-\[0\.68rem\] { font-size: 0.68rem; }
-    .text-\[0\.76rem\] { font-size: 0.76rem; }
-    .text-\[0\.82rem\] { font-size: 0.82rem; }
-    .font-medium       { font-weight: 500; }
-    .uppercase         { text-transform: uppercase; }
-    .tracking-\[0\.14em\] { letter-spacing: 0.14em; }
-    .leading-relaxed   { line-height: 1.625; }
-    .truncate          { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .text-cream\/58    { color: rgba(255, 248, 240, 0.58); }
-
-    /* Transform / visibility */
-    .translate-x-\[1px\] { transform: translateX(1px); }
-    .hidden              { display: none; }
-
-    .scene-video {
-      position: fixed;
-      inset: 0;
+    #player {
       width: 100%;
       height: 100%;
       display: block;
+      object-fit: contain;
+      object-position: center var(--player-focus-y);
+      background: #000;
+      touch-action: none;
+    }
+
+    .vignette {
+      position: absolute;
+      inset: 0;
       pointer-events: none;
-      object-fit: cover;
       z-index: 1;
-      opacity: 0;
-      transition: opacity 400ms ease;
-    }
-
-    .scene-video.loaded { opacity: 1; }
-
-    .scene-mask {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      background: linear-gradient(
-        to bottom,
-        rgba(17,17,17,0.08) 0%,
-        rgba(17,17,17,0.28) 52%,
-        rgba(17,17,17,0.62) 100%
-      );
-    }
-
-    .scene-fallback {
-      position: fixed;
-      inset: 0;
-      z-index: 3;
-      display: none;
-      place-items: center;
-      padding: 1.5rem;
-      text-align: center;
-      color: rgba(255,248,240,0.76);
       background:
-        radial-gradient(circle at 50% 30%, rgb(var(--accent-rgb) / 0.24), transparent 34%),
-        #111111;
+        linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, transparent 22%, transparent 68%, rgba(0, 0, 0, 0.86) 100%),
+        radial-gradient(130% 95% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.26) 100%);
     }
 
-    .scene-fallback.visible { display: grid; }
-
-    .scene-fallback p {
-      max-width: 28rem;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      letter-spacing: 0.02em;
-    }
-
-    /*
-      z-index intentionally removed from #stage.
-      Adding z-index here would create an isolated stacking context that
-      traps the backdrop-filter compositor layer and buries fixed overlays
-      (like #infoBtn) even when they have a higher z-index in the root context.
-      gestureArea (z-10) and controls (z-20) handle their own stacking directly.
-    */
-    #stage {
-      position: relative;
-    }
-
-    .controls {
-      opacity: 1;
-      transition: opacity 320ms ease;
-      pointer-events: none;
-      padding-bottom: max(1rem, env(safe-area-inset-bottom));
-    }
-
-    .controls.hidden { opacity: 0; }
-    .controls .ui    { pointer-events: auto; }
-
-    .glass {
-      backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(23,23,25,0.56);
-      border: 1px solid rgba(255,248,240,0.12);
-      box-shadow: 0 16px 38px rgba(0,0,0,0.36);
-      transform: translateZ(0);
-    }
-
-    /* Original translucent glass button — sits quietly in the panel and lets the
-       scene show subtly through, with a soft light rim. */
-    .gloss {
-      border: 1px solid rgba(255,248,240,0.25);
-      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
-      color: #fff8f0;
-      cursor: pointer;
-      transition:
-        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 200ms ease,
-        filter 200ms ease;
-    }
-
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
-    .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
-    .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
-
-    /* Cross-fade the play/pause glyphs instead of an instant swap. Both icons
-       are stacked and centred; the utility .hidden is overridden to fade. */
-    #playPauseBtn { position: relative; }
-    #playPauseBtn .btn-icon-play {
+    .ui {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transition: opacity 200ms ease, transform 200ms ease;
-    }
-    #iconPlay  { transform: translate(calc(-50% + 1px), -50%) scale(1); }
-    #iconPause { transform: translate(-50%, -50%) scale(1); }
-    #iconPlay.hidden,
-    #iconPause.hidden {
-      display: block;
-      opacity: 0;
-      pointer-events: none;
-    }
-    #iconPlay.hidden  { transform: translate(calc(-50% + 1px), -50%) scale(0.7); }
-    #iconPause.hidden { transform: translate(-50%, -50%) scale(0.7); }
-
-    .control-icon {
-      width: 1.55rem;
-      height: 1.55rem;
-      overflow: visible;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.85;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .btn-icon {
-      width: 1.35rem;
-      height: 1.35rem;
-    }
-
-    .btn-icon-nav {
-      width: 1.1rem;
-      height: 1.1rem;
-    }
-
-    .btn-icon-play {
-      width: 1.2rem;
-      height: 1.2rem;
-    }
-
-    .link-icon {
-      width: 1.05rem;
-      height: 1.05rem;
-      fill: currentColor;
-    }
-
-    /* Active toggle takes the brand accent so "on" reads instantly. */
-    .shuffle-on {
-      border-color: rgb(var(--accent-rgb) / 0.85);
-      background: linear-gradient(to bottom, rgb(var(--accent-rgb) / 0.30), rgb(var(--accent-rgb) / 0.12));
-      color: var(--accent-bright);
-    }
-
-    .progress {
-      height: 4px;
-      border-radius: 999px;
-      position: relative;
-      background: rgba(255,248,240,0.18);
-      cursor: pointer;
-      transition: height 180ms ease;
-      touch-action: none;   /* drags go straight to the scrubber, no page-scroll delay */
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .progress:hover,
-    .progress:focus-visible,
-    .progress.scrubbing { height: 6px; }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent-bright));
-    }
-
-    .progress-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 0%;
-      transform: translate(-50%, -50%) scale(0);
-      background: #fff8f0;
-      pointer-events: none;
-      transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .progress:hover .progress-thumb,
-    .progress:focus-visible .progress-thumb {
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    /* Keep the white circle visible for the whole drag (there's no hover on touch). */
-    .progress.scrubbing .progress-thumb {
-      transform: translate(-50%, -50%) scale(1.15);
-    }
-
-    .track-panel {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
-      contain: paint;
-    }
-
-    .track-panel.open { max-height: min(34svh, 310px); }
-
-    .track-scroll {
-      max-height: min(27svh, 250px);
-      overflow: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255,248,240,0.18) transparent;
-    }
-
-    .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255,248,240,0.18); border-radius: 999px; }
-
-    .track-item {
+      inset: 0;
+      z-index: 6;
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 0.5rem;
-      padding: 0.45rem 0.625rem;
-      cursor: pointer;
-      color: rgba(255,248,240,0.7);
-      transition: background 150ms ease, color 150ms ease;
-      user-select: none;
-    }
-
-    /* Exclude the active row from hover so tapping it (which leaves a sticky
-       :hover on touch) can't override the aqua highlight — the active track
-       looks the same whether reached by tap or by the next/prev buttons. */
-    .track-item:not(.track-active):hover {
-      background: rgba(255,248,240,0.07);
-      color: rgba(255,248,240,0.9);
-    }
-
-    .track-active {
-      background: linear-gradient(to right, rgb(var(--accent-rgb) / 0.16), rgb(var(--accent-rgb) / 0.05));
-      color: #fff8f0;
-      box-shadow: inset 0 0 0 1px rgb(var(--accent-rgb) / 0.35);
-    }
-
-    .track-spotify-link {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      padding: 2px;
-      color: rgba(255,248,240,0.26);
-      text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
-    }
-
-    .track-spotify-link:hover {
-      color: rgba(255,248,240,0.75);
-      transform: scale(1.2);
-    }
-
-    .track-active .track-spotify-link {
-      color: rgba(255,248,240,0.42);
-    }
-
-    /* Download link — shown only on the song1 row (see renderTracklist).
-       Colors mirror .track-spotify-link exactly so the download glyph is the
-       same gray as the external-link icons. */
-    .track-download-link {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      padding: 2px;
-      color: rgba(255,248,240,0.26);
-      text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
-    }
-
-    .track-download-link:hover { color: rgba(255,248,240,0.75); transform: scale(1.2); }
-    .track-active .track-download-link { color: rgba(255,248,240,0.42); }
-
-    /* Download glyph rendered from download.svg via a CSS mask so it takes the
-       CURRENT text color (currentColor) — exactly like the inline external-link
-       icon — instead of the color baked into the SVG file. This makes it the same
-       gray as the external-link in the list, and white on the buttons. */
-    .link-icon-img,
-    .btn-icon-img {
-      display: block;
-      background-color: currentColor;
-      -webkit-mask: url("download.svg") center / contain no-repeat;
-              mask: url("download.svg") center / contain no-repeat;
-    }
-    .link-icon-img { width: 1.05rem; height: 1.05rem; }
-    .btn-icon-img  { width: 1.35rem; height: 1.35rem; }
-
-    .tnum { font-variant-numeric: tabular-nums; }
-
-    .marquee-wrap { overflow: hidden; }
-
-    .marquee-track {
-      display: inline-flex;
-      white-space: nowrap;
-      font-size: 0.72rem;
-      color: rgba(255,248,240,0.58);
-      letter-spacing: 0.01em;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-
-    .marquee-track.scrolling {
-      animation: marquee-scroll var(--marquee-dur, 14s) linear infinite;
-    }
-
-    .marquee-track.scrolling:hover { animation-play-state: paused; }
-
-    @keyframes marquee-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-    }
-
-    /* Fixed top-right, last in DOM, highest z-index — always above the video and controls */
-    .info-btn {
-      position: fixed;
-      top: max(1rem, env(safe-area-inset-top));
-      right: max(1rem, env(safe-area-inset-right));
-      z-index: 9999;
-    }
-
-    /*
-      Popover anchored to top-right, below the info button.
-      transform-origin: top right means the scale animation grows
-      from the button's corner — matches iOS popover behaviour.
-    */
-    .info-panel {
-      position: fixed;
-      top: max(4.5rem, calc(env(safe-area-inset-top) + 3.5rem));
-      right: max(1rem, env(safe-area-inset-right));
-      z-index: 9998;
-      width: min(calc(100vw - 2rem), 22rem);
-      border-radius: 1.5rem;
-      padding: 1.25rem 1.5rem;
-      cursor: pointer;
-      opacity: 0;
+      flex-direction: column;
+      justify-content: space-between;
       pointer-events: none;
-      transform-origin: top right;
-      transform: scale(0.92) translateY(-6px);
-      transition:
-        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 260ms ease;
+      padding:
+        calc(14px + env(safe-area-inset-top, 0px))
+        max(12px, env(safe-area-inset-right, 0px))
+        calc(14px + env(safe-area-inset-bottom, 0px))
+        max(12px, env(safe-area-inset-left, 0px));
+      transition: opacity var(--t), transform var(--t), filter var(--t);
+      -webkit-user-select: none;
       user-select: none;
+      -webkit-touch-callout: none;
     }
 
-    .info-panel.open {
-      transform: scale(1) translateY(0);
-      opacity: 1;
+    .app.is-ui-hidden .ui {
+      opacity: 0;
+      transform: translateY(8px) scale(0.995);
+      filter: blur(0.6px);
+      pointer-events: none;
+    }
+
+    .top-zone,
+    .bottom-zone {
       pointer-events: auto;
     }
 
-    /* Responsive utilities (Tailwind `md:` — min-width 768px). Placed last so
-       they override the base spacing/width utilities on larger screens. */
-    @media (min-width: 768px) {
-      .md\:p-6       { padding: 1.5rem; }
-      .md\:p-5       { padding: 1.25rem; }
-      .md\:mx-auto   { margin-left: auto; margin-right: auto; }
-      .md\:w-full    { width: 100%; }
-      .md\:max-w-4xl { max-width: 56rem; }
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 10px 9px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow:
+        var(--shadow-tight),
+        inset 0 1px 0 var(--hairline-top);
+      backdrop-filter: saturate(180%) blur(22px);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+    }
+
+    .meta {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(0.94rem, 1.65vw, 1.08rem);
+      line-height: 1.24;
+      font-weight: 635;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: min(58vw, 620px);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+    }
+
+    .credit-line {
+      margin: 0;
+      font-size: 0.66rem;
+      line-height: 1.24;
+      letter-spacing: 0.048em;
+      font-weight: 540;
+      color: rgba(210, 210, 216, 0.6);
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: min(58vw, 620px);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .ghost-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      height: 44px;
+      width: 44px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      font: inherit;
+      position: relative;
+      transition:
+        color var(--t),
+        background-color var(--t),
+        transform var(--t);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ghost-btn svg {
+      width: 25px;
+      height: 25px;
+      display: block;
+      pointer-events: none;
+    }
+
+    .ghost-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .ghost-btn:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .ghost-btn:focus-visible {
+      outline: none;
+      color: #fff;
+      box-shadow: 0 0 0 3px var(--focus);
+    }
+
+    .playlist-section {
+      margin-top: 10px;
+      max-height: 0;
+      opacity: 0;
+      transform: translateX(10px);
+      overflow: hidden;
+      pointer-events: none;
+      transition: max-height var(--t), opacity var(--t), transform var(--t);
+    }
+
+    .app.is-playlist-open .playlist-section {
+      max-height: 110px;
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .playlist-rail {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 2px 2px 4px;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x proximity;
+    }
+
+    .playlist-rail::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .playlist-rail::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .playlist-item {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--panel-elevated);
+      color: var(--text);
+      border-radius: var(--radius-md);
+      min-height: 50px;
+      min-width: min(280px, 78vw);
+      max-width: min(360px, 86vw);
+      padding: 9px 11px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--t);
+      scroll-snap-align: start;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+    }
+
+    .playlist-item:hover {
+      background: rgba(64, 64, 66, 0.6);
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.34);
+    }
+
+    .playlist-item:focus-visible {
+      outline: none;
+      border-color: rgba(232, 178, 115, 0.74);
+      box-shadow:
+        0 0 0 3px var(--focus),
+        0 8px 20px rgba(0, 0, 0, 0.34);
+    }
+
+    .playlist-item.is-active {
+      background: rgba(150, 92, 34, 0.48);
+      border-color: rgba(233, 182, 120, 0.56);
+    }
+
+    .playlist-item-id {
+      font-size: 0.63rem;
+      font-weight: 620;
+      letter-spacing: 0.075em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .playlist-item-title {
+      font-size: 0.84rem;
+      font-weight: 610;
+      line-height: 1.24;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bottom-zone {
+      display: grid;
+      gap: 0;
+      padding: 12px 14px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--panel);
+      box-shadow:
+        var(--shadow-soft),
+        inset 0 1px 0 var(--hairline-top);
+      backdrop-filter: saturate(180%) blur(22px);
+      -webkit-backdrop-filter: saturate(180%) blur(22px);
+    }
+
+    .seek-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .time {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.01em;
+    }
+
+    .seek {
+      width: 100%;
+      margin: 0;
+      height: 22px;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .seek:focus-visible {
+      outline: none;
+    }
+
+    /* iOS-style scrubber: a slim track that thickens while you drag, with a
+       knob that only appears on touch. */
+    .seek::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg,
+          var(--seek-fill) 0 var(--seek-progress, 0%),
+          var(--seek-track) var(--seek-progress, 0%) 100%);
+      transition: height var(--t);
+    }
+
+    .app.is-scrubbing .seek::-webkit-slider-runnable-track {
+      height: 7px;
+    }
+
+    .seek::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      margin-top: -6px;
+      border: none;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transform: scale(0.3);
+      transition: opacity var(--t), transform var(--t);
+    }
+
+    .app.is-scrubbing .seek::-webkit-slider-thumb {
+      margin-top: -4.5px;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .seek::-moz-range-track {
+      height: 4px;
+      border-radius: 999px;
+      background: var(--seek-track);
+      transition: height var(--t);
+    }
+
+    .app.is-scrubbing .seek::-moz-range-track {
+      height: 7px;
+    }
+
+    .seek::-moz-range-progress {
+      height: 4px;
+      border-radius: 999px;
+      background: var(--seek-fill);
+    }
+
+    .app.is-scrubbing .seek::-moz-range-progress {
+      height: 7px;
+    }
+
+    .seek::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border: none;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: opacity var(--t);
+    }
+
+    .app.is-scrubbing .seek::-moz-range-thumb {
+      opacity: 1;
+    }
+
+    .transport-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: nowrap;
+      margin-bottom: 4px;
+    }
+
+    .mute-btn .icon-unmute {
+      display: none;
+    }
+
+    .mute-btn.is-muted .icon-mute {
+      display: none;
+    }
+
+    .mute-btn.is-muted .icon-unmute {
+      display: block;
+    }
+
+    .play-btn {
+      appearance: none;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(180deg, var(--accent-tint), var(--accent));
+      box-shadow: 0 8px 22px rgba(219, 139, 50, 0.38);
+      transition:
+        transform var(--t),
+        box-shadow var(--t),
+        filter var(--t);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .play-btn:hover {
+      filter: brightness(1.06);
+      box-shadow: 0 10px 26px rgba(219, 139, 50, 0.46);
+    }
+
+    .play-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 6px 16px rgba(219, 139, 50, 0.34);
+    }
+
+    .play-btn:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 4px var(--focus),
+        0 8px 22px rgba(219, 139, 50, 0.4);
+    }
+
+    .play-btn svg {
+      width: 26px;
+      height: 26px;
+      display: block;
+    }
+
+    .play-btn .icon-play {
+      margin-left: 2px;
+    }
+
+    .play-btn .icon-pause {
+      display: none;
+    }
+
+    .play-btn.is-playing .icon-play {
+      display: none;
+    }
+
+    .play-btn.is-playing .icon-pause {
+      display: block;
+    }
+
+    .osd {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, 14px) scale(0.96);
+      z-index: 10;
+      pointer-events: none;
+      border-radius: 999px;
+      border: 1px solid var(--hairline-top);
+      background: var(--panel-strong);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 640;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+      padding: 9px 18px;
+      opacity: 0;
+      transition: opacity var(--t), transform var(--t);
+      white-space: nowrap;
+      backdrop-filter: blur(20px) saturate(170%);
+      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      box-shadow:
+        var(--shadow-tight),
+        inset 0 1px 0 var(--hairline-top);
+    }
+
+    .osd.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 720px) {
+      .ui {
+        padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      }
+
+      .top-row {
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: var(--radius-md);
+      }
+
+      .title {
+        max-width: 50vw;
+        font-size: 0.93rem;
+      }
+
+      .bottom-zone {
+        padding: 10px 10px 8px;
+        border-radius: var(--radius-md);
+      }
+
+      .seek-row {
+        gap: 7px;
+        margin-bottom: 8px;
+      }
+
+      .credit-line {
+        font-size: 0.62rem;
+        max-width: 50vw;
+      }
+
+      .transport-row {
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .ghost-btn {
+        height: 42px;
+        width: 42px;
+      }
+
+      .ghost-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .playlist-item {
+        min-width: 78vw;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .ghost-btn {
+        height: 46px;
+        width: 46px;
+      }
+
+      .play-btn {
+        width: 60px;
+        height: 60px;
+      }
+
+      .transport-row {
+        gap: 12px;
+      }
+
+      .playlist-item {
+        min-height: 52px;
+      }
+    }
+
+    @media (prefers-contrast: more) {
+      .top-row,
+      .bottom-zone,
+      .playlist-item {
+        border-color: rgba(255, 255, 255, 0.5);
+      }
+
+      .ghost-btn,
+      .playlist-item {
+        color: #fff;
+      }
+    }
+
+    @media (prefers-reduced-transparency: reduce) {
+      .top-row,
+      .bottom-zone,
+      .osd,
+      .playlist-item {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      .top-row,
+      .bottom-zone {
+        background: rgba(24, 24, 26, 0.96);
+      }
+
+      .osd {
+        background: rgba(24, 24, 26, 0.98);
+      }
+
+      .playlist-item {
+        background: rgba(44, 44, 46, 0.98);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
     }
   </style>
 </head>
 <body>
-  <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="og-image.JPG" aria-hidden="true">
-    <source src="boomerang.MP4" type="video/mp4" />
-  </video>
+  <main class="app" id="app" aria-label="Minimal theater video player">
+    <div class="player-stage" id="playerStage">
+      <video id="player" preload="metadata" playsinline></video>
+    </div>
+    <div class="vignette" aria-hidden="true"></div>
 
-  <div id="sceneFallback" class="scene-fallback" aria-live="polite">
-    <p>The background video could not be loaded. Make sure <strong>boomerang.MP4</strong> is in the same folder as this page.</p>
-  </div>
-
-  <div class="scene-mask" aria-hidden="true"></div>
-
-  <main id="stage" class="relative h-[100svh] w-full overflow-hidden">
-    <div id="gestureArea" class="absolute inset-0 z-10"></div>
-
-    <div id="controls" class="controls absolute inset-0 z-20 flex flex-col justify-end p-4 md:p-6">
-      <section class="ui glass mx-0 rounded-3xl px-4 py-3 md:mx-auto md:w-full md:max-w-4xl md:p-5" aria-label="Audio controls">
-
-        <!-- All five controls on one row, no wrapping -->
-        <div class="flex items-center justify-center gap-2">
-
-          <button id="prevBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Previous track">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-nav" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M19.496 4.136l-12 7a1 1 0 0 0 0 1.728l12 7a1 1 0 0 0 1.504 -.864v-14a1 1 0 0 0 -1.504 -.864z"/>
-              <path d="M4 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
-            </svg>
-          </button>
-
-          <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
-            <svg id="iconPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/>
-            </svg>
-            <svg id="iconPause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play hidden" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/>
-              <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/>
-            </svg>
-          </button>
-
-          <button id="nextBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Next track">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-nav" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z"/>
-              <path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/>
-            </svg>
-          </button>
-
-          <button id="shuffleBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Shuffle" aria-pressed="false">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="btn-icon" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M18 4l3 3l-3 3"/>
-              <path d="M18 20l3 -3l-3 -3"/>
-              <path d="M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5"/>
-              <path d="M3 17h3a5 5 0 0 0 5 -5a5 5 0 0 1 5 -5h5"/>
-            </svg>
-          </button>
-
-          <button id="tracklistBtn" type="button" class="gloss inline-flex h-11 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
-            Tracklist
-          </button>
-
-        </div>
-
-        <div class="mt-3 flex items-center gap-2">
-          <div id="marqueeWrap" class="marquee-wrap min-w-0 flex-1">
-            <div id="marqueeTrack" class="marquee-track">
-              <span id="nowPlayingText"></span>
-              <span id="nowPlayingClone" class="hidden" aria-hidden="true"></span>
-            </div>
+    <div class="ui" id="ui">
+      <section class="top-zone">
+        <div class="top-row">
+          <div class="meta">
+            <h1 class="title" id="nowPlayingTitle">Loading playlist...</h1>
+            <p class="credit-line" id="creditLine">Filmed &amp; Edited by: Andrew Rios</p>
           </div>
-          <a id="spotifyBtn" href="#" target="_blank" rel="noopener noreferrer"
-             class="gloss inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
-             aria-label="Open in Spotify">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-              <path d="M12 5a1 1 0 0 1 0 2h-6a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1 -1v-6a1 1 0 0 1 2 0v6a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3zm3 -2h5l.075 .003l.126 .017l.111 .03l.111 .044l.098 .052l.096 .067l.09 .08q .054 .053 .097 .112l.071 .11l.054 .114l.035 .105l.03 .148l.006 .118v5a1 1 0 0 1 -2 0v-2.586l-7.293 7.293a1 1 0 0 1 -1.414 -1.414l7.291 -7.293h-2.584a1 1 0 0 1 0 -2"/>
-            </svg>
-          </a>
-        </div>
-
-        <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
-          <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
-          <div id="progressTrack" class="progress" role="slider" tabindex="0"
-               aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div id="progressFill" class="progress-fill"></div>
-            <div id="progressThumb" class="progress-thumb"></div>
+          <div class="top-actions">
+            <button class="ghost-btn" id="playlistToggle" type="button" aria-expanded="false" aria-controls="playlistRail" aria-label="Playlist">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <g fill="currentColor">
+                  <circle cx="4.5" cy="6.5" r="1.6"></circle>
+                  <rect x="8.5" y="5.4" width="12" height="2.2" rx="1.1"></rect>
+                  <circle cx="4.5" cy="12" r="1.6"></circle>
+                  <rect x="8.5" y="10.9" width="12" height="2.2" rx="1.1"></rect>
+                  <circle cx="4.5" cy="17.5" r="1.6"></circle>
+                  <rect x="8.5" y="16.4" width="12" height="2.2" rx="1.1"></rect>
+                </g>
+              </svg>
+            </button>
           </div>
-          <span id="durationEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
         </div>
 
-        <div id="trackPanel" class="track-panel mt-3">
-          <ol id="trackList" class="track-scroll space-y-0.5 px-0.5 pb-1 text-[0.76rem] leading-relaxed"></ol>
+        <div class="playlist-section" id="playlistSection" aria-hidden="true">
+          <div class="playlist-rail" id="playlistRail" role="listbox" aria-label="Video playlist"></div>
+        </div>
+      </section>
+
+      <section class="bottom-zone">
+        <div class="seek-row">
+          <span class="time" id="timeCurrent">0:00</span>
+          <input class="seek" id="seekBar" type="range" min="0" max="1000" step="1" value="0" aria-label="Seek timeline" />
+          <span class="time" id="timeTotal">--:--</span>
         </div>
 
+        <div class="transport-row" aria-label="Playback controls">
+          <button class="ghost-btn" id="prevBtn" type="button" aria-label="Previous video">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M7.5 5.5a1 1 0 0 1 2 0V18a1 1 0 0 1-2 0z"></path>
+              <path d="M18 6.6v10.8a1 1 0 0 1-1.53.85l-8.2-5.4a1 1 0 0 1 0-1.7l8.2-5.4A1 1 0 0 1 18 6.6z"></path>
+            </svg>
+          </button>
+
+          <button class="ghost-btn" id="rewindBtn" type="button" aria-label="Rewind 10 seconds">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                d="M4.6 12a7.4 7.4 0 1 0 2.3-5.35"></path>
+              <path fill="currentColor" d="M3.4 4.2 4.7 8.9l4.6-1.35z"></path>
+              <text x="12.4" y="15.4" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif"
+                font-size="8" font-weight="700" fill="currentColor">10</text>
+            </svg>
+          </button>
+
+          <button class="play-btn" id="playBtn" type="button" aria-label="Play video">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M7 4.8v14.4a1 1 0 0 0 1.53.85l11.2-7.2a1 1 0 0 0 0-1.7L8.53 3.95A1 1 0 0 0 7 4.8z"></path>
+            </svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="6" y="5" width="4.4" height="14" rx="1.6"></rect>
+              <rect x="13.6" y="5" width="4.4" height="14" rx="1.6"></rect>
+            </svg>
+          </button>
+
+          <button class="ghost-btn" id="forwardBtn" type="button" aria-label="Forward 10 seconds">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                d="M19.4 12a7.4 7.4 0 1 1-2.3-5.35"></path>
+              <path fill="currentColor" d="M20.6 4.2 19.3 8.9l-4.6-1.35z"></path>
+              <text x="11.6" y="15.4" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif"
+                font-size="8" font-weight="700" fill="currentColor">10</text>
+            </svg>
+          </button>
+
+          <button class="ghost-btn" id="nextBtn" type="button" aria-label="Next video">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M16.5 5.5a1 1 0 0 0-2 0V18a1 1 0 0 0 2 0z"></path>
+              <path d="M6 6.6v10.8a1 1 0 0 0 1.53.85l8.2-5.4a1 1 0 0 0 0-1.7l-8.2-5.4A1 1 0 0 0 6 6.6z"></path>
+            </svg>
+          </button>
+
+          <button class="ghost-btn mute-btn" id="muteBtn" type="button" aria-label="Mute audio">
+            <svg class="icon-mute" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M4 9.3v5.4a1 1 0 0 0 1 1h2.9l3.5 2.95a1 1 0 0 0 1.65-.77V6.12a1 1 0 0 0-1.65-.77L7.9 8.3H5a1 1 0 0 0-1 1z"></path>
+              <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                d="M16 9.2a4 4 0 0 1 0 5.6M18.7 6.7a7.5 7.5 0 0 1 0 10.6"></path>
+            </svg>
+            <svg class="icon-unmute" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M4 9.3v5.4a1 1 0 0 0 1 1h2.9l3.5 2.95a1 1 0 0 0 1.65-.77V6.12a1 1 0 0 0-1.65-.77L7.9 8.3H5a1 1 0 0 0-1 1z"></path>
+              <path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                d="M16.5 9.5 21 14M21 9.5 16.5 14"></path>
+            </svg>
+          </button>
+        </div>
       </section>
     </div>
+
+    <div class="osd" id="osd" aria-hidden="true"></div>
+    <span class="sr-only" id="liveRegion" aria-live="polite"></span>
   </main>
 
-  <!--
-    Info button and panel are last in <body> and carry z-index 9999/9998.
-    Being last in DOM order AND highest in z-index means no stacking context
-    on any earlier element can bury them — they are always above the video,
-    the mask, and the audio controls.
-  -->
-  <button id="infoBtn" type="button" class="glass gloss info-btn inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="About this mix" aria-expanded="false">
-    <svg viewBox="0 0 28 28" class="control-icon" aria-hidden="true">
-      <circle cx="14" cy="14" r="9"/>
-      <line x1="14" y1="12.5" x2="14" y2="19"/>
-      <circle cx="14" cy="9.5" r="1.1" fill="currentColor" stroke="none"/>
-    </svg>
-  </button>
-
-  <div id="infoPanel" class="info-panel glass" role="dialog" aria-label="About this mix">
-    <p id="infoText" class="text-[0.82rem] leading-relaxed" style="color:rgba(255,248,240,0.76)"></p>
-  </div>
-
   <script>
-    // ================================================================
-    //  PORTAL DATA  —  only edit this section
-    // ================================================================
-    const PORTAL = {
-      mix: {
-        title: "Vagabond",
+    const TITLE_SOURCE = "titles.txt";
+    const PLAYER_ID = "player";
 
-        // Shown in the info panel (tap ⓘ top-right). Keep it short.
-        description: "Between lost and found. Neon nights and the joyride that finds you. Curated by Andrew Rios.",
+    // How long the controls stay visible after your last interaction while a
+    // video is playing (ms). ~3s matches YouTube / native player behavior.
+    const UI_HIDE_DELAY = 3000;
 
-        // audio   → filename in your repo (e.g. song1.mp3)
-        // title   → shown in tracklist and now-playing marquee
-        // spotify → right-click track in Spotify → Share → Copy link to song
-        //
-        // • Songs play one after another automatically.
-        // • Tap a row while playing  → switches to that song immediately.
-        // • Tap a row while paused   → selects it; press play to start.
-        // • To add a track  → copy any block below and paste it after.
-        // • To remove a track → delete its { } block and the comma before it.
-        tracklist: [
-          {
-            audio:   "song1.mp3",
-            title:   "01. Go Back (feat. Julia Church) — John Summit, Sub Focus, Julia Church",
-            spotify: "https://open.spotify.com/track/4CfcXnwLf2MUfnjCnqUMvj?si=b9m2GudBRG-XlVj6f7MUzw",
-          },
-          {
-            audio:   "song2.mp3",
-            title:   "02. What A Life — John Summit, Guz, Stevie Appleton",
-            spotify: "https://open.spotify.com/track/1KbLVz3ZcdUOt2wBXqU2cG?si=TcvU_IkJSZ2y5rkBI1v_8w",
-          },
-          {
-            audio:   "song3.mp3",
-            title:   "03. Remember (John Summit Remix) — deadmau5, Kaskade, John Summit",
-            spotify: "https://open.spotify.com/track/1d4EFJUZpnKhmfClsR2WWc?si=Cf6h0_L-QoOQ6g7nN7SK_Q",
-          },
-        ],
-      },
-    };
-    // ================================================================
-    //  END OF EDITABLE DATA
-    // ================================================================
+    const videos = [];
+    let currentId = null;
+    let fallbackAttempted = false;
+    let playlistVisible = false;
+    let osdTimer = null;
+    let hideUiTimer = null;
+    let isScrubbing = false;
 
-    const audio = new Audio();
-    audio.preload = "metadata";
+    const app = document.getElementById("app");
+    const player = document.getElementById(PLAYER_ID);
+    const ui = document.getElementById("ui");
 
-    let isPlaying          = false;
-    let isScrubbing        = false;
-    let controlsAreVisible = true;
-    let tracklistOpen      = false;
-    let isShuffling        = false;
-    let infoOpen           = false;
-    let hideTimer          = null;
-    let activeTrack        = null;
-    let displayList        = [];
-    let progressRafPending = false;
+    const playlistToggle = document.getElementById("playlistToggle");
+    const playlistSection = document.getElementById("playlistSection");
+    const playlistRail = document.getElementById("playlistRail");
+    const topZone = document.querySelector(".top-zone");
+    const bottomZone = document.querySelector(".bottom-zone");
 
-    const sceneVideo      = document.getElementById("sceneVideo");
-    const sceneFallback   = document.getElementById("sceneFallback");
-    const stage           = document.getElementById("stage");
-    const gestureArea     = document.getElementById("gestureArea");
-    const controls        = document.getElementById("controls");
-    const prevBtn         = document.getElementById("prevBtn");
-    const playPauseBtn    = document.getElementById("playPauseBtn");
-    const iconPlay        = document.getElementById("iconPlay");
-    const iconPause       = document.getElementById("iconPause");
-    const nextBtn         = document.getElementById("nextBtn");
-    const shuffleBtn      = document.getElementById("shuffleBtn");
-    const tracklistBtn    = document.getElementById("tracklistBtn");
-    const spotifyBtn      = document.getElementById("spotifyBtn");
-    const marqueeWrap     = document.getElementById("marqueeWrap");
-    const marqueeTrack    = document.getElementById("marqueeTrack");
-    const nowPlayingText  = document.getElementById("nowPlayingText");
-    const nowPlayingClone = document.getElementById("nowPlayingClone");
-    const progressTrack   = document.getElementById("progressTrack");
-    const progressFill    = document.getElementById("progressFill");
-    const progressThumb   = document.getElementById("progressThumb");
-    const timeEl          = document.getElementById("timeEl");
-    const durationEl      = document.getElementById("durationEl");
-    const trackPanel      = document.getElementById("trackPanel");
-    const trackList       = document.getElementById("trackList");
-    const infoBtn         = document.getElementById("infoBtn");
-    const infoPanel       = document.getElementById("infoPanel");
-    const infoText        = document.getElementById("infoText");
+    const nowPlayingTitle = document.getElementById("nowPlayingTitle");
 
-    function formatTime(s) {
-      if (!Number.isFinite(s) || s < 0) return "0:00";
-      return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-    }
+    const playBtn = document.getElementById("playBtn");
+    const rewindBtn = document.getElementById("rewindBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const muteBtn = document.getElementById("muteBtn");
 
-    function clearHideTimer() {
-      if (!hideTimer) return;
-      window.clearTimeout(hideTimer);
-      hideTimer = null;
-    }
+    const seekBar = document.getElementById("seekBar");
+    const timeCurrent = document.getElementById("timeCurrent");
+    const timeTotal = document.getElementById("timeTotal");
 
-    function setControlsVisible(visible) {
-      controlsAreVisible = visible;
-      controls.classList.toggle("hidden", !visible);
-    }
+    const osd = document.getElementById("osd");
+    const liveRegion = document.getElementById("liveRegion");
 
-    function scheduleAutoHide() {
-      // The player is permanent over the artwork — it never auto-hides.
-      clearHideTimer();
-    }
-
-    function revealControls() {
-      setControlsVisible(true);
-      scheduleAutoHide();
-    }
-
-    function setTracklistOpen(open) {
-      tracklistOpen = open;
-      trackPanel.classList.toggle("open", open);
-      tracklistBtn.setAttribute("aria-expanded", String(open));
-      tracklistBtn.textContent = open ? "Hide List" : "Tracklist";
-      if (open) revealControls(); else scheduleAutoHide();
-    }
-
-    function setInfoOpen(open) {
-      infoOpen = open;
-      infoPanel.classList.toggle("open", open);
-      infoBtn.setAttribute("aria-expanded", String(open));
-    }
-
-    function updatePlayState(playing) {
-      isPlaying = playing;
-      iconPlay.classList.toggle("hidden", playing);
-      iconPause.classList.toggle("hidden", !playing);
-      playPauseBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
-      if (playing) {
-        scheduleAutoHide();
-      } else {
-        clearHideTimer();
-        setControlsVisible(true);
+    async function loadTitles() {
+      try {
+        const response = await fetch(TITLE_SOURCE);
+        if (!response.ok) return [];
+        return (await response.text())
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+      } catch (error) {
+        return [];
       }
-      updateMediaSession();
     }
 
-    function _doUpdateProgressUI() {
-      progressRafPending = false;
-      const dur = audio.duration;
-      const now = audio.currentTime;
-      if (!Number.isFinite(dur) || dur <= 0) {
-        progressFill.style.width = "0%";
-        progressThumb.style.left = "0%";
-        progressTrack.setAttribute("aria-valuenow", "0");
-        progressTrack.setAttribute("aria-valuetext", "0:00 of 0:00");
-        timeEl.textContent = "0:00";
-        durationEl.textContent = "0:00";
+    async function loadData() {
+      const titles = await loadTitles();
+      videos.length = 0;
+
+      for (let i = 1; i <= titles.length; i += 1) {
+        videos.push({
+          id: i,
+          title: titles[i - 1] || `Video ${i}`,
+          src: `video${i}.MP4`
+        });
+      }
+
+      if (!videos.length) {
+        videos.push({ id: 1, title: "Video 1", src: "video1.MP4" });
+      }
+    }
+
+    // Toggle the extension casing so a case-sensitive host can still resolve
+    // the file if the primary request 404s (e.g. .MP4 <-> .mp4).
+    function getFallbackSource(src) {
+      return /\.MP4$/.test(src)
+        ? src.replace(/\.MP4$/, ".mp4")
+        : src.replace(/\.mp4$/i, ".MP4");
+    }
+
+    function padVideoNumber(id) {
+      return String(id).padStart(2, "0");
+    }
+
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds) || seconds < 0) return "--:--";
+      const total = Math.floor(seconds);
+      const h = Math.floor(total / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+      if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      return `${m}:${String(s).padStart(2, "0")}`;
+    }
+
+    function showOSD(text, duration = 1300) {
+      osd.textContent = text;
+      liveRegion.textContent = text;
+      osd.classList.add("is-visible");
+      clearTimeout(osdTimer);
+      osdTimer = setTimeout(() => {
+        osd.classList.remove("is-visible");
+      }, duration);
+    }
+
+    function setPlayButtonState(isPlaying) {
+      playBtn.classList.toggle("is-playing", isPlaying);
+      playBtn.setAttribute("aria-label", isPlaying ? "Pause video" : "Play video");
+    }
+
+    function updateMuteButton() {
+      const muted = player.muted;
+      muteBtn.classList.toggle("is-muted", muted);
+      muteBtn.setAttribute("aria-label", muted ? "Unmute audio" : "Mute audio");
+    }
+
+    function updateNowPlaying(video) {
+      nowPlayingTitle.textContent = video.title;
+    }
+
+    // Paint the leading (played) portion of the scrubber to match the thumb.
+    function updateSeekFill() {
+      const pct = (Number(seekBar.value) / 1000) * 100;
+      seekBar.style.setProperty("--seek-progress", `${pct}%`);
+    }
+
+    function updateTimeline() {
+      const duration = Number.isFinite(player.duration) ? player.duration : 0;
+      const current = Number.isFinite(player.currentTime) ? player.currentTime : 0;
+      timeCurrent.textContent = formatTime(current);
+      timeTotal.textContent = duration > 0 ? formatTime(duration) : "--:--";
+
+      if (!isScrubbing) {
+        seekBar.value = duration > 0 ? String(Math.round((current / duration) * 1000)) : "0";
+      }
+      updateSeekFill();
+    }
+
+    function getCurrentIndex() {
+      return videos.findIndex((video) => video.id === currentId);
+    }
+
+    function getCurrentVideo() {
+      return videos.find((video) => video.id === currentId) || null;
+    }
+
+    function getInitialVideoIdFromUrl() {
+      const raw = new URLSearchParams(window.location.search).get("v");
+      const parsed = Number.parseInt(raw, 10);
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+    }
+
+    function syncUrlForVideo(id) {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.set("v", String(id));
+        history.replaceState({ v: id }, "", url);
+      } catch (error) {
+        /* no-op */
+      }
+    }
+
+    function getPlaylistItems() {
+      return Array.from(playlistRail.querySelectorAll(".playlist-item"));
+    }
+
+    function focusPlaylistItem(index) {
+      const items = getPlaylistItems();
+      if (!items.length) return;
+      const safe = ((index % items.length) + items.length) % items.length;
+
+      items.forEach((item, i) => {
+        item.tabIndex = i === safe ? 0 : -1;
+      });
+
+      items[safe].focus({ preventScroll: true });
+      items[safe].scrollIntoView({ behavior: "smooth", inline: "nearest", block: "nearest" });
+    }
+
+    function renderPlaylist() {
+      playlistRail.innerHTML = "";
+
+      videos.forEach((video) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.id = `playlist-item-${video.id}`;
+        item.className = "playlist-item";
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-selected", String(video.id === currentId));
+        item.tabIndex = -1;
+
+        if (video.id === currentId) item.classList.add("is-active");
+
+        const id = document.createElement("span");
+        id.className = "playlist-item-id";
+        id.textContent = `#${padVideoNumber(video.id)}`;
+
+        const title = document.createElement("span");
+        title.className = "playlist-item-title";
+        title.textContent = video.title;
+
+        item.append(id, title);
+
+        item.addEventListener("click", () => {
+          loadVideo(video.id);
+          setPlaylistVisible(false, { returnFocus: true });
+        });
+
+        playlistRail.appendChild(item);
+      });
+    }
+
+    function setPlaylistVisible(visible, { focus = false, returnFocus = false } = {}) {
+      playlistVisible = visible;
+      app.classList.toggle("is-playlist-open", visible);
+      playlistToggle.setAttribute("aria-expanded", String(visible));
+      playlistSection.setAttribute("aria-hidden", String(!visible));
+
+      if (visible) {
+        renderPlaylist();
+        const currentIndex = videos.findIndex((video) => video.id === currentId);
+        if (focus) focusPlaylistItem(currentIndex >= 0 ? currentIndex : 0);
+        showUi(true);
+      } else {
+        getPlaylistItems().forEach((item) => {
+          item.tabIndex = -1;
+        });
+        if (returnFocus) playlistToggle.focus();
+        hideUiAfterDelay();
+      }
+
+      updatePlayerInsets();
+    }
+
+    async function safePlay(showHint = true) {
+      try {
+        await player.play();
+        return true;
+      } catch (error) {
+        if (showHint) showOSD("TAP PLAY");
+        return false;
+      }
+    }
+
+    async function togglePlayback() {
+      if (player.paused) {
+        await safePlay(true);
+      } else {
+        player.pause();
+      }
+    }
+
+    function seekBy(seconds) {
+      const duration = Number.isFinite(player.duration)
+        ? player.duration
+        : (player.currentTime || 0) + Math.abs(seconds);
+      player.currentTime = Math.min(Math.max(0, (player.currentTime || 0) + seconds), duration);
+    }
+
+    async function loadVideo(id) {
+      const selected = videos.find((video) => video.id === id);
+      if (!selected) return;
+
+      currentId = id;
+      syncUrlForVideo(id);
+      fallbackAttempted = false;
+      player.src = selected.src;
+
+      updateNowPlaying(selected);
+      renderPlaylist();
+
+      await safePlay(true);
+    }
+
+    function stepVideo(step) {
+      if (!videos.length) return;
+      const currentIndex = getCurrentIndex();
+      const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+      const nextIndex = (safeIndex + step + videos.length) % videos.length;
+      loadVideo(videos[nextIndex].id);
+    }
+
+    function showUi(lock = false) {
+      app.classList.remove("is-ui-hidden");
+      clearTimeout(hideUiTimer);
+      if (!lock) hideUiAfterDelay();
+    }
+
+    function hideUiAfterDelay() {
+      clearTimeout(hideUiTimer);
+      if (player.paused || playlistVisible || isScrubbing) return;
+      hideUiTimer = setTimeout(() => {
+        app.classList.add("is-ui-hidden");
+      }, UI_HIDE_DELAY);
+    }
+
+    function isEditingTarget(target) {
+      if (!(target instanceof HTMLElement)) return false;
+      return /input|textarea|select/i.test(target.tagName);
+    }
+
+    function handlePlaylistKeys(event) {
+      if (!playlistVisible) return false;
+      const items = getPlaylistItems();
+      if (!items.length) return false;
+
+      const currentIndex = items.findIndex((item) => item === document.activeElement);
+      const safeCurrent = currentIndex >= 0 ? currentIndex : 0;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        focusPlaylistItem(safeCurrent + 1);
+        return true;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        focusPlaylistItem(safeCurrent - 1);
+        return true;
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+        focusPlaylistItem(0);
+        return true;
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+        focusPlaylistItem(items.length - 1);
+        return true;
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        items[safeCurrent].click();
+        return true;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setPlaylistVisible(false, { returnFocus: true });
+        return true;
+      }
+
+      return false;
+    }
+
+    function getFullscreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement || null;
+    }
+
+    async function requestFullscreen() {
+      const root = document.documentElement;
+      const fn = root.requestFullscreen || root.webkitRequestFullscreen;
+      if (!fn) return false;
+      try {
+        const result = fn.call(root);
+        if (result && typeof result.then === "function") await result;
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function exitFullscreen() {
+      const fn = document.exitFullscreen || document.webkitExitFullscreen;
+      if (!fn) return false;
+      try {
+        const result = fn.call(document);
+        if (result && typeof result.then === "function") await result;
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function toggleFullscreen() {
+      if (getFullscreenElement()) {
+        await exitFullscreen();
+      } else {
+        const ok = await requestFullscreen();
+        if (!ok && typeof player.webkitEnterFullscreen === "function") {
+          try {
+            player.webkitEnterFullscreen();
+          } catch (error) {
+            /* no-op */
+          }
+        }
+      }
+    }
+
+    function armFullscreenOnGesture() {
+      const once = async () => {
+        await requestFullscreen();
+      };
+      window.addEventListener("pointerdown", once, { once: true });
+      window.addEventListener("keydown", once, { once: true });
+    }
+
+    function updatePlayerInsets() {
+      const isPhoneViewport = window.matchMedia("(max-width: 720px)").matches;
+
+      if (!isPhoneViewport) {
+        app.style.setProperty("--player-inset-x", "0px");
+        app.style.setProperty("--player-inset-top", "0px");
+        app.style.setProperty("--player-inset-bottom", "0px");
         return;
       }
-      const pct = Math.min(100, Math.max(0, (now / dur) * 100));
-      progressFill.style.width = `${pct}%`;
-      progressThumb.style.left = `${pct}%`;
-      progressTrack.setAttribute("aria-valuenow", String(Math.round(pct)));
-      progressTrack.setAttribute("aria-valuetext", `${formatTime(now)} of ${formatTime(dur)}`);
-      timeEl.textContent = formatTime(now);
-      durationEl.textContent = formatTime(dur);
+
+      const topHeight = topZone ? topZone.getBoundingClientRect().height : 0;
+      const bottomHeight = bottomZone ? bottomZone.getBoundingClientRect().height : 0;
+      const uiStyles = ui ? getComputedStyle(ui) : null;
+      const uiTopPad = uiStyles ? Number.parseFloat(uiStyles.paddingTop) || 0 : 0;
+      const uiLeftPad = uiStyles ? Number.parseFloat(uiStyles.paddingLeft) || 0 : 0;
+      const uiBottomPad = uiStyles ? Number.parseFloat(uiStyles.paddingBottom) || 0 : 0;
+
+      /*
+        Reserve matte rails from the *actual* UI footprint so controls stay off
+        active color video, while avoiding over-shifting in iOS webviews.
+      */
+      const matteGap = 12;
+      const topInset = Math.round(topHeight + uiTopPad + matteGap);
+      const bottomInset = Math.round(bottomHeight + uiBottomPad + matteGap);
+      const xInset = Math.round(Math.max(8, Math.min(20, uiLeftPad + 2)));
+
+      app.style.setProperty("--player-inset-x", `${xInset}px`);
+      app.style.setProperty("--player-inset-top", `${topInset}px`);
+      app.style.setProperty("--player-inset-bottom", `${bottomInset}px`);
     }
 
-    function updateProgressUI() {
-      // While the user is dragging, the scrub preview owns the bar — don't let
-      // playback's timeupdate fight it.
-      if (isScrubbing) return;
-      if (progressRafPending) return;
-      progressRafPending = true;
-      requestAnimationFrame(_doUpdateProgressUI);
+    // Pin the app to the actual visible viewport height. iOS Safari can leave
+    // 100vh / 100dvh stale after its toolbars move or after exiting video
+    // fullscreen, which pushes the top and bottom panels off-screen; measuring
+    // the visual viewport keeps both panels inside the visible area.
+    function syncViewportHeight() {
+      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      if (height) app.style.height = `${Math.round(height)}px`;
     }
 
-    function progressFractionFromClientX(clientX) {
-      const rect = progressTrack.getBoundingClientRect();
-      if (rect.width <= 0) return 0;
-      return Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    // Coalesce bursty resize/viewport events into one layout read per frame.
+    let insetFrame = null;
+    function scheduleInsetUpdate() {
+      if (insetFrame !== null) return;
+      insetFrame = requestAnimationFrame(() => {
+        insetFrame = null;
+        syncViewportHeight();
+        updatePlayerInsets();
+      });
     }
 
-    // While dragging we only move the fill + thumb (cheap). Setting
-    // audio.currentTime on every pointer move forces a re-decode each time,
-    // which is what made the drag feel laggy — so we preview visually and
-    // commit the real seek once, on release.
-    function previewScrubAt(clientX) {
-      if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-      const frac = progressFractionFromClientX(clientX);
-      const pct = frac * 100;
-      const t = frac * audio.duration;
-      progressFill.style.width = `${pct}%`;
-      progressThumb.style.left = `${pct}%`;
-      timeEl.textContent = formatTime(t);
-      progressTrack.setAttribute("aria-valuenow", String(Math.round(pct)));
-      progressTrack.setAttribute("aria-valuetext", `${formatTime(t)} of ${formatTime(audio.duration)}`);
-    }
+    // Touch model:
+    //   single tap             -> play / pause
+    //   double-tap left third  -> seek -10s
+    //   double-tap right third -> seek +10s
+    //   swipe left             -> next video
+    //   swipe right            -> previous video
+    // Only the side thirds wait for a possible second tap, so a center tap
+    // toggles playback instantly.
+    function bindGestures() {
+      const SWIPE_MIN_X = 55;
+      const TAP_MAX_MOVE = 14;
+      const DOUBLE_TAP_MS = 300;
 
-    function commitScrubAt(clientX) {
-      if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-      audio.currentTime = progressFractionFromClientX(clientX) * audio.duration;
-      updateProgressUI();
-    }
+      let startX = 0;
+      let startY = 0;
+      let tracking = false;
+      let lastTapTime = 0;
+      let lastTapSide = "";
+      let tapTimer = null;
+      let uiWasHidden = false;
 
-    function shuffleArray(arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function buildDisplayList() {
-      displayList = isShuffling ? shuffleArray(PORTAL.mix.tracklist) : [...PORTAL.mix.tracklist];
-    }
-
-    function spotifyHref(track) {
-      return track.spotify && track.spotify !== "PASTE_SPOTIFY_LINK_HERE" ? track.spotify : "#";
-    }
-
-    // The now-playing action button (next to the title) becomes a Download
-    // button for song1, and the Spotify (external-link) button otherwise.
-    const SPOTIFY_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5a1 1 0 0 1 0 2h-6a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1 -1v-6a1 1 0 0 1 2 0v6a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3zm3 -2h5l.075 .003l.126 .017l.111 .03l.111 .044l.098 .052l.096 .067l.09 .08q .054 .053 .097 .112l.071 .11l.054 .114l.035 .105l.03 .148l.006 .118v5a1 1 0 0 1 -2 0v-2.586l-7.293 7.293a1 1 0 0 1 -1.414 -1.414l7.291 -7.293h-2.584a1 1 0 0 1 0 -2"/></svg>`;
-
-    function updateNowPlayingAction(track) {
-      if (track && track.audio === "song1.mp3") {
-        spotifyBtn.href = track.audio;
-        spotifyBtn.setAttribute("download", "");
-        spotifyBtn.removeAttribute("target");
-        spotifyBtn.setAttribute("aria-label", "Download this track");
-        spotifyBtn.innerHTML = `<span class="btn-icon-img" aria-hidden="true"></span>`;
-      } else {
-        spotifyBtn.href = spotifyHref(track);
-        spotifyBtn.setAttribute("target", "_blank");
-        spotifyBtn.removeAttribute("download");
-        spotifyBtn.setAttribute("aria-label", "Open in Spotify");
-        spotifyBtn.innerHTML = SPOTIFY_ICON_SVG;
-      }
-    }
-
-    function renderTracklist() {
-      trackList.innerHTML = "";
-      displayList.forEach((track) => {
-        const li = document.createElement("li");
-        li.className = "track-item" + (track === activeTrack ? " track-active" : "");
-        li.addEventListener("click", () => selectTrack(track));
-
-        const titleSpan = document.createElement("span");
-        titleSpan.className = "flex-1 min-w-0 truncate";
-        titleSpan.textContent = track.title;
-        li.appendChild(titleSpan);
-
-        // song1 shows a Download button in place of the Spotify (external-link)
-        // icon; every other track keeps its Spotify link.
-        let action;
-        if (track.audio === "song1.mp3") {
-          action = document.createElement("a");
-          action.href = track.audio;
-          action.setAttribute("download", "");
-          action.className = "track-download-link";
-          action.setAttribute("aria-label", "Download this track");
-          action.innerHTML = `<span class="link-icon-img" aria-hidden="true"></span>`;
-        } else {
-          action = document.createElement("a");
-          action.href = spotifyHref(track);
-          action.target = "_blank";
-          action.rel = "noopener noreferrer";
-          action.className = "track-spotify-link";
-          action.setAttribute("aria-label", "Open in Spotify");
-          action.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="link-icon" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5a1 1 0 0 1 0 2h-6a1 1 0 0 0 -1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1 -1v-6a1 1 0 0 1 2 0v6a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3zm3 -2h5l.075 .003l.126 .017l.111 .03l.111 .044l.098 .052l.096 .067l.09 .08q .054 .053 .097 .112l.071 .11l.054 .114l.035 .105l.03 .148l.006 .118v5a1 1 0 0 1 -2 0v-2.586l-7.293 7.293a1 1 0 0 1 -1.414 -1.414l7.291 -7.293h-2.584a1 1 0 0 1 0 -2"/></svg>`;
+      const clearPendingTap = () => {
+        if (tapTimer !== null) {
+          clearTimeout(tapTimer);
+          tapTimer = null;
         }
-        action.addEventListener("click", (e) => e.stopPropagation());
-        li.appendChild(action);
+      };
 
-        trackList.appendChild(li);
-      });
-    }
-
-    function selectTrack(track, forcePlay = false) {
-      const wasPlaying = !audio.paused;
-      activeTrack = track;
-      audio.src = track.audio;
-      audio.load();
-      nowPlayingText.textContent = track.title;
-      updateNowPlayingAction(track);
-      refreshMarquee();
-      renderTracklist();
-      updateMediaSession();
-      if (wasPlaying || forcePlay) playAudio();
-    }
-
-    function advanceToNext() {
-      const idx = displayList.indexOf(activeTrack);
-      if (idx >= 0 && idx < displayList.length - 1) {
-        selectTrack(displayList[idx + 1], true);
-      } else {
-        updatePlayState(false);
-      }
-    }
-
-    function setShuffling(active) {
-      isShuffling = active;
-      shuffleBtn.setAttribute("aria-pressed", String(active));
-      shuffleBtn.classList.toggle("shuffle-on", active);
-      buildDisplayList();
-      renderTracklist();
-      revealControls();
-    }
-
-    function refreshMarquee() {
-      marqueeTrack.classList.remove("scrolling");
-      marqueeTrack.style.willChange = "";
-      nowPlayingClone.classList.add("hidden");
-      nowPlayingText.style.paddingRight = "";
-      nowPlayingClone.style.paddingRight = "";
-
-      requestAnimationFrame(() => {
-        const wrapW = marqueeWrap.offsetWidth;
-        const rawW  = nowPlayingText.offsetWidth;
-        if (rawW <= wrapW) return;
-
-        const GAP = 56;
-        nowPlayingText.style.paddingRight = `${GAP}px`;
-        nowPlayingClone.textContent = nowPlayingText.textContent;
-        nowPlayingClone.style.paddingRight = `${GAP}px`;
-        nowPlayingClone.classList.remove("hidden");
-
-        requestAnimationFrame(() => {
-          const dur = Math.max(6, nowPlayingText.offsetWidth / 50);
-          marqueeTrack.style.setProperty("--marquee-dur", `${dur}s`);
-          marqueeTrack.style.willChange = "transform";
-          marqueeTrack.classList.add("scrolling");
-        });
-      });
-    }
-
-    function initSceneVideo() {
-      const showVideo    = () => { sceneFallback.classList.remove("visible"); sceneVideo.classList.add("loaded"); };
-      const showFallback = () => { sceneVideo.classList.remove("loaded"); sceneFallback.classList.add("visible"); };
-
-      function playSceneVideo() {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-          sceneVideo.pause();
-          if (sceneVideo.readyState > 0) showVideo();
+      // A single tap while the controls are hidden should only reveal them —
+      // it must not pause a playing video. Toggling playback requires the
+      // controls to already be visible (a second tap).
+      const tapTogglePlayback = () => {
+        if (uiWasHidden && !player.paused) {
+          // Controls were hidden while playing: this tap only woke them up.
+          // Let them fade again after the usual delay instead of pausing.
+          hideUiAfterDelay();
           return;
         }
-        // iOS Safari can clear the video from memory after ~60s in background.
-        // If readyState dropped to 0, reload the source before attempting play.
-        if (sceneVideo.readyState === 0) {
-          sceneVideo.addEventListener("canplay", () => {
-            sceneVideo.play().catch(() => {});
-          }, { once: true });
-          sceneVideo.load();
+        togglePlayback();
+      };
+
+      const sideAt = (clientX) => {
+        const rect = player.getBoundingClientRect();
+        const ratio = rect.width ? (clientX - rect.left) / rect.width : 0.5;
+        if (ratio < 0.34) return "left";
+        if (ratio > 0.66) return "right";
+        return "center";
+      };
+
+      player.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        tracking = true;
+        startX = event.clientX;
+        startY = event.clientY;
+        // Capture the visibility state before any other handler wakes the UI,
+        // so pointerup can tell a "wake" tap apart from an "act" tap.
+        uiWasHidden = app.classList.contains("is-ui-hidden");
+      });
+
+      player.addEventListener("pointercancel", () => {
+        tracking = false;
+      });
+
+      player.addEventListener("pointerup", (event) => {
+        if (!tracking) return;
+        tracking = false;
+
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+
+        // Horizontal swipe -> change video (left = next, right = previous).
+        if (Math.abs(dx) >= SWIPE_MIN_X && Math.abs(dx) > Math.abs(dy)) {
+          clearPendingTap();
+          showUi(true);
+          stepVideo(dx < 0 ? 1 : -1);
           return;
         }
-        const p = sceneVideo.play();
-        if (p) p.catch(() => { if (sceneVideo.readyState > 0) showVideo(); else showFallback(); });
-      }
 
-      sceneVideo.loop = true;
-      sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
-      sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
-      sceneVideo.addEventListener("error", showFallback);
+        // A drag that is neither a tap nor a horizontal swipe does nothing.
+        if (Math.abs(dx) > TAP_MAX_MOVE || Math.abs(dy) > TAP_MAX_MOVE) return;
 
-      // Resume after tab/app switch — 150ms delay lets the browser finish restoring context
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-          sceneVideo.pause();
+        showUi(true);
+        const side = sideAt(event.clientX);
+        const now = performance.now();
+
+        // Second quick tap on the same side -> seek instead of play/pause.
+        if (side !== "center" && side === lastTapSide && now - lastTapTime <= DOUBLE_TAP_MS) {
+          clearPendingTap();
+          lastTapTime = 0;
+          lastTapSide = "";
+          seekBy(side === "left" ? -10 : 10);
+          showOSD(side === "left" ? "−10s" : "+10s");
+          // Let the controls fade on their own after a seek, the same way they
+          // do after the video first starts playing.
+          hideUiAfterDelay();
+          return;
+        }
+
+        lastTapTime = now;
+        lastTapSide = side;
+        clearPendingTap();
+
+        if (side === "center") {
+          tapTogglePlayback();
         } else {
-          setTimeout(playSceneVideo, 150);
+          tapTimer = setTimeout(() => {
+            tapTimer = null;
+            tapTogglePlayback();
+          }, DOUBLE_TAP_MS);
         }
       });
-
-      // Resume after browser restores page from bfcache (back/forward navigation)
-      window.addEventListener("pageshow", (e) => {
-        if (e.persisted) setTimeout(playSceneVideo, 150);
-      });
-
-      // Health check: if the page is visible and the video has stopped unexpectedly, restart it
-      setInterval(() => {
-        if (!document.hidden && sceneVideo.paused && !sceneVideo.error) {
-          playSceneVideo();
-        }
-      }, 3000);
-
-      if (sceneVideo.readyState > 0) showVideo();
-      playSceneVideo();
-    }
-
-    function updateMediaSession() {
-      if (!("mediaSession" in navigator)) return;
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title:  activeTrack ? activeTrack.title : PORTAL.mix.title,
-        artist: "Mixed by Andrew Rios",
-        album:  PORTAL.mix.title,
-      });
-      navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
-    }
-
-    async function playAudio() {
-      try { await audio.play(); updatePlayState(true); }
-      catch (_) { updatePlayState(false); }
-    }
-
-    function togglePlayPause() {
-      if (audio.paused) playAudio(); else audio.pause();
-    }
-
-    function initMix(autoplay = false) {
-      document.title = PORTAL.mix.title;
-      if (PORTAL.mix.description) infoText.textContent = PORTAL.mix.description;
-      buildDisplayList();
-      if (displayList.length > 0) selectTrack(displayList[0]);
-      updateProgressUI();
-      if (autoplay) playAudio(); else updatePlayState(false);
-      revealControls();
     }
 
     function bindEvents() {
-      gestureArea.addEventListener("pointerdown", () => {
-        // Tapping the artwork only dismisses the info popover; the player stays put.
-        if (infoOpen) setInfoOpen(false);
+      playBtn.addEventListener("click", async () => {
+        showUi(true);
+        await togglePlayback();
       });
 
-      infoBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        setInfoOpen(!infoOpen);
-        revealControls();
+      rewindBtn.addEventListener("click", () => {
+        showUi(true);
+        seekBy(-10);
+        showOSD("−10s");
       });
 
-      infoPanel.addEventListener("click", (e) => {
-        e.stopPropagation();
-        setInfoOpen(false);
+      forwardBtn.addEventListener("click", () => {
+        showUi(true);
+        seekBy(10);
+        showOSD("+10s");
       });
-
-      stage.addEventListener("pointermove", () => {
-        if (!controlsAreVisible && isPlaying) return;
-        if (isPlaying) scheduleAutoHide();
-      });
-
-      playPauseBtn.addEventListener("click", () => { togglePlayPause(); revealControls(); });
 
       prevBtn.addEventListener("click", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx > 0) selectTrack(displayList[idx - 1], isPlaying);
-        revealControls();
+        showUi(true);
+        stepVideo(-1);
       });
 
       nextBtn.addEventListener("click", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx >= 0 && idx < displayList.length - 1) selectTrack(displayList[idx + 1], isPlaying);
-        revealControls();
+        showUi(true);
+        stepVideo(1);
       });
 
-      shuffleBtn.addEventListener("click", () => setShuffling(!isShuffling));
-      tracklistBtn.addEventListener("click", () => setTracklistOpen(!tracklistOpen));
-      spotifyBtn.addEventListener("click", () => revealControls());
+      muteBtn.addEventListener("click", () => {
+        showUi(true);
+        player.muted = !player.muted;
+        updateMuteButton();
+      });
 
-      progressTrack.addEventListener("pointerdown", (e) => {
-        if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+      playlistToggle.addEventListener("click", () => {
+        setPlaylistVisible(!playlistVisible, { focus: !playlistVisible });
+      });
+
+      seekBar.addEventListener("pointerdown", () => {
         isScrubbing = true;
-        progressTrack.classList.add("scrubbing");
-        progressTrack.setPointerCapture(e.pointerId);
-        previewScrubAt(e.clientX);
+        app.classList.add("is-scrubbing");
+        showUi(true);
       });
-      progressTrack.addEventListener("pointermove", (e) => {
-        if (isScrubbing) previewScrubAt(e.clientX);
-      });
-      const endScrub = (e) => {
+
+      document.addEventListener("pointerup", () => {
         if (!isScrubbing) return;
         isScrubbing = false;
-        progressTrack.classList.remove("scrubbing");
-        commitScrubAt(e.clientX);
+        app.classList.remove("is-scrubbing");
+        osd.classList.remove("is-visible");
+        hideUiAfterDelay();
+      });
+
+      seekBar.addEventListener("input", () => {
+        const duration = Number.isFinite(player.duration) ? player.duration : 0;
+        if (duration > 0) {
+          player.currentTime = (Number(seekBar.value) / 1000) * duration;
+        }
+        updateTimeline();
+        // Show a live time badge while dragging, iOS-style.
+        if (duration > 0) {
+          osd.textContent = `${formatTime(player.currentTime)} / ${formatTime(duration)}`;
+          osd.classList.add("is-visible");
+          clearTimeout(osdTimer);
+        }
+        showUi(true);
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        if (!playlistVisible) return;
+        if (!(event.target instanceof Node)) return;
+        if (playlistSection.contains(event.target) || playlistToggle.contains(event.target)) return;
+        setPlaylistVisible(false);
+      });
+
+      app.addEventListener("pointermove", () => showUi());
+      app.addEventListener("pointerdown", () => showUi());
+
+      player.addEventListener("play", () => {
+        setPlayButtonState(true);
+        hideUiAfterDelay();
+      });
+
+      player.addEventListener("pause", () => {
+        setPlayButtonState(false);
+        showUi(true);
+      });
+
+      player.addEventListener("timeupdate", updateTimeline);
+      player.addEventListener("durationchange", updateTimeline);
+      player.addEventListener("loadedmetadata", updateTimeline);
+
+      player.addEventListener("volumechange", updateMuteButton);
+
+      player.addEventListener("ended", () => {
+        stepVideo(1);
+      });
+
+      player.addEventListener("error", async () => {
+        const currentVideo = videos.find((video) => video.id === currentId);
+        if (!currentVideo || fallbackAttempted) return;
+        fallbackAttempted = true;
+        player.src = getFallbackSource(currentVideo.src);
+        await safePlay(false);
+      });
+
+      document.addEventListener("keydown", async (event) => {
+        showUi();
+
+        if (handlePlaylistKeys(event)) return;
+        if (isEditingTarget(event.target)) return;
+
+        if (event.key === "Escape" && playlistVisible) {
+          event.preventDefault();
+          setPlaylistVisible(false, { returnFocus: true });
+          return;
+        }
+
+        if (event.key === "ArrowRight" || event.key.toLowerCase() === "l") {
+          event.preventDefault();
+          forwardBtn.click();
+        } else if (event.key === "ArrowLeft" || event.key.toLowerCase() === "j") {
+          event.preventDefault();
+          rewindBtn.click();
+        } else if (event.key === " " || event.key.toLowerCase() === "k") {
+          event.preventDefault();
+          playBtn.click();
+        } else if (event.key.toLowerCase() === "m") {
+          event.preventDefault();
+          muteBtn.click();
+        } else if (event.key.toLowerCase() === "n") {
+          event.preventDefault();
+          nextBtn.click();
+        } else if (event.key.toLowerCase() === "p") {
+          event.preventDefault();
+          prevBtn.click();
+        } else if (event.key.toLowerCase() === "f") {
+          event.preventDefault();
+          await toggleFullscreen();
+        } else if (event.key.toLowerCase() === "c") {
+          event.preventDefault();
+          setPlaylistVisible(!playlistVisible, { focus: !playlistVisible });
+        }
+      });
+
+      bindGestures();
+
+      // Re-measure the viewport whenever fullscreen state changes; iOS needs a
+      // delayed pass because the toolbars settle after the transition ends.
+      const handleViewportChange = () => {
+        showUi(true);
+        scheduleInsetUpdate();
       };
-      progressTrack.addEventListener("pointerup", endScrub);
-      progressTrack.addEventListener("pointercancel", endScrub);
-
-      progressTrack.addEventListener("keydown", (e) => {
-        if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-        const step = Math.max(1, audio.duration * 0.02);
-        if      (e.key === "ArrowLeft")  { e.preventDefault(); audio.currentTime = Math.max(0, audio.currentTime - step); }
-        else if (e.key === "ArrowRight") { e.preventDefault(); audio.currentTime = Math.min(audio.duration, audio.currentTime + step); }
-        else if (e.key === "Home")       { e.preventDefault(); audio.currentTime = 0; }
-        else if (e.key === "End")        { e.preventDefault(); audio.currentTime = audio.duration; }
-        updateProgressUI();
+      document.addEventListener("fullscreenchange", handleViewportChange);
+      document.addEventListener("webkitfullscreenchange", handleViewportChange);
+      player.addEventListener("webkitbeginfullscreen", () => showUi(true));
+      player.addEventListener("webkitendfullscreen", () => {
+        handleViewportChange();
+        setTimeout(handleViewportChange, 300);
       });
 
-      audio.addEventListener("loadedmetadata", updateProgressUI);
-      audio.addEventListener("timeupdate",     updateProgressUI);
-      audio.addEventListener("play",           () => updatePlayState(true));
-      audio.addEventListener("pause",          () => updatePlayState(false));
-      audio.addEventListener("ended",          advanceToNext);
-
-      document.addEventListener("keydown", (e) => {
-        if (e.target.closest("input, textarea, select, [contenteditable], button, a")) return;
-        if      (e.key === " ")                    { e.preventDefault(); togglePlayPause(); }
-        else if (e.key.toLowerCase() === "s")      { e.preventDefault(); setShuffling(!isShuffling); }
-        else if (e.key.toLowerCase() === "t")      { e.preventDefault(); setTracklistOpen(!tracklistOpen); }
-        revealControls();
-      });
-
-      window.addEventListener("resize", refreshMarquee);
+      window.addEventListener("resize", scheduleInsetUpdate);
+      window.addEventListener("orientationchange", scheduleInsetUpdate);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", scheduleInsetUpdate);
+      }
     }
 
-    function initMediaSessionActions() {
-      if (!("mediaSession" in navigator)) return;
-      navigator.mediaSession.setActionHandler("play",  playAudio);
-      navigator.mediaSession.setActionHandler("pause", () => audio.pause());
-      navigator.mediaSession.setActionHandler("previoustrack", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx > 0) selectTrack(displayList[idx - 1]);
-      });
-      navigator.mediaSession.setActionHandler("nexttrack", () => {
-        const idx = displayList.indexOf(activeTrack);
-        if (idx < displayList.length - 1) selectTrack(displayList[idx + 1]);
-      });
-      navigator.mediaSession.setActionHandler("seekbackward", () => {
-        audio.currentTime = Math.max(0, audio.currentTime - 10);
-        updateProgressUI();
-      });
-      navigator.mediaSession.setActionHandler("seekforward", () => {
-        if (!Number.isFinite(audio.duration)) return;
-        audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
-        updateProgressUI();
-      });
-    }
-
-    function init() {
-      initSceneVideo();
+    async function init() {
+      await loadData();
       bindEvents();
-      initMediaSessionActions();
-      initMix(false);
-      setTracklistOpen(false);
-      setControlsVisible(true);
+      renderPlaylist();
+      updateMuteButton();
+      setPlayButtonState(false);
+      syncViewportHeight();
+      updatePlayerInsets();
+
+      const initialId = getInitialVideoIdFromUrl();
+      const validInitialId =
+        initialId && videos.some((video) => video.id === initialId)
+          ? initialId
+          : videos[0]?.id;
+
+      if (validInitialId) {
+        await loadVideo(validInitialId);
+      }
+
+      const full = await requestFullscreen();
+      if (!full) armFullscreenOnGesture();
     }
 
-    init();
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
   </script>
 </body>
 </html>
