@@ -233,14 +233,11 @@
       transform: translateZ(0);
     }
 
+    /* Original translucent glass button — sits quietly in the panel and lets the
+       scene show subtly through, with a soft light rim. */
     .gloss {
       border: 1px solid rgba(255,248,240,0.25);
-      /* Frosted gray fill so every button reads as the same gray circle as the
-         info button (which gets its gray from this backdrop-filter). A solid gray
-         base keeps them gray even over the dark control panel, not just black. */
-      background: rgba(120,122,128,0.30);
-      backdrop-filter: blur(16px) saturate(150%);
-      -webkit-backdrop-filter: blur(16px) saturate(150%);
+      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
       color: #fff8f0;
       cursor: pointer;
       transition:
@@ -249,8 +246,7 @@
         filter 200ms ease;
     }
 
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop).
-       All transport buttons share one size and outline for a consistent look. */
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
     .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
     .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
 
