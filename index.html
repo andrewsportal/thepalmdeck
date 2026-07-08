@@ -235,7 +235,12 @@
 
     .gloss {
       border: 1px solid rgba(255,248,240,0.25);
-      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
+      /* Frosted gray fill so every button reads as the same gray circle as the
+         info button (which gets its gray from this backdrop-filter). A solid gray
+         base keeps them gray even over the dark control panel, not just black. */
+      background: rgba(120,122,128,0.30);
+      backdrop-filter: blur(16px) saturate(150%);
+      -webkit-backdrop-filter: blur(16px) saturate(150%);
       color: #fff8f0;
       cursor: pointer;
       transition:
@@ -416,32 +421,34 @@
     }
 
     /* Download link — shown only on the song1 row (see renderTracklist).
-       Opacity levels mirror .track-spotify-link (0.26 / 0.75 / active 0.42) so
-       the white download glyph reads as the same gray as the external-link icons. */
+       Colors mirror .track-spotify-link exactly so the download glyph is the
+       same gray as the external-link icons. */
     .track-download-link {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      opacity: 0.26;
+      color: rgba(255,248,240,0.26);
       text-decoration: none;
-      transition: opacity 150ms ease, transform 150ms ease;
+      transition: color 150ms ease, transform 150ms ease;
     }
 
-    .track-download-link:hover { opacity: 0.75; transform: scale(1.2); }
-    .track-active .track-download-link { opacity: 0.42; }
+    .track-download-link:hover { color: rgba(255,248,240,0.75); transform: scale(1.2); }
+    .track-active .track-download-link { color: rgba(255,248,240,0.42); }
 
-    .link-icon-img {
-      display: block;
-      width: 1.05rem;
-      height: 1.05rem;
-    }
-
+    /* Download glyph rendered from download.svg via a CSS mask so it takes the
+       CURRENT text color (currentColor) — exactly like the inline external-link
+       icon — instead of the color baked into the SVG file. This makes it the same
+       gray as the external-link in the list, and white on the buttons. */
+    .link-icon-img,
     .btn-icon-img {
       display: block;
-      width: 1.35rem;
-      height: 1.35rem;
+      background-color: currentColor;
+      -webkit-mask: url("download.svg") center / contain no-repeat;
+              mask: url("download.svg") center / contain no-repeat;
     }
+    .link-icon-img { width: 1.05rem; height: 1.05rem; }
+    .btn-icon-img  { width: 1.35rem; height: 1.35rem; }
 
     .tnum { font-variant-numeric: tabular-nums; }
 
@@ -863,7 +870,7 @@
         spotifyBtn.setAttribute("download", "");
         spotifyBtn.removeAttribute("target");
         spotifyBtn.setAttribute("aria-label", "Download this track");
-        spotifyBtn.innerHTML = `<img src="download.svg" alt="" class="btn-icon-img" width="24" height="24" />`;
+        spotifyBtn.innerHTML = `<span class="btn-icon-img" aria-hidden="true"></span>`;
       } else {
         spotifyBtn.href = spotifyHref(track);
         spotifyBtn.setAttribute("target", "_blank");
@@ -894,7 +901,7 @@
           action.setAttribute("download", "");
           action.className = "track-download-link";
           action.setAttribute("aria-label", "Download this track");
-          action.innerHTML = `<img src="download.svg" alt="" class="link-icon-img" width="24" height="24" />`;
+          action.innerHTML = `<span class="link-icon-img" aria-hidden="true"></span>`;
         } else {
           action = document.createElement("a");
           action.href = spotifyHref(track);
