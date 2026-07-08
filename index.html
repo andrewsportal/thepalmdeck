@@ -233,21 +233,11 @@
       transform: translateZ(0);
     }
 
-    /* Apple-style "glass" button:
-       - a light gray base (readable over the dark panel)
-       - a top-to-bottom sheen so light appears to catch the top
-       - blur + high saturation for vibrancy (the scene glows through)
-       - inset top hairline = specular edge; inset bottom = depth; drop = lift */
+    /* Original translucent glass button — sits quietly in the panel and lets the
+       scene show subtly through, with a soft light rim. */
     .gloss {
-      border: 1px solid rgba(255,255,255,0.20);
-      background-color: rgba(118,122,130,0.22);
-      background-image: linear-gradient(to bottom, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      box-shadow:
-        inset 0 1px 0.5px rgba(255,255,255,0.32),
-        inset 0 -1px 1px rgba(0,0,0,0.16),
-        0 3px 10px rgba(0,0,0,0.26);
+      border: 1px solid rgba(255,248,240,0.25);
+      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
       color: #fff8f0;
       cursor: pointer;
       transition:
@@ -256,8 +246,7 @@
         filter 200ms ease;
     }
 
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop).
-       All transport buttons share one size and outline for a consistent look. */
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
     .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
     .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
 
