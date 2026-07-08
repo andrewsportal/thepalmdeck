@@ -386,7 +386,10 @@
       user-select: none;
     }
 
-    .track-item:hover {
+    /* Exclude the active row from hover so tapping it (which leaves a sticky
+       :hover on touch) can't override the aqua highlight — the active track
+       looks the same whether reached by tap or by the next/prev buttons. */
+    .track-item:not(.track-active):hover {
       background: rgba(255,248,240,0.07);
       color: rgba(255,248,240,0.9);
     }
