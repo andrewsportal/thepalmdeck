@@ -417,6 +417,26 @@
       color: rgba(255,248,240,0.42);
     }
 
+    /* Download link — shown only on the song1 row (see renderTracklist). */
+    .track-download-link {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      opacity: 0.4;
+      text-decoration: none;
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    .track-download-link:hover { opacity: 0.9; transform: scale(1.2); }
+    .track-active .track-download-link { opacity: 0.62; }
+
+    .link-icon-img {
+      display: block;
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+
     .tnum { font-variant-numeric: tabular-nums; }
 
     .marquee-wrap { overflow: hidden; }
@@ -838,6 +858,19 @@
         titleSpan.className = "flex-1 min-w-0 truncate";
         titleSpan.textContent = track.title;
         li.appendChild(titleSpan);
+
+        // Download button — only for song1.mp3. To offer it on another track,
+        // change the filename here (or add more conditions).
+        if (track.audio === "song1.mp3") {
+          const dl = document.createElement("a");
+          dl.href = track.audio;
+          dl.setAttribute("download", "");
+          dl.className = "track-download-link";
+          dl.setAttribute("aria-label", "Download this track");
+          dl.innerHTML = `<img src="download.svg" alt="" class="link-icon-img" width="24" height="24" />`;
+          dl.addEventListener("click", (e) => e.stopPropagation());
+          li.appendChild(dl);
+        }
 
         const link = document.createElement("a");
         link.href = spotifyHref(track);
