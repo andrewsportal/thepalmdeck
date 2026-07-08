@@ -240,16 +240,10 @@
         filter 200ms ease;
     }
 
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop).
+       All transport buttons share one size and outline for a consistent look. */
     .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
     .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
-
-    /* Primary transport action (play/pause): brighter fill + heavier rim so it
-       reads as the focal control, per Apple transport hierarchy. */
-    .btn-primary {
-      border-color: rgba(255,248,240,0.45);
-      background: linear-gradient(to bottom, rgba(255,248,240,0.28), rgba(255,248,240,0.12));
-    }
 
     /* Cross-fade the play/pause glyphs instead of an instant swap. Both icons
        are stacked and centred; the utility .hidden is overridden to fade. */
@@ -417,19 +411,21 @@
       color: rgba(255,248,240,0.42);
     }
 
-    /* Download link — shown only on the song1 row (see renderTracklist). */
+    /* Download link — shown only on the song1 row (see renderTracklist).
+       Opacity levels mirror .track-spotify-link (0.26 / 0.75 / active 0.42) so
+       the white download glyph reads as the same gray as the external-link icons. */
     .track-download-link {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      opacity: 0.4;
+      opacity: 0.26;
       text-decoration: none;
       transition: opacity 150ms ease, transform 150ms ease;
     }
 
-    .track-download-link:hover { opacity: 0.9; transform: scale(1.2); }
-    .track-active .track-download-link { opacity: 0.62; }
+    .track-download-link:hover { opacity: 0.75; transform: scale(1.2); }
+    .track-active .track-download-link { opacity: 0.42; }
 
     .link-icon-img {
       display: block;
@@ -549,7 +545,7 @@
             </svg>
           </button>
 
-          <button id="playPauseBtn" type="button" class="gloss btn-primary inline-flex h-12 w-12 items-center justify-center rounded-full" aria-label="Play">
+          <button id="playPauseBtn" type="button" class="gloss inline-flex h-11 w-11 items-center justify-center rounded-full" aria-label="Play">
             <svg id="iconPlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="btn-icon-play" aria-hidden="true">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/>
