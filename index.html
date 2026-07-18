@@ -42,6 +42,16 @@
       --accent:        #12C6E0;
       --accent-bright: #4AF2E4;
       --accent-rgb:    18 198 224;
+
+      /* Ink + surface tokens. Use rgb(var(--cream-rgb) / 0.5) for translucent
+         cream so every tint derives from one value. */
+      --cream:     #fff8f0;
+      --cream-rgb: 255 248 240;
+      --bg:        #111111;
+      --bg-rgb:    17 17 17;
+
+      /* Shared ease-out curve for all interactive motion. */
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     * {
@@ -53,9 +63,9 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background: #111111;
-      color: #fff8f0;
-      font-family: -apple-system, "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -93,6 +103,13 @@
     a   { color: inherit; text-decoration: none; }
     svg { display: block; vertical-align: middle; }
 
+    /* Keyboard focus — one consistent ring on every control (buttons, links,
+       the scrubber). Mouse/touch stay ring-free via :focus-visible. */
+    :focus-visible {
+      outline: 2px solid var(--accent-bright);
+      outline-offset: 3px;
+    }
+
     /* Position */
     .relative        { position: relative; }
     .absolute        { position: absolute; }
@@ -104,9 +121,7 @@
     /* Sizing */
     .h-11           { height: 2.75rem; }
     .w-11           { width: 2.75rem; }
-    .h-12           { height: 3rem; }
-    .w-12           { width: 3rem; }
-    .h-\[100svh\]   { height: 100svh; }
+    .h-\[100svh\]   { height: 100vh; height: 100svh; }
     .w-full         { width: 100%; }
     .min-w-0        { min-width: 0; }
     .flex-1         { flex: 1 1 0%; }
@@ -137,21 +152,19 @@
     .rounded-full { border-radius: 9999px; }
     .rounded-3xl  { border-radius: 1.5rem; }
 
-    /* Typography */
-    .text-\[0\.62rem\] { font-size: 0.62rem; }
-    .text-\[0\.68rem\] { font-size: 0.68rem; }
-    .text-\[0\.76rem\] { font-size: 0.76rem; }
-    .text-\[0\.82rem\] { font-size: 0.82rem; }
+    /* Typography — 11 / 13 / 14px ladder (0.6875 / 0.8125 / 0.875rem) */
+    .text-\[0\.6875rem\] { font-size: 0.6875rem; }
+    .text-\[0\.8125rem\] { font-size: 0.8125rem; }
+    .text-\[0\.875rem\]  { font-size: 0.875rem; }
     .font-medium       { font-weight: 500; }
     .uppercase         { text-transform: uppercase; }
     .tracking-\[0\.14em\] { letter-spacing: 0.14em; }
     .leading-relaxed   { line-height: 1.625; }
     .truncate          { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .text-cream\/58    { color: rgba(255, 248, 240, 0.58); }
+    .text-cream\/64    { color: rgb(var(--cream-rgb) / 0.64); }
 
-    /* Transform / visibility */
-    .translate-x-\[1px\] { transform: translateX(1px); }
-    .hidden              { display: none; }
+    /* Visibility */
+    .hidden { display: none; }
 
     .scene-video {
       position: fixed;
@@ -174,9 +187,9 @@
       z-index: 2;
       background: linear-gradient(
         to bottom,
-        rgba(17,17,17,0.08) 0%,
-        rgba(17,17,17,0.28) 52%,
-        rgba(17,17,17,0.62) 100%
+        rgb(var(--bg-rgb) / 0.08) 0%,
+        rgb(var(--bg-rgb) / 0.28) 52%,
+        rgb(var(--bg-rgb) / 0.62) 100%
       );
     }
 
@@ -188,17 +201,17 @@
       place-items: center;
       padding: 1.5rem;
       text-align: center;
-      color: rgba(255,248,240,0.76);
+      color: rgb(var(--cream-rgb) / 0.76);
       background:
         radial-gradient(circle at 50% 30%, rgb(var(--accent-rgb) / 0.24), transparent 34%),
-        #111111;
+        var(--bg);
     }
 
     .scene-fallback.visible { display: grid; }
 
     .scene-fallback p {
       max-width: 28rem;
-      font-size: 0.82rem;
+      font-size: 0.875rem;
       line-height: 1.5;
       letter-spacing: 0.02em;
     }
@@ -218,6 +231,9 @@
       opacity: 1;
       transition: opacity 320ms ease;
       pointer-events: none;
+      /* Safe-area padding overrides .p-4 on notched phones (incl. landscape). */
+      padding-left:   max(1rem, env(safe-area-inset-left));
+      padding-right:  max(1rem, env(safe-area-inset-right));
       padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
 
@@ -227,27 +243,34 @@
     .glass {
       backdrop-filter: blur(20px) saturate(150%);
       -webkit-backdrop-filter: blur(20px) saturate(150%);
-      background: rgba(23,23,25,0.56);
-      border: 1px solid rgba(255,248,240,0.12);
-      box-shadow: 0 16px 38px rgba(0,0,0,0.36);
+      background: rgba(23,23,25,0.6);
+      border: 1px solid rgb(var(--cream-rgb) / 0.12);
+      /* Layered depth: inner rim light, tight contact shadow, soft ambient. */
+      box-shadow:
+        inset 0 1px 0 rgb(var(--cream-rgb) / 0.07),
+        0 1px 2px rgba(0,0,0,0.22),
+        0 16px 40px rgba(0,0,0,0.38);
       transform: translateZ(0);
     }
 
     /* Original translucent glass button — sits quietly in the panel and lets the
        scene show subtly through, with a soft light rim. */
     .gloss {
-      border: 1px solid rgba(255,248,240,0.25);
-      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
-      color: #fff8f0;
+      border: 1px solid rgb(var(--cream-rgb) / 0.25);
+      background: linear-gradient(to bottom, rgb(var(--cream-rgb) / 0.15), rgb(var(--cream-rgb) / 0.06));
+      color: var(--cream);
       cursor: pointer;
       transition:
-        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 280ms var(--ease-out),
         border-color 200ms ease,
         filter 200ms ease;
     }
 
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
-    .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop).
+       Guarded so touch devices never get a stuck hover state. */
+    @media (hover: hover) {
+      .gloss:hover { transform: scale(1.03); border-color: rgb(var(--cream-rgb) / 0.4); filter: brightness(1.12); }
+    }
     .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
 
     /* Cross-fade the play/pause glyphs instead of an instant swap. Both icons
@@ -313,7 +336,7 @@
       height: 4px;
       border-radius: 999px;
       position: relative;
-      background: rgba(255,248,240,0.18);
+      background: rgb(var(--cream-rgb) / 0.18);
       cursor: pointer;
       transition: height 180ms ease;
       touch-action: none;   /* drags go straight to the scrubber, no page-scroll delay */
@@ -321,7 +344,21 @@
       -webkit-user-select: none;
     }
 
-    .progress:hover,
+    /* Invisible hit area: the 4px bar accepts pointers ~30px tall (fits the
+       clear space around it — the marquee row sits 12px above, the panel gap
+       and padding below). Seek math uses the bar's own rect, so unaffected. */
+    .progress::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -12px;
+      bottom: -14px;
+    }
+
+    @media (hover: hover) {
+      .progress:hover { height: 6px; }
+    }
     .progress:focus-visible,
     .progress.scrubbing { height: 6px; }
 
@@ -340,12 +377,17 @@
       top: 50%;
       left: 0%;
       transform: translate(-50%, -50%) scale(0);
-      background: #fff8f0;
+      background: var(--cream);
       pointer-events: none;
-      transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 200ms var(--ease-out);
     }
 
-    .progress:hover .progress-thumb,
+    @media (hover: hover) {
+      .progress:hover .progress-thumb {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
     .progress:focus-visible .progress-thumb {
       transform: translate(-50%, -50%) scale(1);
     }
@@ -358,82 +400,80 @@
     .track-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: max-height 340ms var(--ease-out);
       contain: paint;
     }
 
-    .track-panel.open { max-height: min(34svh, 310px); }
+    .track-panel.open {
+      max-height: min(34vh, 310px);
+      max-height: min(34svh, 310px);
+    }
 
     .track-scroll {
+      max-height: min(27vh, 250px);
       max-height: min(27svh, 250px);
       overflow: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255,248,240,0.18) transparent;
+      scrollbar-color: rgb(var(--cream-rgb) / 0.18) transparent;
     }
 
     .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255,248,240,0.18); border-radius: 999px; }
+    .track-scroll::-webkit-scrollbar-thumb { background: rgb(var(--cream-rgb) / 0.18); border-radius: 999px; }
 
     .track-item {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       border-radius: 0.5rem;
-      padding: 0.45rem 0.625rem;
+      padding: 0.5rem 0.625rem;
       cursor: pointer;
-      color: rgba(255,248,240,0.7);
+      color: rgb(var(--cream-rgb) / 0.7);
       transition: background 150ms ease, color 150ms ease;
       user-select: none;
     }
 
-    /* Exclude the active row from hover so tapping it (which leaves a sticky
-       :hover on touch) can't override the aqua highlight — the active track
-       looks the same whether reached by tap or by the next/prev buttons. */
-    .track-item:not(.track-active):hover {
-      background: rgba(255,248,240,0.07);
-      color: rgba(255,248,240,0.9);
+    /* Exclude the active row from hover so the aqua highlight always wins —
+       the active track looks the same whether reached by tap or by the
+       next/prev buttons. Hover-guarded: touch devices skip it entirely. */
+    @media (hover: hover) {
+      .track-item:not(.track-active):hover {
+        background: rgb(var(--cream-rgb) / 0.07);
+        color: rgb(var(--cream-rgb) / 0.9);
+      }
     }
 
     .track-active {
       background: linear-gradient(to right, rgb(var(--accent-rgb) / 0.16), rgb(var(--accent-rgb) / 0.05));
-      color: #fff8f0;
+      color: var(--cream);
       box-shadow: inset 0 0 0 1px rgb(var(--accent-rgb) / 0.35);
     }
 
-    .track-spotify-link {
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      padding: 2px;
-      color: rgba(255,248,240,0.26);
-      text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
-    }
-
-    .track-spotify-link:hover {
-      color: rgba(255,248,240,0.75);
-      transform: scale(1.2);
-    }
-
-    .track-active .track-spotify-link {
-      color: rgba(255,248,240,0.42);
-    }
-
-    /* Download link — shown only on the song1 row (see renderTracklist).
-       Colors mirror .track-spotify-link exactly so the download glyph is the
-       same gray as the external-link icons. */
+    /* Per-row action links. The Spotify (external-link) and Download links
+       share one style so the download glyph on the song1 row (see
+       renderTracklist) is the same gray as the external-link icons. */
+    .track-spotify-link,
     .track-download-link {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255,248,240,0.26);
+      color: rgb(var(--cream-rgb) / 0.38);
       text-decoration: none;
       transition: color 150ms ease, transform 150ms ease;
     }
 
-    .track-download-link:hover { color: rgba(255,248,240,0.75); transform: scale(1.2); }
-    .track-active .track-download-link { color: rgba(255,248,240,0.42); }
+    @media (hover: hover) {
+      .track-spotify-link:hover,
+      .track-download-link:hover {
+        color: rgb(var(--cream-rgb) / 0.75);
+        transform: scale(1.2);
+      }
+    }
+
+    .track-active .track-spotify-link,
+    .track-active .track-download-link {
+      color: rgb(var(--cream-rgb) / 0.5);
+    }
 
     /* Download glyph rendered from download.svg via a CSS mask so it takes the
        CURRENT text color (currentColor) — exactly like the inline external-link
@@ -456,8 +496,8 @@
     .marquee-track {
       display: inline-flex;
       white-space: nowrap;
-      font-size: 0.72rem;
-      color: rgba(255,248,240,0.58);
+      font-size: 0.8125rem;
+      color: rgb(var(--cream-rgb) / 0.65);
       letter-spacing: 0.01em;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -467,7 +507,9 @@
       animation: marquee-scroll var(--marquee-dur, 14s) linear infinite;
     }
 
-    .marquee-track.scrolling:hover { animation-play-state: paused; }
+    @media (hover: hover) {
+      .marquee-track.scrolling:hover { animation-play-state: paused; }
+    }
 
     @keyframes marquee-scroll {
       from { transform: translateX(0); }
@@ -505,7 +547,7 @@
       transform-origin: top right;
       transform: scale(0.92) translateY(-6px);
       transition:
-        transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+        transform 360ms var(--ease-out),
         opacity 260ms ease;
       user-select: none;
     }
@@ -524,6 +566,29 @@
       .md\:mx-auto   { margin-left: auto; margin-right: auto; }
       .md\:w-full    { width: 100%; }
       .md\:max-w-4xl { max-width: 56rem; }
+
+      /* Re-assert safe-area padding over md:p-6 (landscape phones ≥768px wide
+         still have notches and a home indicator). */
+      .controls {
+        padding-left:   max(1.5rem, env(safe-area-inset-left));
+        padding-right:  max(1.5rem, env(safe-area-inset-right));
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
+
+      .info-panel { width: min(calc(100vw - 2rem), 24rem); }
+    }
+
+    /* Desktop (min-width 1024px) — same layout, roomier tracklist. */
+    @media (min-width: 1024px) {
+      .track-panel.open {
+        max-height: min(42vh, 380px);
+        max-height: min(42svh, 380px);
+      }
+
+      .track-scroll {
+        max-height: min(36vh, 320px);
+        max-height: min(36svh, 320px);
+      }
     }
   </style>
 </head>
@@ -585,7 +650,7 @@
             </svg>
           </button>
 
-          <button id="tracklistBtn" type="button" class="gloss inline-flex h-11 items-center justify-center rounded-full px-4 text-[0.62rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
+          <button id="tracklistBtn" type="button" class="gloss inline-flex h-11 items-center justify-center rounded-full px-4 text-[0.6875rem] font-medium uppercase tracking-[0.14em]" aria-expanded="false" aria-label="Toggle tracklist">
             Tracklist
           </button>
 
@@ -609,17 +674,17 @@
         </div>
 
         <div class="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
-          <span id="timeEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
+          <span id="timeEl" class="tnum text-[0.6875rem] text-cream/64">0:00</span>
           <div id="progressTrack" class="progress" role="slider" tabindex="0"
                aria-label="Playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div id="progressFill" class="progress-fill"></div>
             <div id="progressThumb" class="progress-thumb"></div>
           </div>
-          <span id="durationEl" class="tnum text-[0.68rem] text-cream/58">0:00</span>
+          <span id="durationEl" class="tnum text-[0.6875rem] text-cream/64">0:00</span>
         </div>
 
         <div id="trackPanel" class="track-panel mt-3">
-          <ol id="trackList" class="track-scroll space-y-0.5 px-0.5 pb-1 text-[0.76rem] leading-relaxed"></ol>
+          <ol id="trackList" class="track-scroll space-y-0.5 px-0.5 pb-1 text-[0.8125rem] leading-relaxed"></ol>
         </div>
 
       </section>
@@ -641,7 +706,7 @@
   </button>
 
   <div id="infoPanel" class="info-panel glass" role="dialog" aria-label="About this mix">
-    <p id="infoText" class="text-[0.82rem] leading-relaxed" style="color:rgba(255,248,240,0.76)"></p>
+    <p id="infoText" class="text-[0.875rem] leading-relaxed" style="color:rgb(var(--cream-rgb) / 0.76)"></p>
   </div>
 
   <script>
