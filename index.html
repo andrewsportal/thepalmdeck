@@ -38,10 +38,50 @@
   <style>
     :root {
       color-scheme: dark;
-      /* Neon aqua accent — matches the "THE PALM DECK" sign above the bar. */
+
+      /* --- Brand identity (unchanged): dark base, neon-aqua accent, warm cream ink.
+         Aqua matches the "THE PALM DECK" sign above the bar. --- */
+      --bg:            #111111;
+      --ink:           #fff8f0;
       --accent:        #12C6E0;
       --accent-bright: #4AF2E4;
       --accent-rgb:    18 198 224;
+
+      /* Cream ink at fixed opacities — folds ~30 repeated rgba() literals into
+         one honest scale (see PERFORMANCE & CLEANUP: consolidate). */
+      --ink-90: rgba(255,248,240,0.90);
+      --ink-76: rgba(255,248,240,0.76);
+      --ink-70: rgba(255,248,240,0.70);
+      --ink-64: rgba(255,248,240,0.64);
+      --ink-42: rgba(255,248,240,0.42);
+      --ink-40: rgba(255,248,240,0.40);
+      --ink-26: rgba(255,248,240,0.26);
+      --ink-25: rgba(255,248,240,0.25);
+      --ink-18: rgba(255,248,240,0.18);
+      --ink-15: rgba(255,248,240,0.15);
+      --ink-12: rgba(255,248,240,0.12);
+      --ink-07: rgba(255,248,240,0.07);
+      --ink-06: rgba(255,248,240,0.06);
+
+      /* Spacing — 8px grid (only the rungs the layout uses) */
+      --space-2: 0.5rem;   /*  8px */
+      --space-5: 1.5rem;   /* 24px */
+      --space-6: 2rem;     /* 32px */
+
+      /* Radii */
+      --radius-sm: 0.5rem;
+      --radius-lg: 1.5rem;
+
+      /* Depth — soft, low-opacity shadow (no hard border where a shadow does the job) */
+      --shadow-panel: 0 16px 40px rgba(0,0,0,0.42);
+
+      /* Motion — 150–300ms ease-out, applied to interactive elements only */
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --dur-fast: 150ms;
+      --dur-mid:  220ms;
+
+      /* Focus ring — brand aqua, high-contrast on the dark base */
+      --focus: 2px solid var(--accent-bright);
     }
 
     * {
@@ -53,9 +93,10 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background: #111111;
-      color: #fff8f0;
-      font-family: -apple-system, "SF Pro Display", "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -104,8 +145,6 @@
     /* Sizing */
     .h-11           { height: 2.75rem; }
     .w-11           { width: 2.75rem; }
-    .h-12           { height: 3rem; }
-    .w-12           { width: 3rem; }
     .h-\[100svh\]   { height: 100svh; }
     .w-full         { width: 100%; }
     .min-w-0        { min-width: 0; }
@@ -141,16 +180,18 @@
     .text-\[0\.62rem\] { font-size: 0.62rem; }
     .text-\[0\.68rem\] { font-size: 0.68rem; }
     .text-\[0\.76rem\] { font-size: 0.76rem; }
-    .text-\[0\.82rem\] { font-size: 0.82rem; }
+    /* Used only on the About paragraph — the one real body-copy block. Fluid up
+       toward a ~16px reading size on larger screens; still fits the popover. */
+    .text-\[0\.82rem\] { font-size: clamp(0.9rem, 0.85rem + 0.35vw, 1rem); }
     .font-medium       { font-weight: 500; }
     .uppercase         { text-transform: uppercase; }
     .tracking-\[0\.14em\] { letter-spacing: 0.14em; }
     .leading-relaxed   { line-height: 1.625; }
     .truncate          { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .text-cream\/58    { color: rgba(255, 248, 240, 0.58); }
+    /* Nudged 0.58 → 0.64 so the tabular time labels clear AA over the glass panel. */
+    .text-cream\/58    { color: var(--ink-64); }
 
     /* Transform / visibility */
-    .translate-x-\[1px\] { transform: translateX(1px); }
     .hidden              { display: none; }
 
     .scene-video {
@@ -186,9 +227,9 @@
       z-index: 3;
       display: none;
       place-items: center;
-      padding: 1.5rem;
+      padding: var(--space-5);
       text-align: center;
-      color: rgba(255,248,240,0.76);
+      color: var(--ink-76);
       background:
         radial-gradient(circle at 50% 30%, rgb(var(--accent-rgb) / 0.24), transparent 34%),
         #111111;
@@ -228,27 +269,32 @@
       backdrop-filter: blur(20px) saturate(150%);
       -webkit-backdrop-filter: blur(20px) saturate(150%);
       background: rgba(23,23,25,0.56);
-      border: 1px solid rgba(255,248,240,0.12);
-      box-shadow: 0 16px 38px rgba(0,0,0,0.36);
+      border: 1px solid var(--ink-12);
+      box-shadow: var(--shadow-panel);
       transform: translateZ(0);
     }
 
     /* Original translucent glass button — sits quietly in the panel and lets the
        scene show subtly through, with a soft light rim. */
     .gloss {
-      border: 1px solid rgba(255,248,240,0.25);
-      background: linear-gradient(to bottom, rgba(255,248,240,0.15), rgba(255,248,240,0.06));
-      color: #fff8f0;
+      border: 1px solid var(--ink-25);
+      background: linear-gradient(to bottom, var(--ink-15), var(--ink-06));
+      color: var(--ink);
       cursor: pointer;
       transition:
-        transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 200ms ease,
-        filter 200ms ease;
+        transform var(--dur-mid) var(--ease-out),
+        border-color var(--dur-fast) ease,
+        filter var(--dur-fast) ease;
     }
 
-    /* Restrained hover (Apple favours a small lift + brightness over a big pop). */
-    .gloss:hover  { transform: scale(1.03); border-color: rgba(255,248,240,0.4); filter: brightness(1.12); }
+    /* Press feedback stays available to both touch and mouse. */
     .gloss:active { transform: scale(0.94); filter: brightness(0.96); }
+
+    /* Restrained hover (Apple favours a small lift + brightness over a big pop),
+       pointer devices only so touch users never get a stuck :hover state. */
+    @media (hover: hover) {
+      .gloss:hover { transform: scale(1.03); border-color: var(--ink-40); filter: brightness(1.12); }
+    }
 
     /* Cross-fade the play/pause glyphs instead of an instant swap. Both icons
        are stacked and centred; the utility .hidden is overridden to fade. */
@@ -313,7 +359,7 @@
       height: 4px;
       border-radius: 999px;
       position: relative;
-      background: rgba(255,248,240,0.18);
+      background: var(--ink-18);
       cursor: pointer;
       transition: height 180ms ease;
       touch-action: none;   /* drags go straight to the scrubber, no page-scroll delay */
@@ -321,9 +367,13 @@
       -webkit-user-select: none;
     }
 
-    .progress:hover,
+    /* Focus (keyboard) and active drag (touch) always thicken the bar. */
     .progress:focus-visible,
     .progress.scrubbing { height: 6px; }
+
+    @media (hover: hover) {
+      .progress:hover { height: 6px; }
+    }
 
     .progress-fill {
       width: 0%;
@@ -340,14 +390,19 @@
       top: 50%;
       left: 0%;
       transform: translate(-50%, -50%) scale(0);
-      background: #fff8f0;
+      background: var(--ink);
       pointer-events: none;
       transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .progress:hover .progress-thumb,
     .progress:focus-visible .progress-thumb {
       transform: translate(-50%, -50%) scale(1);
+    }
+
+    @media (hover: hover) {
+      .progress:hover .progress-thumb {
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
 
     /* Keep the white circle visible for the whole drag (there's no hover on touch). */
@@ -368,35 +423,37 @@
       max-height: min(27svh, 250px);
       overflow: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(255,248,240,0.18) transparent;
+      scrollbar-color: var(--ink-18) transparent;
     }
 
     .track-scroll::-webkit-scrollbar       { width: 8px; }
-    .track-scroll::-webkit-scrollbar-thumb { background: rgba(255,248,240,0.18); border-radius: 999px; }
+    .track-scroll::-webkit-scrollbar-thumb { background: var(--ink-18); border-radius: 999px; }
 
     .track-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      border-radius: 0.5rem;
+      gap: var(--space-2);
+      border-radius: var(--radius-sm);
       padding: 0.45rem 0.625rem;
       cursor: pointer;
-      color: rgba(255,248,240,0.7);
-      transition: background 150ms ease, color 150ms ease;
+      color: var(--ink-70);
+      transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
       user-select: none;
     }
 
-    /* Exclude the active row from hover so tapping it (which leaves a sticky
-       :hover on touch) can't override the aqua highlight — the active track
-       looks the same whether reached by tap or by the next/prev buttons. */
-    .track-item:not(.track-active):hover {
-      background: rgba(255,248,240,0.07);
-      color: rgba(255,248,240,0.9);
+    /* Hover is pointer-only, and the active row is excluded so the aqua
+       highlight always wins — the active track looks the same whether reached
+       by tap or by the next/prev buttons. */
+    @media (hover: hover) {
+      .track-item:not(.track-active):hover {
+        background: var(--ink-07);
+        color: var(--ink-90);
+      }
     }
 
     .track-active {
       background: linear-gradient(to right, rgb(var(--accent-rgb) / 0.16), rgb(var(--accent-rgb) / 0.05));
-      color: #fff8f0;
+      color: var(--ink);
       box-shadow: inset 0 0 0 1px rgb(var(--accent-rgb) / 0.35);
     }
 
@@ -405,18 +462,20 @@
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255,248,240,0.26);
+      color: var(--ink-26);
       text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
+      transition: color var(--dur-fast) ease, transform var(--dur-fast) ease;
     }
 
-    .track-spotify-link:hover {
-      color: rgba(255,248,240,0.75);
-      transform: scale(1.2);
+    @media (hover: hover) {
+      .track-spotify-link:hover {
+        color: var(--ink-76);
+        transform: scale(1.2);
+      }
     }
 
     .track-active .track-spotify-link {
-      color: rgba(255,248,240,0.42);
+      color: var(--ink-42);
     }
 
     /* Download link — shown only on the song1 row (see renderTracklist).
@@ -427,13 +486,15 @@
       display: inline-flex;
       align-items: center;
       padding: 2px;
-      color: rgba(255,248,240,0.26);
+      color: var(--ink-26);
       text-decoration: none;
-      transition: color 150ms ease, transform 150ms ease;
+      transition: color var(--dur-fast) ease, transform var(--dur-fast) ease;
     }
 
-    .track-download-link:hover { color: rgba(255,248,240,0.75); transform: scale(1.2); }
-    .track-active .track-download-link { color: rgba(255,248,240,0.42); }
+    @media (hover: hover) {
+      .track-download-link:hover { color: var(--ink-76); transform: scale(1.2); }
+    }
+    .track-active .track-download-link { color: var(--ink-42); }
 
     /* Download glyph rendered from download.svg via a CSS mask so it takes the
        CURRENT text color (currentColor) — exactly like the inline external-link
@@ -457,7 +518,7 @@
       display: inline-flex;
       white-space: nowrap;
       font-size: 0.72rem;
-      color: rgba(255,248,240,0.58);
+      color: var(--ink-64);
       letter-spacing: 0.01em;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
@@ -467,7 +528,9 @@
       animation: marquee-scroll var(--marquee-dur, 14s) linear infinite;
     }
 
-    .marquee-track.scrolling:hover { animation-play-state: paused; }
+    @media (hover: hover) {
+      .marquee-track.scrolling:hover { animation-play-state: paused; }
+    }
 
     @keyframes marquee-scroll {
       from { transform: translateX(0); }
@@ -477,6 +540,22 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+
+    /* --------------------------------------------------------------
+       Keyboard focus. Every interactive control gets a visible aqua ring,
+       shown only for keyboard users via :focus-visible so pointer/touch
+       presses stay clean. The ring clears the 3:1 non-text contrast bar
+       against the dark base, and outline (not box-shadow) is used so it
+       never fights the glass panel's own shadow. Outline follows the
+       pill/rounded shape in current Safari & Chrome.
+       -------------------------------------------------------------- */
+    :focus-visible {
+      outline: var(--focus);
+      outline-offset: 3px;
+    }
+    :focus:not(:focus-visible) { outline: none; }
+    /* Give the thin scrubber a little more breathing room around its ring. */
+    .progress:focus-visible { outline-offset: 6px; }
 
     /* Fixed top-right, last in DOM, highest z-index — always above the video and controls */
     .info-btn {
@@ -497,8 +576,8 @@
       right: max(1rem, env(safe-area-inset-right));
       z-index: 9998;
       width: min(calc(100vw - 2rem), 22rem);
-      border-radius: 1.5rem;
-      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-5);
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
@@ -524,6 +603,18 @@
       .md\:mx-auto   { margin-left: auto; margin-right: auto; }
       .md\:w-full    { width: 100%; }
       .md\:max-w-4xl { max-width: 56rem; }
+    }
+
+    /* Large screens (≥1024px): more generous rhythm around the player, and
+       re-assert the safe-area inset on the bottom padding that md:p-6 flattens.
+       The panel measure stays capped (max-w-4xl above) — a control bar stretched
+       wider than that reads as sprawl, not polish, so only the padding grows. */
+    @media (min-width: 1024px) {
+      .controls {
+        padding: var(--space-6);
+        padding-bottom: max(var(--space-6), env(safe-area-inset-bottom));
+      }
+      .ui.glass { padding: var(--space-5) var(--space-6); }
     }
   </style>
 </head>
