@@ -594,11 +594,14 @@
 </head>
 <body>
   <video id="sceneVideo" class="scene-video" autoplay muted playsinline loop preload="auto" poster="og-image.JPG" aria-hidden="true">
+    <!-- The browser tries each source in order, so the video loads whether
+         the uploaded file is named boomerang.mp4 or boomerang.MP4 -->
+    <source src="boomerang.mp4" type="video/mp4" />
     <source src="boomerang.MP4" type="video/mp4" />
   </video>
 
   <div id="sceneFallback" class="scene-fallback" aria-live="polite">
-    <p>The background video could not be loaded. Make sure <strong>boomerang.MP4</strong> is in the same folder as this page.</p>
+    <p>The background video could not be loaded. Make sure <strong>boomerang.mp4</strong> (or <strong>boomerang.MP4</strong>) is in the same folder as this page.</p>
   </div>
 
   <div class="scene-mask" aria-hidden="true"></div>
@@ -1067,6 +1070,12 @@
       sceneVideo.addEventListener("loadeddata", showVideo, { once: true });
       sceneVideo.addEventListener("canplay", playSceneVideo, { once: true });
       sceneVideo.addEventListener("error", showFallback);
+      // With multiple <source> children, load errors fire on the <source>
+      // elements, not the video — only the last one failing means nothing loaded
+      const sceneSources = sceneVideo.querySelectorAll("source");
+      if (sceneSources.length) {
+        sceneSources[sceneSources.length - 1].addEventListener("error", showFallback);
+      }
 
       // Resume after tab/app switch — 150ms delay lets the browser finish restoring context
       document.addEventListener("visibilitychange", () => {
